@@ -1166,8 +1166,16 @@ if (mysqli_num_rows($table_check) > 0) {
                     ];
                     const contract = new ethers.Contract(contractAddr, abi, wallet);
 
-                    // Call mint function - this will sign and send the transaction
-                    const tx = await contract.mint(metadataUri);
+                    // Add gas price information for faster transaction processing
+                    const gasPrice = await provider.getGasPrice();
+                    // Double the gas price (multiply by 200%)
+                    const doubledGasPrice = gasPrice.mul(2);
+                    console.log('Using doubled gas price:', ethers.utils.formatUnits(doubledGasPrice, 'gwei'), 'gwei');
+
+                    // Call mint function with doubled gas price
+                    const tx = await contract.mint(metadataUri, {
+                        gasPrice: doubledGasPrice
+                    });
 
                     // Update status with transaction hash
                     document.getElementById('mint-status-message').textContent = 'Transaction submitted: ' + tx.hash;
