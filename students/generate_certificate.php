@@ -1125,7 +1125,17 @@ if (mysqli_num_rows($table_check) > 0) {
                 });
 
                 if (!mintResponse.ok) {
-                    throw new Error('Failed to prepare NFT transaction. Server error.');
+                    const errorText = await mintResponse.text();
+                    console.error('Server error response:', errorText);
+                    throw new Error(`Failed to prepare NFT transaction. Server error: ${mintResponse.status}. Check the console for details.`);
+                }
+
+                // Check if the response is JSON by looking at the Content-Type header
+                const contentType = mintResponse.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    const responseText = await mintResponse.text();
+                    console.error('Non-JSON response from server:', responseText);
+                    throw new Error('Server returned non-JSON response. Check the console for details.');
                 }
 
                 const mintResult = await mintResponse.json();
@@ -1209,7 +1219,17 @@ if (mysqli_num_rows($table_check) > 0) {
                     });
 
                     if (!updateResponse.ok) {
-                        throw new Error('Failed to update transaction details. Server error.');
+                        const errorText = await updateResponse.text();
+                        console.error('Server error response:', errorText);
+                        throw new Error(`Failed to update transaction details. Server error: ${updateResponse.status}. Check the console for details.`);
+                    }
+
+                    // Check if the response is JSON
+                    const updateContentType = updateResponse.headers.get('content-type');
+                    if (!updateContentType || !updateContentType.includes('application/json')) {
+                        const responseText = await updateResponse.text();
+                        console.error('Non-JSON response from server:', responseText);
+                        throw new Error('Server returned non-JSON response. Check the console for details.');
                     }
 
                     const updateResult = await updateResponse.json();
