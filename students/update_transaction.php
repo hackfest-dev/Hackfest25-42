@@ -62,6 +62,8 @@ if (!$update_success) {
     exit();
 }
 
+error_log("Transaction data updated successfully: Hash=$transaction_hash, TokenID=$token_id");
+
 // Get certificate details for email sending
 $email_sent = false;
 if ($send_email && !empty($certificate_image_base64)) {

@@ -148,6 +148,27 @@ function send_nft_certificate_email($student_uname, $attempt_id, $image_path) {
         $exam_name = $exam_data['exname'];
         $subject = $exam_data['subject'];
         
+        // Get NFT details
+        $sql = "SELECT * FROM certificate_nfts WHERE attempt_id = $attempt_id AND uname = '$student_uname'";
+        $result = mysqli_query($conn, $sql);
+        
+        $transaction_hash = '';
+        $token_id = '';
+        $contract_address = '';
+        $opensea_link = '';
+        $etherscan_link = '';
+        
+        if ($result && mysqli_num_rows($result) > 0) {
+            $nft_data = mysqli_fetch_assoc($result);
+            $transaction_hash = $nft_data['transaction_hash'];
+            $token_id = $nft_data['token_id'];
+            $contract_address = $nft_data['contract_address'];
+            
+            // Create links
+            $opensea_link = "https://testnets.opensea.io/assets/sepolia/{$contract_address}/{$token_id}";
+            $etherscan_link = "https://sepolia.etherscan.io/tx/{$transaction_hash}";
+        }
+        
         // Email content
         $email_subject = "Your NFT Certificate for $exam_name";
         
@@ -161,6 +182,9 @@ function send_nft_certificate_email($student_uname, $attempt_id, $image_path) {
                 .header { background-color: #4CAF50; color: white; padding: 10px; text-align: center; }
                 .content { padding: 20px; background-color: #f9f9f9; }
                 .footer { text-align: center; margin-top: 20px; font-size: 12px; color: #666; }
+                .blockchain-details { background-color: #f0f8ff; padding: 15px; border-radius: 5px; margin: 20px 0; }
+                .link { color: #0066cc; text-decoration: underline; word-break: break-all; }
+                .transaction-hash { font-family: monospace; background-color: #f5f5f5; padding: 5px; border-radius: 3px; word-break: break-all; }
             </style>
         </head>
         <body>
@@ -172,6 +196,28 @@ function send_nft_certificate_email($student_uname, $attempt_id, $image_path) {
                     <p>We are pleased to attach your NFT Certificate for completing the $exam_name in $subject.</p>
                     <p>Your certificate has been minted as an NFT on the blockchain, ensuring its authenticity and permanence.</p>
                     <p>The NFT certificate is attached to this email as a PNG file. You can view or print this certificate whenever needed.</p>
+                    
+                    <div class='blockchain-details'>
+                        <h3>Blockchain Details</h3>";
+                        
+        if (!empty($transaction_hash)) {
+            $message .= "
+                        <p><strong>Transaction Hash:</strong><br>
+                        <span class='transaction-hash'>$transaction_hash</span></p>
+                        
+                        <p><strong>View Transaction on Etherscan:</strong><br>
+                        <a href='$etherscan_link' target='_blank' class='link'>$etherscan_link</a></p>";
+        }
+                        
+        if (!empty($opensea_link)) {
+            $message .= "
+                        <p><strong>View on OpenSea:</strong><br>
+                        <a href='$opensea_link' target='_blank' class='link'>$opensea_link</a></p>";
+        }
+                        
+        $message .= "
+                    </div>
+                    
                     <p>Thank you for your dedication to learning!</p>
                 </div>
                 <div class='footer'>
