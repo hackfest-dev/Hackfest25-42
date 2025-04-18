@@ -10,16 +10,27 @@ if (isset($_POST["addexm"])) {
     $subt = mysqli_real_escape_string($conn, $_POST["subt"]);
     $extime = mysqli_real_escape_string($conn, $_POST["extime"]);
     $subject = mysqli_real_escape_string($conn, $_POST["subject"]);
-    $sql = "INSERT INTO exm_list (exname, nq, desp, subt, extime, subject) VALUES ('$exname', '$nq', '$desp', '$subt', '$extime', '$subject')";
+    $duration = mysqli_real_escape_string($conn, $_POST["duration"]);
+    $sql = "INSERT INTO exm_list (exname, nq, desp, subt, extime, subject, duration) VALUES ('$exname', '$nq', '$desp', '$subt', '$extime', '$subject', '$duration')";
     $result = mysqli_query($conn, $sql);
     if ($result) {
         // Get the ID of the newly created exam
         $exam_id = mysqli_insert_id($conn);
 
-        // Log the action - removed mock exam generation as it will happen after questions are added
+        // Log the action
         error_log("Created exam ID $exam_id");
 
-        header("Location: exams.php");
+        // Instead of redirecting, output a form that auto-submits to addqp.php
+        echo "
+        <form id='redirectForm' action='addqp.php' method='post'>
+            <input type='hidden' name='exid' value='$exam_id'>
+            <input type='hidden' name='nq' value='$nq'>
+        </form>
+        <script>
+            document.getElementById('redirectForm').submit();
+        </script>
+        ";
+        exit; // Stop execution to prevent additional headers
     } else {
         echo "<script>alert('Adding exam failed.');</script>";
         header("Location: exams.php");

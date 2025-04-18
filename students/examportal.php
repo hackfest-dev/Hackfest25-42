@@ -43,6 +43,7 @@ while ($rowd = mysqli_fetch_array($res)) {
   $nq = $rowd['nq'];
   $exname = $rowd['exname'];
   $desp = $rowd['desp'];
+  $duration = $rowd['duration']; // Get the test duration
 }
 
 
@@ -107,12 +108,21 @@ while ($rowd = mysqli_fetch_array($res)) {
     //set the date we are counting down to 
     var count_id = "<?php echo $td; ?>";
     var countDownDate = new Date(count_id).getTime();
+    
+    // Get the test duration in minutes and convert to milliseconds
+    var testDuration = <?php echo $duration; ?> * 60 * 1000;
+    var startTime = new Date().getTime();
+    var endTime = startTime + testDuration;
+    
+    // Use the smaller of the two times: either submission deadline or test duration
+    var effectiveEndTime = Math.min(countDownDate, endTime);
+    
     //Update the count down every 1 second 
     var x = setInterval(function() {
       //Get today's date and time 
       var now = new Date().getTime();
-      //Fir thn dist2nr 'nnn now and the count down date 
-      var distance = countDownDate - now;
+      //Find the distance between now and the effective end time
+      var distance = effectiveEndTime - now;
       //Ti ilculations fr k-rt—s,minutes and seconds 
       var days = Math.floor(distance / (1000 * 60 * 60 * 24));
       var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));

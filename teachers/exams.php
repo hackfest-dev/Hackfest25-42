@@ -101,6 +101,7 @@ $result = mysqli_query($conn, $sql);
                             <th>No. of questions</th>
                             <th>Exam time</th>
                             <th>Submission time</th>
+                            <th>Duration (min)</th>
                             <th>EDIT</th>
                             <th>DELETE</th>
                         </tr>
@@ -120,6 +121,7 @@ $result = mysqli_query($conn, $sql);
                                 <td><?php  echo $row['nq']; ?></td>
                                 <td><?php  echo $row['extime']; ?></td>
                                 <td><?php  echo $row['subt']; ?></td>
+                                <td><?php  echo $row['duration']; ?></td>
                                 <td>
                                     <form action="addqp.php" method="post">
                                          <input type="hidden" name="nq" value="<?php echo $row['nq']; ?>">
@@ -157,6 +159,8 @@ $result = mysqli_query($conn, $sql);
 				      <input class="inputbox" type="datetime-local" id="extime" name="extime" required /></br>
               <label for="subt">Submission time</label><br>
 				      <input class="inputbox" type="datetime-local" id="subt" name="subt" required /></br>
+              <label for="duration">Test duration (minutes)</label><br>
+				      <input class="inputbox" type="number" id="duration" name="duration" min="1" max="240" value="60" required /></br>
               <label for="nq">No. of questions</label><br>
 				      <input class="inputbox" type="number" id="nq" name="nq" required /></br>
               <br><br>             

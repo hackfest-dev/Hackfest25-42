@@ -38,6 +38,9 @@ while ($rowd = mysqli_fetch_array($res)) {
     $nq = $rowd['nq'];
     $exname = $rowd['exname'];
     $desp = $rowd['desp'];
+    
+    // Set a fixed duration of 10 minutes for all mock tests
+    $duration = 10;
 }
 
 ?>
@@ -151,25 +154,31 @@ while ($rowd = mysqli_fetch_array($res)) {
         function st() {
             document.getElementById("form1").submit();
         }
-        //set the date we are counting down to 
-        var count_id = "<?php echo $td; ?>";
-        var countDownDate = new Date(count_id).getTime();
-        //Update the count down every 1 second 
+        // Set up timer for mock exam
+        var testDuration = <?php echo $duration; ?> * 60 * 1000; // Convert minutes to milliseconds
+        var startTime = new Date().getTime();
+        var endTime = startTime + testDuration;
+        
+        // Update the countdown every 1 second
         var x = setInterval(function() {
-            //Get today's date and time 
-            var now = new Date().getTime();
-            //Find the distance between now and the count down date 
-            var distance = countDownDate - now;
-            //Time calculations for days, hours, minutes and seconds 
-            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-            document.getElementById("time").innerHTML = "Timer: " + hours + "h " + minutes + "m " + seconds + "s";
-            if (distance < 0) {
-                clearInterval(x);
-                document.getElementById("form1").submit();
-            }
+          // Get current time
+          var now = new Date().getTime();
+          // Calculate remaining time
+          var distance = endTime - now;
+          
+          // Time calculations for hours, minutes and seconds
+          var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+          var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+          
+          // Display the timer
+          document.getElementById("time").innerHTML = "Timer: " + hours + "h " + minutes + "m " + seconds + "s";
+          
+          // If timer expires, submit the form
+          if (distance < 0) {
+            clearInterval(x);
+            document.getElementById("form1").submit();
+          }
         }, 1000);
     </script>
 
