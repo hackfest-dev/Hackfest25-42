@@ -65,39 +65,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $correct_ans = $row['qstn_ans'];
             $user_ans_value = isset($_POST['a' . $sno]) ? $_POST['a' . $sno] : '';
             
-            // Convert answer to option key (option1, option2, etc)
-            $option_key = '';
-            if ($user_ans_value == $row['qstn_o1']) {
-                $option_key = 'option1';
-            } elseif ($user_ans_value == $row['qstn_o2']) {
-                $option_key = 'option2';
-            } elseif ($user_ans_value == $row['qstn_o3']) {
-                $option_key = 'option3';
-            } elseif ($user_ans_value == $row['qstn_o4']) {
-                $option_key = 'option4';
-            }
-            
             // Debug info
-            error_log("Q$sno: Stored answer: $option_key (from: $user_ans_value), Correct: $correct_ans");
+            error_log("Q$sno: User selected text: '$user_ans_value'");
+            error_log("Q$sno: Correct answer: '$correct_ans'");
             
             // Sanitize inputs to prevent SQL injection
             $sno = mysqli_real_escape_string($conn, $sno);
-            $option_key = mysqli_real_escape_string($conn, $option_key);
+            $user_ans_value = mysqli_real_escape_string($conn, $user_ans_value);
 
             // Save user's answer
-            if (!empty($option_key)) {
+            if (!empty($user_ans_value)) {
                 $save_ans_sql = "INSERT INTO mock_qstn_ans (mock_exid, uname, sno, ans) 
-                               VALUES ('$mock_exid', '$uname', '$sno', '$option_key')";
+                               VALUES ('$mock_exid', '$uname', '$sno', '$user_ans_value')";
                 
                 if (!mysqli_query($conn, $save_ans_sql)) {
-                    // Log error but continue processing
                     error_log("Error saving answer: " . mysqli_error($conn));
                 }
-            }
 
-            // Check if the user's answer is correct
-            if ($option_key == $correct_ans) {
-                $cnq++;
+                // Check if the user's answer is correct (case-sensitive comparison)
+                if ($user_ans_value === $correct_ans) {
+                    $cnq++;
+                    error_log("Q$sno: Answer is correct!");
+                } else {
+                    error_log("Q$sno: Answer is incorrect. Expected '$correct_ans', got '$user_ans_value'");
+                }
+            } else {
+                error_log("Q$sno: No answer provided");
             }
         }
     }

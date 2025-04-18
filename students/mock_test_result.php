@@ -330,46 +330,35 @@ error_log("User Answers Retrieved: " . json_encode($user_answers));
                         $is_correct = ($question['qstn_ans'] == $option_key);
                         $is_user_selected = (isset($user_answers[$sno]) && $user_answers[$sno] == $option_key);
                         
-                        $option_class = 'option-item';
-                        if ($is_correct) {
-                            $option_class .= ' option-correct';
-                        } elseif ($is_user_selected) {
-                            $option_class .= ' option-incorrect';
-                        }
-                        
-                        if ($is_user_selected) {
-                            $option_class .= ' option-user-selected';
-                        }
-                        
-                        echo '<li class="'.$option_class.'">';
-                        echo $option_text;
-                        
-                        // Show labels for correct answer and/or user answer
-                        $labels = [];
-                        
-                        if ($is_correct) {
-                            $labels[] = '<span style="color: green;">✓ Correct Answer</span>';
-                        }
-                        
-                        if ($is_user_selected) {
-                            if ($is_correct) {
-                                $labels[] = '<span style="color: green;">✓ Your Answer</span>';
-                            } else {
-                                $labels[] = '<span style="color: red;">✗ Your Answer</span>';
-                            }
-                        }
-                        
-                        if (!empty($labels)) {
-                            echo '<span style="float: right;">' . implode(' | ', $labels) . '</span>';
-                        }
-                        
+                        echo '<li class="option-item">';
+                        echo htmlspecialchars($option_text);
                         echo '</li>';
                     }
                     
-                    // If no answer was provided
-                    if (!isset($user_answers[$sno]) || empty($user_answers[$sno])) {
-                        echo '<div style="color: #dc3545; margin-top: 10px;">No answer provided for this question</div>';
+                    // Display correct and marked answers
+                    echo '<div style="margin-top: 10px; padding: 10px; background-color: #f8f9fa; border-radius: 4px;">';
+                    
+                    // Get the correct answer text directly from the database
+                    $correct_answer_text = $question['qstn_ans'];
+                    
+                    // Get the user's marked answer text
+                    $marked_answer_text = isset($user_answers[$sno]) ? $user_answers[$sno] : 'Not answered';
+                    
+                    // Determine if the answer is correct
+                    $is_correct = ($marked_answer_text === $correct_answer_text);
+                    
+                    if ($marked_answer_text === 'Not answered') {
+                        echo '<div><strong>Your Answer:</strong> <span style="color: #666;">Not answered</span></div>';
+                        echo '<div><strong>Correct Answer:</strong> <span style="color: #28a745;">' . htmlspecialchars($correct_answer_text) . '</span></div>';
+                    } else {
+                        if ($is_correct) {
+                            echo '<div><strong>Your Answer:</strong> <span style="color: #28a745;">' . htmlspecialchars($marked_answer_text) . ' ✓</span></div>';
+                        } else {
+                            echo '<div><strong>Your Answer:</strong> <span style="color: #dc3545;">' . htmlspecialchars($marked_answer_text) . ' ✗</span></div>';
+                            echo '<div><strong>Correct Answer:</strong> <span style="color: #28a745;">' . htmlspecialchars($correct_answer_text) . '</span></div>';
+                        }
                     }
+                    echo '</div>';
                     
                     echo '</ul>';
                     echo '</div>';
