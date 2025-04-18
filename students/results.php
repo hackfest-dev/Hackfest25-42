@@ -39,6 +39,12 @@ $result = mysqli_query($conn, $sql);
         </a>
       </li>
       <li>
+        <a href="mock_exams.php">
+          <i class='bx bx-edit'></i>
+          <span class="links_name">Mock Exams</span>
+        </a>
+      </li>
+      <li>
         <a href="#" class="active">
           <i class='bx bxs-bar-chart-alt-2'></i>
           <span class="links_name">Results</span>

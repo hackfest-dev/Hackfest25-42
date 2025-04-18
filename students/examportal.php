@@ -496,7 +496,13 @@ while ($rowd = mysqli_fetch_array($res)) {
         </a>
       </li>
       <li>
-        <a>
+        <a href="mock_exams.php">
+          <i class='bx bx-edit'></i>
+          <span class="links_name">Mock Exams</span>
+        </a>
+      </li>
+      <li>
+        <a href="results.php">
           <i class='bx bxs-bar-chart-alt-2'></i>
           <span class="links_name">Results</span>
         </a>
