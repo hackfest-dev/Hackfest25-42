@@ -902,6 +902,7 @@ if (mysqli_num_rows($table_check) > 0) {
                 let headers = {};
                 let retryCount = 0;
                 const maxRetries = 3;
+                let gateways = []; // Define gateways at the higher scope
 
                 // Function to retry failed operations
                 async function retryOperation(operation, errorMessage) {
@@ -1026,7 +1027,7 @@ if (mysqli_num_rows($table_check) > 0) {
                     ipfsUri = `ipfs://${ipfsHash}`;
                     
                     // Create multiple gateway URLs as fallbacks
-                    const gateways = [
+                    gateways = [
                         `https://gateway.pinata.cloud/ipfs/${ipfsHash}`,
                         `https://ipfs.io/ipfs/${ipfsHash}`
                     ];
@@ -1069,19 +1070,21 @@ if (mysqli_num_rows($table_check) > 0) {
                     throw new Error('IPFS upload failed - no image URL was generated');
                 }
 
-                // Create metadata
-                const metadata = {
-                    name: `${<?php echo json_encode(htmlspecialchars($_SESSION["uname"])); ?>}-${<?php echo json_encode(htmlspecialchars($exam_name)); ?>}-${Math.floor(10000 + Math.random() * 90000)}`,
-                    description: `Certificate of completion for ${<?php echo json_encode(htmlspecialchars($student_name)); ?>} (ID: ${<?php echo json_encode(htmlspecialchars($_SESSION["uname"])); ?>}) in ${<?php echo json_encode(htmlspecialchars($subject)); ?>} with a score of ${<?php echo $score; ?>}/${<?php echo $total; ?>} (${<?php echo $percentage; ?>}%) and integrity score of ${<?php echo $integrity_score; ?>}/100 (${<?php echo json_encode(htmlspecialchars($integrity_category)); ?>})`,
-                    image: ipfsUri, // Use IPFS URI format instead of gateway URL
-                    image_url: imageIpfsUrl, // Fallback gateway URL for OpenSea
-                    external_url: imageIpfsUrl, // Alternative fallback that some marketplaces use
-                    // Add additional image URLs for redundancy using various popular gateways
-                    image_data: {
-                        uri: ipfsUri,
-                        gateway_urls: gateways
-                    },
-                    attributes: [{
+                // Create metadata after gateways are defined
+                const createAndUploadMetadata = () => {
+                    // Create metadata
+                    const metadata = {
+                        name: `${<?php echo json_encode(htmlspecialchars($_SESSION["uname"])); ?>}-${<?php echo json_encode(htmlspecialchars($exam_name)); ?>}-${Math.floor(10000 + Math.random() * 90000)}`,
+                        description: `Certificate of completion for ${<?php echo json_encode(htmlspecialchars($student_name)); ?>} (ID: ${<?php echo json_encode(htmlspecialchars($_SESSION["uname"])); ?>}) in ${<?php echo json_encode(htmlspecialchars($subject)); ?>} with a score of ${<?php echo $score; ?>}/${<?php echo $total; ?>} (${<?php echo $percentage; ?>}%) and integrity score of ${<?php echo $integrity_score; ?>}/100 (${<?php echo json_encode(htmlspecialchars($integrity_category)); ?>})`,
+                        image: ipfsUri, // Use IPFS URI format instead of gateway URL
+                        image_url: imageIpfsUrl, // Fallback gateway URL for OpenSea
+                        external_url: imageIpfsUrl, // Alternative fallback that some marketplaces use
+                        // Add additional image URLs for redundancy using various popular gateways
+                        image_data: {
+                            uri: ipfsUri,
+                            gateway_urls: gateways
+                        },
+                        attributes: [{
                             trait_type: "Student ID",
                             value: <?php echo json_encode(htmlspecialchars($_SESSION["uname"])); ?>
                         },
@@ -1128,12 +1131,15 @@ if (mysqli_num_rows($table_check) > 0) {
                         {
                             trait_type: "Completion Date",
                             value: <?php echo json_encode($completion_date); ?>
-                        }
-                    ]
-                };
+                        }]
+                    };
 
+                    // Upload metadata to Pinata with retry logic
+                    return uploadMetadataToPinata(metadata);
+                };
+                
                 // Upload metadata to Pinata with retry logic
-                async function uploadMetadataToPinata() {
+                async function uploadMetadataToPinata(metadata) {
                     try {
                         const metadataResponse = await fetch('https://api.pinata.cloud/pinning/pinJSONToIPFS', {
                             method: 'POST',
@@ -1161,13 +1167,13 @@ if (mysqli_num_rows($table_check) > 0) {
                     } catch (error) {
                         // If we get a rate limit error (429) or server error (5xx), retry
                         if (error.message.includes('429') || error.message.includes('5')) {
-                            return await retryOperation(uploadMetadataToPinata, 'Maximum retry attempts reached. Metadata upload failed.');
+                            return await retryOperation(createAndUploadMetadata, 'Maximum retry attempts reached. Metadata upload failed.');
                         }
                         throw error;
                     }
                 }
 
-                const metadataResult = await uploadMetadataToPinata();
+                const metadataResult = await createAndUploadMetadata();
                 const ipfsMetadataHash = metadataResult.IpfsHash;
                 
                 // Create multiple gateway URLs for metadata as fallbacks
