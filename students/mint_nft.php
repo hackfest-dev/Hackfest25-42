@@ -220,10 +220,12 @@ if (mysqli_query($conn, $insert_sql)) {
                     error_log("Failed to save certificate image to: $certificate_path");
                 }
                 
-                // Send email with certificate attachment if image was saved successfully
-                if ($save_success && file_exists($certificate_path)) {
-                    $email_sent = send_nft_certificate_email($uname, $attempt_id, $certificate_path);
-                    error_log("Email sending " . ($email_sent ? "successful" : "failed") . " for {$uname}");
+                // Email sending is now handled by update_transaction.php to avoid duplicate emails
+                // Do not send email here, just indicate that the image was saved successfully
+                $email_sent = false;
+                if ($save_success) {
+                    error_log("Certificate image saved successfully at: $certificate_path");
+                    error_log("Email will be sent by update_transaction.php");
                 }
             }
         } catch (Exception $e) {

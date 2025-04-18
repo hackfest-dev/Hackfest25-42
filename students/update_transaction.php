@@ -65,6 +65,8 @@ if (!$update_success) {
 // Get certificate details for email sending
 $email_sent = false;
 if ($send_email && !empty($certificate_image_base64)) {
+    error_log("Starting email process in update_transaction.php");
+    
     // Get NFT details to get student username and attempt ID
     $nft_sql = "SELECT * FROM certificate_nfts WHERE id = $nft_id";
     $nft_result = mysqli_query($conn, $nft_sql);
@@ -74,32 +76,56 @@ if ($send_email && !empty($certificate_image_base64)) {
         $uname = $nft_data['uname'];
         $attempt_id = $nft_data['attempt_id'];
         
+        error_log("Found NFT data for user: $uname, attempt ID: $attempt_id");
+        
         // Save certificate image
         try {
             // Ensure certificates directory exists
             $certificates_dir = '../certificates';
             if (!file_exists($certificates_dir)) {
                 mkdir($certificates_dir, 0755, true);
+                error_log("Created certificates directory: $certificates_dir");
             }
             
             // Save the image
             $certificate_path = $certificates_dir . "/certificate_{$uname}_{$attempt_id}.png";
+            error_log("Saving certificate to: $certificate_path");
             
             // Process base64 image
             if (strpos($certificate_image_base64, 'base64,') !== false) {
+                error_log("Processing base64 image data");
                 list(, $base64_data) = explode('base64,', $certificate_image_base64);
                 $image_data = base64_decode($base64_data);
                 if ($image_data !== false) {
-                    if (file_put_contents($certificate_path, $image_data) !== false) {
+                    $save_success = file_put_contents($certificate_path, $image_data) !== false;
+                    error_log("Certificate save " . ($save_success ? "successful" : "failed"));
+                    
+                    if ($save_success && file_exists($certificate_path)) {
                         // Send email with certificate
+                        error_log("Calling send_nft_certificate_email() for $uname");
                         $email_sent = send_nft_certificate_email($uname, $attempt_id, $certificate_path);
                         error_log("Email sending " . ($email_sent ? "successful" : "failed") . " for {$uname}");
+                    } else {
+                        error_log("Certificate file not found or save unsuccessful");
                     }
+                } else {
+                    error_log("Failed to decode base64 data");
                 }
+            } else {
+                error_log("No base64 data found in the image data");
             }
         } catch (Exception $e) {
             error_log("Error processing image for email: " . $e->getMessage());
         }
+    } else {
+        error_log("No NFT record found for ID: $nft_id");
+    }
+} else {
+    if (!$send_email) {
+        error_log("Email sending disabled by send_email=false parameter");
+    }
+    if (empty($certificate_image_base64)) {
+        error_log("No certificate image provided");
     }
 }
 
