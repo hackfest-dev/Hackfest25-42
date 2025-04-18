@@ -993,7 +993,10 @@ if (mysqli_num_rows($table_check) > 0) {
 
                     // Set the imageIpfsUrl here
                     imageIpfsUrl = `https://gateway.pinata.cloud/ipfs/${uploadResult.IpfsHash}`;
+                    // Also create an ipfs:// URI format that OpenSea prefers
+                    const ipfsUri = `ipfs://${uploadResult.IpfsHash}`;
                     console.log('Image IPFS URL:', imageIpfsUrl);
+                    console.log('Image IPFS URI:', ipfsUri);
                 } catch (uploadError) {
                     console.error('Error during Pinata upload:', uploadError);
                     throw uploadError;
@@ -1011,7 +1014,9 @@ if (mysqli_num_rows($table_check) > 0) {
                 const metadata = {
                     name: `${<?php echo json_encode(htmlspecialchars($_SESSION["uname"])); ?>}-${<?php echo json_encode(htmlspecialchars($exam_name)); ?>}-${Math.floor(10000 + Math.random() * 90000)}`,
                     description: `Certificate of completion for ${<?php echo json_encode(htmlspecialchars($student_name)); ?>} (ID: ${<?php echo json_encode(htmlspecialchars($_SESSION["uname"])); ?>}) in ${<?php echo json_encode(htmlspecialchars($subject)); ?>} with a score of ${<?php echo $score; ?>}/${<?php echo $total; ?>} (${<?php echo $percentage; ?>}%) and integrity score of ${<?php echo $integrity_score; ?>}/100 (${<?php echo json_encode(htmlspecialchars($integrity_category)); ?>})`,
-                    image: imageIpfsUrl,
+                    image: ipfsUri, // Use IPFS URI format instead of gateway URL
+                    image_url: imageIpfsUrl, // Fallback gateway URL for OpenSea
+                    external_url: imageIpfsUrl, // Alternative fallback that some marketplaces use
                     attributes: [{
                             trait_type: "Student ID",
                             value: <?php echo json_encode(htmlspecialchars($_SESSION["uname"])); ?>
@@ -1088,6 +1093,9 @@ if (mysqli_num_rows($table_check) > 0) {
 
                 const metadataResult = await metadataResponse.json();
                 const metadataUrl = `https://gateway.pinata.cloud/ipfs/${metadataResult.IpfsHash}`;
+                const metadataUri = `ipfs://${metadataResult.IpfsHash}`;
+                console.log('Metadata Gateway URL:', metadataUrl);
+                console.log('Metadata IPFS URI:', metadataUri);
 
                 // Update status
                 document.getElementById('mint-status-message').textContent = 'Preparing blockchain transaction...';
@@ -1100,8 +1108,8 @@ if (mysqli_num_rows($table_check) > 0) {
                     },
                     body: JSON.stringify({
                         attempt_id: <?php echo $attempt_id; ?>,
-                        metadata_url: metadataUrl,
-                        image_url: imageIpfsUrl
+                        metadata_url: metadataUri, // Use IPFS URI format for blockchain
+                        image_url: ipfsUri // Use IPFS URI format for image reference
                     })
                 });
 
@@ -1116,11 +1124,13 @@ if (mysqli_num_rows($table_check) > 0) {
                 }
 
                 // Update status
-                document.getElementById('mint-status-message').textContent = 'Signing and sending blockchain transaction...';
+                document.getElementById('mint-status-message').textContent = 'Waiting for IPFS propagation (4 seconds)...';
                 
                 // Add a delay to ensure IPFS propagation before sending blockchain transaction
-                await new Promise(resolve => setTimeout(resolve, 2000));
-
+                await new Promise(resolve => setTimeout(resolve, 4000));
+                
+                document.getElementById('mint-status-message').textContent = 'Signing and sending blockchain transaction...';
+                
                 // REAL BLOCKCHAIN INTERACTION
                 // Use ethers.js to sign and send the transaction
                 try {
@@ -1154,7 +1164,7 @@ if (mysqli_num_rows($table_check) > 0) {
                     const contract = new ethers.Contract(contractAddr, abi, wallet);
 
                     // Call mint function - this will sign and send the transaction
-                    const tx = await contract.mint(metadataUrl);
+                    const tx = await contract.mint(metadataUri);
 
                     // Update status with transaction hash
                     document.getElementById('mint-status-message').textContent = 'Transaction submitted: ' + tx.hash;
