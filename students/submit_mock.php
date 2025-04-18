@@ -5,7 +5,8 @@ if (!isset($_SESSION["uname"])) {
 }
 
 include '../config.php';
-error_reporting(0);
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 // Check if form was submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -17,17 +18,85 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Count correct answers
     $cnq = 0;
 
-    // Fetch correct answers from database
-    $sql = "SELECT sno, qstn_ans FROM mock_qstn_list WHERE mock_exid='$mock_exid' ORDER BY sno";
+    // Check if user has already submitted this mock exam
+    $check_sql = "SELECT id FROM mock_atmpt_list WHERE mock_exid='$mock_exid' AND uname='$uname' AND status=1";
+    $check_result = mysqli_query($conn, $check_sql);
+    
+    if (mysqli_num_rows($check_result) > 0) {
+        // User has already submitted this exam, redirect to mock exams page
+        header("Location: mock_exams.php?error=already_submitted");
+        exit;
+    }
+
+    // Check if the mock_qstn_ans table exists, create it if not
+    $table_check = mysqli_query($conn, "SHOW TABLES LIKE 'mock_qstn_ans'");
+    if (mysqli_num_rows($table_check) == 0) {
+        // Table doesn't exist, create it
+        $create_table_sql = "CREATE TABLE IF NOT EXISTS mock_qstn_ans (
+            id INT(11) NOT NULL AUTO_INCREMENT,
+            mock_exid INT(11) NOT NULL,
+            uname VARCHAR(50) NOT NULL,
+            sno INT(11) NOT NULL,
+            ans VARCHAR(255) NOT NULL,
+            datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (id)
+        )";
+        
+        if (!mysqli_query($conn, $create_table_sql)) {
+            error_log("Error creating mock_qstn_ans table: " . mysqli_error($conn));
+            echo "<h2>Error Setting Up Database</h2>";
+            echo "<p>We encountered an error while setting up the database. Please contact support.</p>";
+            echo "<p><a href='mock_exams.php'>Return to Mock Exams</a></p>";
+            exit;
+        }
+    }
+
+    // Delete any existing answers for this user and exam
+    $delete_sql = "DELETE FROM mock_qstn_ans WHERE mock_exid='$mock_exid' AND uname='$uname'";
+    mysqli_query($conn, $delete_sql);
+
+    // Fetch correct answers from database and map option values to option keys
+    $sql = "SELECT * FROM mock_qstn_list WHERE mock_exid='$mock_exid' ORDER BY sno";
     $result = mysqli_query($conn, $sql);
 
     if (mysqli_num_rows($result) > 0) {
         while ($row = mysqli_fetch_assoc($result)) {
             $sno = $row['sno'];
             $correct_ans = $row['qstn_ans'];
+            $user_ans_value = isset($_POST['a' . $sno]) ? $_POST['a' . $sno] : '';
+            
+            // Convert answer to option key (option1, option2, etc)
+            $option_key = '';
+            if ($user_ans_value == $row['qstn_o1']) {
+                $option_key = 'option1';
+            } elseif ($user_ans_value == $row['qstn_o2']) {
+                $option_key = 'option2';
+            } elseif ($user_ans_value == $row['qstn_o3']) {
+                $option_key = 'option3';
+            } elseif ($user_ans_value == $row['qstn_o4']) {
+                $option_key = 'option4';
+            }
+            
+            // Debug info
+            error_log("Q$sno: Stored answer: $option_key (from: $user_ans_value), Correct: $correct_ans");
+            
+            // Sanitize inputs to prevent SQL injection
+            $sno = mysqli_real_escape_string($conn, $sno);
+            $option_key = mysqli_real_escape_string($conn, $option_key);
+
+            // Save user's answer
+            if (!empty($option_key)) {
+                $save_ans_sql = "INSERT INTO mock_qstn_ans (mock_exid, uname, sno, ans) 
+                               VALUES ('$mock_exid', '$uname', '$sno', '$option_key')";
+                
+                if (!mysqli_query($conn, $save_ans_sql)) {
+                    // Log error but continue processing
+                    error_log("Error saving answer: " . mysqli_error($conn));
+                }
+            }
 
             // Check if the user's answer is correct
-            if (isset($_POST['a' . $sno]) && $_POST['a' . $sno] == $correct_ans) {
+            if ($option_key == $correct_ans) {
                 $cnq++;
             }
         }
@@ -41,10 +110,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             VALUES ('$mock_exid', '$uname', '$nq', '$cnq', '$ptg', '1', '$integrity_score')";
 
     if (mysqli_query($conn, $sql)) {
-        // Redirect to results page
-        header("Location: mock_exams.php?submitted=1");
+        // Get the ID of the inserted attempt
+        $attempt_id = mysqli_insert_id($conn);
+        
+        // Redirect to the new results page
+        header("Location: mock_test_result.php?mock_exid=$mock_exid&attempt_id=$attempt_id");
+        exit;
     } else {
-        echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+        // Log the error and show a user-friendly message
+        error_log("Database error: " . mysqli_error($conn));
+        echo "<h2>Error Processing Your Test</h2>";
+        echo "<p>We encountered an error while processing your test results. Please contact support.</p>";
+        echo "<p><a href='mock_exams.php'>Return to Mock Exams</a></p>";
     }
 } else {
     // If not POST request, redirect to mock exams page
