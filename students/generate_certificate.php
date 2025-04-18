@@ -1117,6 +1117,9 @@ if (mysqli_num_rows($table_check) > 0) {
 
                 // Update status
                 document.getElementById('mint-status-message').textContent = 'Signing and sending blockchain transaction...';
+                
+                // Add a delay to ensure IPFS propagation before sending blockchain transaction
+                await new Promise(resolve => setTimeout(resolve, 2000));
 
                 // REAL BLOCKCHAIN INTERACTION
                 // Use ethers.js to sign and send the transaction
