@@ -19,10 +19,13 @@ $result = mysqli_query($conn, $sql);
 // For debugging
 error_log("Mock exams query for user $uname found " . mysqli_num_rows($result) . " results");
 
-// Also get all mock exams regardless of status for debugging
-$debug_sql = "SELECT * FROM mock_exm_list";
-$debug_result = mysqli_query($conn, $debug_sql);
-error_log("Total mock exams in database: " . mysqli_num_rows($debug_result));
+// Get completed mock exams
+$completed_sql = "SELECT ma.*, me.exname 
+                 FROM mock_atmpt_list ma 
+                 JOIN mock_exm_list me ON ma.mock_exid = me.mock_exid 
+                 WHERE ma.uname = '$uname' AND ma.status = 1 
+                 ORDER BY ma.subtime DESC";
+$completed_result = mysqli_query($conn, $completed_sql);
 
 ?>
 <!DOCTYPE html>
@@ -55,19 +58,28 @@ error_log("Total mock exams in database: " . mysqli_num_rows($debug_result));
         }
 
         @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         .pending-message {
             font-size: 16px;
             color: #555;
             margin-bottom: 15px;
+        }
+        
+        .exmbtn {
+            background-color: #0A2558;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .exmbtn:hover {
+            background-color: #153d8a;
         }
     </style>
 </head>
@@ -142,47 +154,39 @@ error_log("Total mock exams in database: " . mysqli_num_rows($debug_result));
         </nav>
 
         <div class="home-content">
-            <div class="stat-boxes">
-                <div class="recent-stat box" style="width:100%;">
-                    <div class="title" style="text-align:center;">:: Mock Exams ::</div><br>
-                    <div class="stat-details">
-                        <p>Welcome to the Mock Exams section. These practice tests are automatically generated based on your upcoming exams to help you prepare. Each mock exam contains 5 multiple-choice questions, and you'll receive a performance score and an integrity score upon completion.</p>
-                        <p><strong>Note:</strong> Mock exams do not generate NFT certificates.</p>
-                    </div>
+            <?php
+            // Display notification for retry operation
+            if (isset($_GET['retry'])) {
+                if ($_GET['retry'] == 'success') {
+                    $count = isset($_GET['count']) ? (int)$_GET['count'] : 0;
+                    echo '<div style="background-color: #d4edda; color: #155724; padding: 10px; margin: 10px 0; border-radius: 4px;">
+                          <strong>Success!</strong> Retried generation for ' . $count . ' mock exam(s). Please check back in a few minutes.
+                          </div>';
+                } elseif ($_GET['retry'] == 'none') {
+                    echo '<div style="background-color: #f8d7da; color: #721c24; padding: 10px; margin: 10px 0; border-radius: 4px;">
+                          <strong>Notice:</strong> No pending mock exams found to retry.
+                          </div>';
+                }
+            }
+
+            // Check for any pending mock exams
+            $pending_sql = "SELECT * FROM mock_exm_list WHERE status = 'pending'";
+            $pending_result = mysqli_query($conn, $pending_sql);
+
+            if (mysqli_num_rows($pending_result) > 0) {
+                echo '<div class="loading-container">
+                <div class="loading-spinner"></div>
+                <div class="pending-message">Mock exams are being generated. Please check back in a few minutes.</div>
+                <div style="margin-top: 10px;">
+                    <form action="retry_mock_generation.php" method="post">
+                        <button type="submit" name="retry" style="padding: 5px 10px; background-color: #0A2558; color: white; border: none; border-radius: 4px; cursor: pointer;">Retry Generation</button>
+                    </form>
                 </div>
+              </div>';
+            }
+            ?>
 
-                <?php
-                // Display notification for retry operation
-                if (isset($_GET['retry'])) {
-                    if ($_GET['retry'] == 'success') {
-                        $count = isset($_GET['count']) ? (int)$_GET['count'] : 0;
-                        echo '<div style="background-color: #d4edda; color: #155724; padding: 10px; margin: 10px 0; border-radius: 4px;">
-                              <strong>Success!</strong> Retried generation for ' . $count . ' mock exam(s). Please check back in a few minutes.
-                              </div>';
-                    } elseif ($_GET['retry'] == 'none') {
-                        echo '<div style="background-color: #f8d7da; color: #721c24; padding: 10px; margin: 10px 0; border-radius: 4px;">
-                              <strong>Notice:</strong> No pending mock exams found to retry.
-                              </div>';
-                    }
-                }
-
-                // Check for any pending mock exams
-                $pending_sql = "SELECT * FROM mock_exm_list WHERE status = 'pending'";
-                $pending_result = mysqli_query($conn, $pending_sql);
-
-                if (mysqli_num_rows($pending_result) > 0) {
-                    echo '<div class="loading-container">
-                    <div class="loading-spinner"></div>
-                    <div class="pending-message">Mock exams are being generated. Please check back in a few minutes.</div>
-                    <div style="margin-top: 10px;">
-                        <form action="retry_mock_generation.php" method="post">
-                            <button type="submit" name="retry" style="padding: 5px 10px; background-color: #0A2558; color: white; border: none; border-radius: 4px; cursor: pointer;">Retry Generation</button>
-                        </form>
-                    </div>
-                  </div>';
-                }
-                ?>
-
+            <div class="stat-boxes">
                 <div class="recent-stat box" style="padding: 0px 0px; width:90%">
                     <table>
                         <thead>
@@ -230,9 +234,9 @@ error_log("Total mock exams in database: " . mysqli_num_rows($debug_result));
             </div>
 
             <!-- Completed Mock Exams Section -->
-            <div class="stat-boxes">
+            <?php if (mysqli_num_rows($completed_result) > 0) { ?>
+            <div class="stat-boxes" style="margin-top: 30px;">
                 <div class="recent-stat box" style="padding: 0px 0px; width:90%">
-                    <div class="title" style="text-align:center; padding: 20px 0;">:: Completed Mock Exams ::</div>
                     <table>
                         <thead>
                             <tr>
@@ -246,39 +250,28 @@ error_log("Total mock exams in database: " . mysqli_num_rows($debug_result));
                         </thead>
                         <tbody>
                             <?php
-                            $completed_sql = "SELECT ma.*, me.exname 
-                                 FROM mock_atmpt_list ma 
-                                 JOIN mock_exm_list me ON ma.mock_exid = me.mock_exid 
-                                 WHERE ma.uname = '$uname' AND ma.status = 1 
-                                 ORDER BY ma.subtime DESC";
-                            $completed_result = mysqli_query($conn, $completed_sql);
-
-                            if (mysqli_num_rows($completed_result) > 0) {
-                                $i = 1;
-                                while ($row = mysqli_fetch_assoc($completed_result)) {
-                                    echo '<tr>
-                            <td>' . $i . '</td>
-                            <td>' . $row['exname'] . '</td>
-                            <td>' . $row['cnq'] . '/' . $row['nq'] . '</td>
-                            <td>' . $row['ptg'] . '%</td>
-                            <td>' . $row['integrity_score'] . '/100</td>
-                            <td>' . $row['subtime'] . '</td>
-                        </tr>';
-                                    $i++;
-                                }
-                            } else {
-                                echo '<tr><td colspan="6" style="text-align: center;">No completed mock exams.</td></tr>';
+                            $i = 1;
+                            while ($row = mysqli_fetch_assoc($completed_result)) {
+                                echo '<tr>
+                                <td>' . $i . '</td>
+                                <td>' . $row['exname'] . '</td>
+                                <td>' . $row['cnq'] . '/' . $row['nq'] . '</td>
+                                <td>' . $row['ptg'] . '%</td>
+                                <td>' . $row['integrity_score'] . '/100</td>
+                                <td>' . $row['subtime'] . '</td>
+                            </tr>';
+                                $i++;
                             }
                             ?>
                         </tbody>
                     </table>
                 </div>
             </div>
+            <?php } ?>
         </div>
     </section>
 
     <script src="../js/script.js"></script>
-
 </body>
 
 </html>
