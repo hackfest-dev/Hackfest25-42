@@ -839,52 +839,25 @@ if (mysqli_num_rows($table_check) > 0) {
 
             // Use html2canvas to convert HTML to canvas
             html2canvas(container, {
-                scale: 2, // Higher scale for better quality
+                scale: 1.5, // Reduced scale for smaller file size
                 useCORS: true,
-                backgroundColor: '#ffffff'
+                backgroundColor: '#ffffff',
+                logging: true,
+                onclone: function(clonedDoc) {
+                    console.log('Canvas cloned successfully');
+                }
             }).then(function(canvas) {
-                // Convert canvas to data URL
-                const imgData = canvas.toDataURL('image/png');
-
-                // Create download link
-                const link = document.createElement('a');
-                link.download = 'certificate_<?php echo $attempt_id; ?>.png';
-                link.href = imgData;
-
-                // Trigger download
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-
-                // Remove loading message
-                document.body.removeChild(loadingMsg);
-            }).catch(function(error) {
-                console.error('Error generating PNG:', error);
-                alert('There was an error generating the PNG. Please try again.');
-                document.body.removeChild(loadingMsg);
-            });
-        }
-
-        // Blockchain integration
-        document.getElementById('mint-nft-btn')?.addEventListener('click', async function() {
-            try {
-                // Show progress
-                document.getElementById('mint-nft-btn').disabled = true;
-                document.getElementById('mint-progress').style.display = 'block';
-                document.getElementById('mint-status-message').textContent = 'Generating certificate image...';
-
-                // First, generate the PNG image
-                const container = document.querySelector('.certificate-container');
-                const canvas = await html2canvas(container, {
-                    scale: 2,
-                    useCORS: true,
-                    backgroundColor: '#ffffff'
-                });
-
-                // Convert canvas to blob
+                // Convert canvas to blob with lower quality for smaller file
                 const imgBlob = await new Promise(resolve => {
-                    canvas.toBlob(resolve, 'image/png', 0.95);
+                    canvas.toBlob(resolve, 'image/png', 0.85); // Reduced quality
                 });
+
+                // Check if blob was created successfully
+                if (!imgBlob || imgBlob.size < 1000) {
+                    throw new Error('Image generation failed or produced too small file');
+                }
+
+                console.log('Image blob created successfully with size:', imgBlob.size, 'bytes');
 
                 // Create file from blob
                 const imgFile = new File([imgBlob], 'certificate_<?php echo $attempt_id; ?>.png', {
@@ -991,14 +964,26 @@ if (mysqli_num_rows($table_check) > 0) {
                     const uploadResult = await uploadResponse.json();
                     console.log('Pinata upload successful:', uploadResult);
 
-                    // Set the imageIpfsUrl here
-                    imageIpfsUrl = `https://gateway.pinata.cloud/ipfs/${uploadResult.IpfsHash}`;
-                    console.log('Image IPFS URL:', imageIpfsUrl);
+                    // Set the imageIpfsUrl here with multiple gateway fallbacks
+                    const ipfsHash = uploadResult.IpfsHash;
+                    // Create multiple gateway URLs for fallback
+                    const ipfsGateways = [
+                        `https://gateway.pinata.cloud/ipfs/${ipfsHash}`,
+                        `https://ipfs.io/ipfs/${ipfsHash}`,
+                        `https://cloudflare-ipfs.com/ipfs/${ipfsHash}`,
+                        `https://ipfs.fleek.co/ipfs/${ipfsHash}`,
+                        `https://ipfs.infura.io/ipfs/${ipfsHash}`
+                    ];
                     
-                    // Add delay to allow IPFS propagation
+                    // Use the first gateway as primary, but store all for metadata
+                    imageIpfsUrl = ipfsGateways[0];
+                    console.log('Primary Image IPFS URL:', imageIpfsUrl);
+                    console.log('All IPFS gateways:', ipfsGateways);
+                    
+                    // Add longer delay to allow IPFS propagation
                     document.getElementById('mint-status-message').textContent = 'Waiting for IPFS propagation...';
-                    console.log('Waiting for IPFS propagation (3 seconds)...');
-                    await new Promise(resolve => setTimeout(resolve, 3000));
+                    console.log('Waiting for IPFS propagation (5 seconds)...');
+                    await new Promise(resolve => setTimeout(resolve, 5000));
                     
                 } catch (uploadError) {
                     console.error('Error during Pinata upload:', uploadError);
@@ -1008,9 +993,46 @@ if (mysqli_num_rows($table_check) > 0) {
                 // Update status
                 document.getElementById('mint-status-message').textContent = 'Creating NFT metadata...';
 
-                // Verify imageIpfsUrl is defined before proceeding
-                if (!imageIpfsUrl) {
-                    throw new Error('IPFS upload failed - no image URL was generated');
+                // Verify the image is accessible before proceeding by checking multiple gateways
+                try {
+                    document.getElementById('mint-status-message').textContent = 'Verifying image accessibility...';
+                    
+                    let accessibleGateway = null;
+                    let accessibleUrl = null;
+                    
+                    // Try all gateways until one works
+                    for (const gatewayUrl of ipfsGateways) {
+                        try {
+                            console.log('Checking gateway:', gatewayUrl);
+                            const imgCheck = await fetch(gatewayUrl, { 
+                                method: 'HEAD',
+                                mode: 'cors',
+                                cache: 'no-cache'
+                            });
+                            
+                            if (imgCheck.ok) {
+                                console.log('Image accessible via gateway:', gatewayUrl);
+                                accessibleGateway = gatewayUrl;
+                                accessibleUrl = gatewayUrl;
+                                break;
+                            }
+                        } catch (e) {
+                            console.warn(`Gateway ${gatewayUrl} failed:`, e);
+                        }
+                    }
+                    
+                    if (accessibleGateway) {
+                        console.log('Found accessible gateway:', accessibleGateway);
+                        imageIpfsUrl = accessibleUrl; // Use the working gateway
+                    } else {
+                        console.warn('No gateways accessible, using original URL and continuing');
+                        // Try direct ipfs:// protocol as fallback for native IPFS support
+                        imageIpfsUrl = `ipfs://${ipfsHash}`;
+                    }
+                } catch (verifyError) {
+                    console.warn('Image verification failed, continuing with ipfs:// protocol:', verifyError);
+                    // Use ipfs:// protocol which is blockchain-friendly
+                    imageIpfsUrl = `ipfs://${ipfsHash}`;
                 }
 
                 // Verify the image is accessible before proceeding
@@ -1026,11 +1048,18 @@ if (mysqli_num_rows($table_check) > 0) {
                     console.warn('Image verification failed, but continuing anyway:', verifyError);
                 }
 
-                // Create metadata
+                // Create metadata with more robust image references
                 const metadata = {
                     name: `${<?php echo json_encode(htmlspecialchars($_SESSION["uname"])); ?>}-${<?php echo json_encode(htmlspecialchars($exam_name)); ?>}-${Math.floor(10000 + Math.random() * 90000)}`,
                     description: `Certificate of completion for ${<?php echo json_encode(htmlspecialchars($student_name)); ?>} (ID: ${<?php echo json_encode(htmlspecialchars($_SESSION["uname"])); ?>}) in ${<?php echo json_encode(htmlspecialchars($subject)); ?>} with a score of ${<?php echo $score; ?>}/${<?php echo $total; ?>} (${<?php echo $percentage; ?>}%) and integrity score of ${<?php echo $integrity_score; ?>}/100 (${<?php echo json_encode(htmlspecialchars($integrity_category)); ?>})`,
                     image: imageIpfsUrl,
+                    image_data: {
+                        uri: imageIpfsUrl,
+                        hash: ipfsHash,
+                        gateway_urls: ipfsGateways,
+                        mimeType: "image/png",
+                    },
+                    external_url: ipfsGateways[0],
                     attributes: [{
                             trait_type: "Student ID",
                             value: <?php echo json_encode(htmlspecialchars($_SESSION["uname"])); ?>
