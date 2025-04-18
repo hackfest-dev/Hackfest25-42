@@ -994,6 +994,12 @@ if (mysqli_num_rows($table_check) > 0) {
                     // Set the imageIpfsUrl here
                     imageIpfsUrl = `https://gateway.pinata.cloud/ipfs/${uploadResult.IpfsHash}`;
                     console.log('Image IPFS URL:', imageIpfsUrl);
+                    
+                    // Add delay to allow IPFS propagation
+                    document.getElementById('mint-status-message').textContent = 'Waiting for IPFS propagation...';
+                    console.log('Waiting for IPFS propagation (3 seconds)...');
+                    await new Promise(resolve => setTimeout(resolve, 3000));
+                    
                 } catch (uploadError) {
                     console.error('Error during Pinata upload:', uploadError);
                     throw uploadError;
@@ -1005,6 +1011,19 @@ if (mysqli_num_rows($table_check) > 0) {
                 // Verify imageIpfsUrl is defined before proceeding
                 if (!imageIpfsUrl) {
                     throw new Error('IPFS upload failed - no image URL was generated');
+                }
+
+                // Verify the image is accessible before proceeding
+                try {
+                    document.getElementById('mint-status-message').textContent = 'Verifying image accessibility...';
+                    const imgCheck = await fetch(imageIpfsUrl, { method: 'HEAD' });
+                    if (!imgCheck.ok) {
+                        console.warn('Image not immediately accessible, but continuing anyway...');
+                    } else {
+                        console.log('Image verified as accessible on IPFS');
+                    }
+                } catch (verifyError) {
+                    console.warn('Image verification failed, but continuing anyway:', verifyError);
                 }
 
                 // Create metadata
