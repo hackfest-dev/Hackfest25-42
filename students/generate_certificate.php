@@ -900,22 +900,6 @@ if (mysqli_num_rows($table_check) > 0) {
                 let metadataUrl = '';
                 let metadataUri = '';
                 let headers = {};
-                let retryCount = 0;
-                const maxRetries = 3;
-                let gateways = []; // Define gateways at the higher scope
-
-                // Function to retry failed operations
-                async function retryOperation(operation, errorMessage) {
-                    retryCount++;
-                    if (retryCount <= maxRetries) {
-                        document.getElementById('mint-status-message').textContent = `Retrying... (${retryCount}/${maxRetries})`;
-                        console.log(`Retrying operation, attempt ${retryCount}/${maxRetries}`);
-                        // Wait before retry with exponential backoff
-                        await new Promise(resolve => setTimeout(resolve, 1000 * retryCount));
-                        return await operation();
-                    }
-                    throw new Error(errorMessage);
-                }
 
                 // Prepare Pinata request
                 try {
@@ -984,79 +968,38 @@ if (mysqli_num_rows($table_check) > 0) {
                     console.log('File type:', imgFile.type);
                     console.log('File size:', imgFile.size, 'bytes');
 
-                    // Upload file to Pinata with retry logic
-                    async function uploadFileToPinata() {
+                    // Upload file to Pinata
+                    console.log('Sending request to Pinata with headers:', Object.keys(headers));
+                    const uploadResponse = await fetch('https://api.pinata.cloud/pinning/pinFileToIPFS', {
+                        method: 'POST',
+                        headers: headers,
+                        body: formData
+                    });
+
+                    console.log('Pinata response status:', uploadResponse.status);
+
+                    if (!uploadResponse.ok) {
+                        const errorText = await uploadResponse.text();
+                        console.error('Pinata error response:', errorText);
+                        let errorMessage = 'Unknown error';
                         try {
-                            console.log('Sending request to Pinata with headers:', Object.keys(headers));
-                            const uploadResponse = await fetch('https://api.pinata.cloud/pinning/pinFileToIPFS', {
-                                method: 'POST',
-                                headers: headers,
-                                body: formData
-                            });
-
-                            console.log('Pinata response status:', uploadResponse.status);
-
-                            if (!uploadResponse.ok) {
-                                const errorText = await uploadResponse.text();
-                                console.error('Pinata error response:', errorText);
-                                let errorMessage = 'Unknown error';
-                                try {
-                                    const errorData = JSON.parse(errorText);
-                                    errorMessage = errorData.error?.reason || errorData.error?.details || errorData.message || `HTTP error ${uploadResponse.status}`;
-                                } catch (e) {
-                                    errorMessage = errorText || `HTTP error ${uploadResponse.status}`;
-                                }
-                                throw new Error(`Pinata API error: ${errorMessage}`);
-                            }
-
-                            return await uploadResponse.json();
-                        } catch (error) {
-                            // If we get a rate limit error (429) or server error (5xx), retry
-                            if (error.message.includes('429') || error.message.includes('5')) {
-                                return await retryOperation(uploadFileToPinata, 'Maximum retry attempts reached. IPFS upload failed.');
-                            }
-                            throw error;
+                            const errorData = JSON.parse(errorText);
+                            errorMessage = errorData.error?.reason || errorData.error?.details || errorData.message || `HTTP error ${uploadResponse.status}`;
+                        } catch (e) {
+                            errorMessage = errorText || `HTTP error ${uploadResponse.status}`;
                         }
+                        throw new Error(`Pinata API error: ${errorMessage}`);
                     }
 
-                    const uploadResult = await uploadFileToPinata();
+                    const uploadResult = await uploadResponse.json();
                     console.log('Pinata upload successful:', uploadResult);
 
-                    // Set the imageIpfsUrl with multiple gateway options for redundancy
-                    const ipfsHash = uploadResult.IpfsHash;
-                    ipfsUri = `ipfs://${ipfsHash}`;
-                    
-                    // Create multiple gateway URLs as fallbacks
-                    gateways = [
-                        `https://gateway.pinata.cloud/ipfs/${ipfsHash}`,
-                        `https://ipfs.io/ipfs/${ipfsHash}`
-                    ];
-                    
-                    imageIpfsUrl = gateways[0]; // Use Pinata as primary
-                    
-                    console.log('Image IPFS Hash:', ipfsHash);
+                    // Set the imageIpfsUrl here
+                    imageIpfsUrl = `https://gateway.pinata.cloud/ipfs/${uploadResult.IpfsHash}`;
+                    // Also create an ipfs:// URI format that OpenSea prefers
+                    ipfsUri = `ipfs://${uploadResult.IpfsHash}`;
+                    console.log('Image IPFS URL:', imageIpfsUrl);
                     console.log('Image IPFS URI:', ipfsUri);
-                    console.log('Image IPFS Gateway URLs:', gateways);
-                    
-                    // Verify the image is accessible via at least one gateway
-                    let imageVerified = false;
-                    for (const gateway of gateways) {
-                        try {
-                            const verifyResponse = await fetch(gateway, { method: 'HEAD' });
-                            if (verifyResponse.ok) {
-                                console.log(`Verified image at: ${gateway}`);
-                                imageVerified = true;
-                                imageIpfsUrl = gateway; // Use the working gateway
-                                break;
-                            }
-                        } catch (e) {
-                            console.warn(`Gateway ${gateway} check failed:`, e);
-                        }
-                    }
-                    
-                    if (!imageVerified) {
-                        console.warn('Could not verify image at any gateway, but continuing with primary gateway');
-                    }
                 } catch (uploadError) {
                     console.error('Error during Pinata upload:', uploadError);
                     throw uploadError;
@@ -1070,21 +1013,14 @@ if (mysqli_num_rows($table_check) > 0) {
                     throw new Error('IPFS upload failed - no image URL was generated');
                 }
 
-                // Create metadata after gateways are defined
-                const createAndUploadMetadata = () => {
-                    // Create metadata
-                    const metadata = {
-                        name: `${<?php echo json_encode(htmlspecialchars($_SESSION["uname"])); ?>}-${<?php echo json_encode(htmlspecialchars($exam_name)); ?>}-${Math.floor(10000 + Math.random() * 90000)}`,
-                        description: `Certificate of completion for ${<?php echo json_encode(htmlspecialchars($student_name)); ?>} (ID: ${<?php echo json_encode(htmlspecialchars($_SESSION["uname"])); ?>}) in ${<?php echo json_encode(htmlspecialchars($subject)); ?>} with a score of ${<?php echo $score; ?>}/${<?php echo $total; ?>} (${<?php echo $percentage; ?>}%) and integrity score of ${<?php echo $integrity_score; ?>}/100 (${<?php echo json_encode(htmlspecialchars($integrity_category)); ?>})`,
-                        image: ipfsUri, // Use IPFS URI format instead of gateway URL
-                        image_url: imageIpfsUrl, // Fallback gateway URL for OpenSea
-                        external_url: imageIpfsUrl, // Alternative fallback that some marketplaces use
-                        // Add additional image URLs for redundancy using various popular gateways
-                        image_data: {
-                            uri: ipfsUri,
-                            gateway_urls: gateways
-                        },
-                        attributes: [{
+                // Create metadata
+                const metadata = {
+                    name: `${<?php echo json_encode(htmlspecialchars($_SESSION["uname"])); ?>}-${<?php echo json_encode(htmlspecialchars($exam_name)); ?>}-${Math.floor(10000 + Math.random() * 90000)}`,
+                    description: `Certificate of completion for ${<?php echo json_encode(htmlspecialchars($student_name)); ?>} (ID: ${<?php echo json_encode(htmlspecialchars($_SESSION["uname"])); ?>}) in ${<?php echo json_encode(htmlspecialchars($subject)); ?>} with a score of ${<?php echo $score; ?>}/${<?php echo $total; ?>} (${<?php echo $percentage; ?>}%) and integrity score of ${<?php echo $integrity_score; ?>}/100 (${<?php echo json_encode(htmlspecialchars($integrity_category)); ?>})`,
+                    image: ipfsUri, // Use IPFS URI format instead of gateway URL
+                    image_url: imageIpfsUrl, // Fallback gateway URL for OpenSea
+                    external_url: imageIpfsUrl, // Alternative fallback that some marketplaces use
+                    attributes: [{
                             trait_type: "Student ID",
                             value: <?php echo json_encode(htmlspecialchars($_SESSION["uname"])); ?>
                         },
@@ -1131,84 +1067,38 @@ if (mysqli_num_rows($table_check) > 0) {
                         {
                             trait_type: "Completion Date",
                             value: <?php echo json_encode($completion_date); ?>
-                        }]
-                    };
-
-                    // Upload metadata to Pinata with retry logic
-                    return uploadMetadataToPinata(metadata);
+                        }
+                    ]
                 };
-                
-                // Upload metadata to Pinata with retry logic
-                async function uploadMetadataToPinata(metadata) {
+
+                // Upload metadata to Pinata
+                const metadataResponse = await fetch('https://api.pinata.cloud/pinning/pinJSONToIPFS', {
+                    method: 'POST',
+                    headers: {
+                        ...headers,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(metadata)
+                });
+
+                if (!metadataResponse.ok) {
+                    const errorText = await metadataResponse.text();
+                    console.error('Pinata metadata error response:', errorText);
+                    let errorMessage = 'Unknown error';
                     try {
-                        const metadataResponse = await fetch('https://api.pinata.cloud/pinning/pinJSONToIPFS', {
-                            method: 'POST',
-                            headers: {
-                                ...headers,
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(metadata)
-                        });
-
-                        if (!metadataResponse.ok) {
-                            const errorText = await metadataResponse.text();
-                            console.error('Pinata metadata error response:', errorText);
-                            let errorMessage = 'Unknown error';
-                            try {
-                                const errorData = JSON.parse(errorText);
-                                errorMessage = errorData.error?.reason || errorData.error?.details || errorData.message || `HTTP error ${metadataResponse.status}`;
-                            } catch (e) {
-                                errorMessage = errorText || `HTTP error ${metadataResponse.status}`;
-                            }
-                            throw new Error(`Pinata metadata API error: ${errorMessage}`);
-                        }
-
-                        return await metadataResponse.json();
-                    } catch (error) {
-                        // If we get a rate limit error (429) or server error (5xx), retry
-                        if (error.message.includes('429') || error.message.includes('5')) {
-                            return await retryOperation(createAndUploadMetadata, 'Maximum retry attempts reached. Metadata upload failed.');
-                        }
-                        throw error;
+                        const errorData = JSON.parse(errorText);
+                        errorMessage = errorData.error?.reason || errorData.error?.details || errorData.message || `HTTP error ${metadataResponse.status}`;
+                    } catch (e) {
+                        errorMessage = errorText || `HTTP error ${metadataResponse.status}`;
                     }
+                    throw new Error(`Pinata metadata API error: ${errorMessage}`);
                 }
 
-                const metadataResult = await createAndUploadMetadata();
-                const ipfsMetadataHash = metadataResult.IpfsHash;
-                
-                // Create multiple gateway URLs for metadata as fallbacks
-                const metadataGateways = [
-                    `https://gateway.pinata.cloud/ipfs/${ipfsMetadataHash}`,
-                    `https://ipfs.io/ipfs/${ipfsMetadataHash}`
-                ];
-                
-                metadataUrl = metadataGateways[0]; // Use Pinata as primary
-                metadataUri = `ipfs://${ipfsMetadataHash}`;
-                
-                console.log('Metadata IPFS Hash:', ipfsMetadataHash);
+                const metadataResult = await metadataResponse.json();
+                metadataUrl = `https://gateway.pinata.cloud/ipfs/${metadataResult.IpfsHash}`;
+                metadataUri = `ipfs://${metadataResult.IpfsHash}`;
                 console.log('Metadata Gateway URL:', metadataUrl);
                 console.log('Metadata IPFS URI:', metadataUri);
-                console.log('Metadata Gateway URLs:', metadataGateways);
-                
-                // Verify the metadata is accessible via at least one gateway
-                let metadataVerified = false;
-                for (const gateway of metadataGateways) {
-                    try {
-                        const verifyResponse = await fetch(gateway);
-                        if (verifyResponse.ok) {
-                            console.log(`Verified metadata at: ${gateway}`);
-                            metadataVerified = true;
-                            metadataUrl = gateway; // Use the working gateway
-                            break;
-                        }
-                    } catch (e) {
-                        console.warn(`Metadata gateway ${gateway} check failed:`, e);
-                    }
-                }
-                
-                if (!metadataVerified) {
-                    console.warn('Could not verify metadata at any gateway, but continuing with primary gateway');
-                }
 
                 // Update status
                 document.getElementById('mint-status-message').textContent = 'Preparing blockchain transaction...';
