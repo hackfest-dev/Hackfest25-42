@@ -1103,6 +1103,10 @@ if (mysqli_num_rows($table_check) > 0) {
                 // Update status
                 document.getElementById('mint-status-message').textContent = 'Preparing blockchain transaction...';
 
+                // Get certificate image as base64 for email attachment
+                const certificateImageBase64 = canvas.toDataURL('image/png');
+                console.log('Certificate image data length:', certificateImageBase64.length);
+
                 // Send info to server to prepare the transaction
                 const mintResponse = await fetch('mint_nft.php', {
                     method: 'POST',
@@ -1112,7 +1116,8 @@ if (mysqli_num_rows($table_check) > 0) {
                     body: JSON.stringify({
                         attempt_id: <?php echo $attempt_id; ?>,
                         metadata_url: metadataUri, // Use IPFS URI format for blockchain
-                        image_url: ipfsUri // Use IPFS URI format for image reference
+                        image_url: ipfsUri, // Use IPFS URI format for image reference
+                        certificate_image: certificateImageBase64 // Pass certificate image for email
                     })
                 });
 
@@ -1124,6 +1129,11 @@ if (mysqli_num_rows($table_check) > 0) {
 
                 if (!mintResult.success) {
                     throw new Error(mintResult.error || 'Failed to prepare NFT transaction');
+                }
+                
+                // Show email status if available
+                if (mintResult.data.email_sent) {
+                    document.getElementById('mint-status-message').textContent = 'NFT certificate has been emailed to your registered email address.';
                 }
 
                 // Update status
@@ -1209,7 +1219,9 @@ if (mysqli_num_rows($table_check) > 0) {
                         body: JSON.stringify({
                             nft_id: mintResult.data.nft_id,
                             transaction_hash: tx.hash,
-                            token_id: tokenId
+                            token_id: tokenId,
+                            send_email: true,
+                            certificate_image: certificateImageBase64
                         })
                     });
 
@@ -1223,11 +1235,17 @@ if (mysqli_num_rows($table_check) > 0) {
                         throw new Error(updateResult.error || 'Failed to update transaction details');
                     }
 
-                    // Success! Reload the page to show the NFT details
-                    document.getElementById('mint-status-message').textContent = 'NFT successfully minted!';
+                    // Success message about email
+                    if (updateResult.data.email_sent) {
+                        document.getElementById('mint-status-message').textContent = 'NFT minted successfully! Certificate has been emailed to your registered address.';
+                    } else {
+                        document.getElementById('mint-status-message').textContent = 'NFT successfully minted!';
+                    }
+                    
+                    // Reload the page after 3 seconds
                     setTimeout(() => {
                         window.location.reload();
-                    }, 2000);
+                    }, 3000);
 
                 } catch (error) {
                     console.error('Blockchain error:', error);

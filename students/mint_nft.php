@@ -1,4 +1,34 @@
 <?php
+// Ensure all errors are caught and not displayed directly
+ini_set('display_errors', 0);
+error_reporting(E_ALL);
+
+// Set up custom error handler to ensure JSON output instead of HTML
+function json_error_handler($errno, $errstr, $errfile, $errline) {
+    header('Content-Type: application/json');
+    echo json_encode([
+        'success' => false,
+        'error' => "Server error: $errstr in $errfile on line $errline",
+        'error_type' => $errno
+    ]);
+    exit();
+}
+set_error_handler('json_error_handler', E_ALL);
+
+// Catch fatal errors
+register_shutdown_function(function() {
+    $error = error_get_last();
+    if ($error !== null && in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {
+        header('Content-Type: application/json');
+        echo json_encode([
+            'success' => false,
+            'error' => "Fatal error: {$error['message']} in {$error['file']} on line {$error['line']}",
+            'error_type' => $error['type']
+        ]);
+    }
+});
+
+// Start session and check authentication
 session_start();
 if (!isset($_SESSION["uname"])) {
     header('Content-Type: application/json');
@@ -6,9 +36,19 @@ if (!isset($_SESSION["uname"])) {
     exit();
 }
 
-// Include database connection and Web3Helper
-include '../config.php';
-require_once 'Web3Helper.php';
+// Include database connection, Web3Helper, and mailer utility
+try {
+    include '../config.php';
+    require_once 'Web3Helper.php';
+    require_once '../utils/mailer.php';
+} catch (Exception $e) {
+    header('Content-Type: application/json');
+    echo json_encode([
+        'success' => false, 
+        'error' => 'Failed to include required files: ' . $e->getMessage()
+    ]);
+    exit();
+}
 
 // Direct blockchain configuration values (hardcoded)
 // The nft/.env file is no longer required with this approach
@@ -22,12 +62,21 @@ $env_vars = [
 error_log("mint_nft.php: Using hardcoded blockchain configuration values");
 
 // Get JSON data from POST request
-$json_data = file_get_contents('php://input');
-$data = json_decode($json_data, true);
+try {
+    $json_data = file_get_contents('php://input');
+    $data = json_decode($json_data, true);
 
-if (!$data || !isset($data['attempt_id']) || !isset($data['metadata_url'])) {
+    if (!$data || !isset($data['attempt_id']) || !isset($data['metadata_url'])) {
+        header('Content-Type: application/json');
+        echo json_encode(['success' => false, 'error' => 'Invalid request data']);
+        exit();
+    }
+} catch (Exception $e) {
     header('Content-Type: application/json');
-    echo json_encode(['success' => false, 'error' => 'Invalid request data']);
+    echo json_encode([
+        'success' => false, 
+        'error' => 'Failed to parse request data: ' . $e->getMessage()
+    ]);
     exit();
 }
 
@@ -35,6 +84,9 @@ $attempt_id = intval($data['attempt_id']);
 $metadata_url = $data['metadata_url'];
 $image_url = $data['image_url'] ?? '';
 $uname = $_SESSION['uname'];
+
+// Certificate image may be passed as base64 data
+$certificate_image = isset($data['certificate_image']) ? $data['certificate_image'] : null;
 
 // Verify this attempt belongs to the logged-in user
 $verify_sql = "SELECT * FROM atmpt_list WHERE id = $attempt_id AND uname = '$uname'";
@@ -118,6 +170,67 @@ if (mysqli_query($conn, $insert_sql)) {
     // Prepare the data for the client
     $txData = $mintResult['data']['tx_data'] ?? [];
     
+    // Save certificate image for email attachment
+    $certificate_path = null;
+    $email_sent = false;
+    
+    // Process certificate image if available
+    if ($certificate_image) {
+        try {
+            // Ensure the certificates directory exists
+            $certificates_dir = '../certificates';
+            if (!file_exists($certificates_dir)) {
+                if (!mkdir($certificates_dir, 0755, true)) {
+                    error_log("Failed to create certificates directory: $certificates_dir");
+                }
+            }
+            
+            if (!is_writable($certificates_dir)) {
+                error_log("Certificates directory is not writable: $certificates_dir");
+            } else {
+                // Save the certificate image
+                $certificate_path = $certificates_dir . "/certificate_{$uname}_{$attempt_id}.png";
+                $save_success = false;
+                
+                // If image is base64 encoded
+                if (strpos($certificate_image, 'base64,') !== false) {
+                    error_log("Received base64 image data of length: " . strlen($certificate_image));
+                    list($mime_type, $base64_data) = explode('base64,', $certificate_image, 2);
+                    error_log("MIME type: $mime_type, Data length: " . strlen($base64_data));
+                    
+                    $image_data = base64_decode($base64_data, true);
+                    if ($image_data !== false) {
+                        $save_success = file_put_contents($certificate_path, $image_data) !== false;
+                        error_log("Base64 decode and save " . ($save_success ? "successful" : "failed"));
+                    } else {
+                        error_log("Failed to decode base64 certificate image for {$uname}");
+                    }
+                }
+                // If image is a URL
+                else if (filter_var($certificate_image, FILTER_VALIDATE_URL)) {
+                    $certificate_content = @file_get_contents($certificate_image);
+                    if ($certificate_content !== false) {
+                        $save_success = file_put_contents($certificate_path, $certificate_content) !== false;
+                    } else {
+                        error_log("Failed to fetch certificate image from URL for {$uname}");
+                    }
+                }
+                
+                if (!$save_success) {
+                    error_log("Failed to save certificate image to: $certificate_path");
+                }
+                
+                // Send email with certificate attachment if image was saved successfully
+                if ($save_success && file_exists($certificate_path)) {
+                    $email_sent = send_nft_certificate_email($uname, $attempt_id, $certificate_path);
+                    error_log("Email sending " . ($email_sent ? "successful" : "failed") . " for {$uname}");
+                }
+            }
+        } catch (Exception $e) {
+            error_log("Exception processing certificate image: " . $e->getMessage());
+        }
+    }
+    
     // Return the transaction data for client-side processing
     header('Content-Type: application/json');
     echo json_encode([
@@ -132,7 +245,8 @@ if (mysqli_query($conn, $insert_sql)) {
             'image_url' => $image_url,
             'rpc_url' => $rpcUrl,
             'private_key' => $privateKey,
-            'tx_data' => $txData
+            'tx_data' => $txData,
+            'email_sent' => $email_sent
         ]
     ]);
 } else {
