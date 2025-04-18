@@ -894,8 +894,11 @@ if (mysqli_num_rows($table_check) > 0) {
                 // Update status
                 document.getElementById('mint-status-message').textContent = 'Uploading certificate to IPFS...';
 
-                // Define imageIpfsUrl at a higher scope
+                // Define imageIpfsUrl and ipfsUri at a higher scope
                 let imageIpfsUrl = '';
+                let ipfsUri = '';
+                let metadataUrl = '';
+                let metadataUri = '';
                 let headers = {};
 
                 // Prepare Pinata request
@@ -994,7 +997,7 @@ if (mysqli_num_rows($table_check) > 0) {
                     // Set the imageIpfsUrl here
                     imageIpfsUrl = `https://gateway.pinata.cloud/ipfs/${uploadResult.IpfsHash}`;
                     // Also create an ipfs:// URI format that OpenSea prefers
-                    const ipfsUri = `ipfs://${uploadResult.IpfsHash}`;
+                    ipfsUri = `ipfs://${uploadResult.IpfsHash}`;
                     console.log('Image IPFS URL:', imageIpfsUrl);
                     console.log('Image IPFS URI:', ipfsUri);
                 } catch (uploadError) {
@@ -1092,8 +1095,8 @@ if (mysqli_num_rows($table_check) > 0) {
                 }
 
                 const metadataResult = await metadataResponse.json();
-                const metadataUrl = `https://gateway.pinata.cloud/ipfs/${metadataResult.IpfsHash}`;
-                const metadataUri = `ipfs://${metadataResult.IpfsHash}`;
+                metadataUrl = `https://gateway.pinata.cloud/ipfs/${metadataResult.IpfsHash}`;
+                metadataUri = `ipfs://${metadataResult.IpfsHash}`;
                 console.log('Metadata Gateway URL:', metadataUrl);
                 console.log('Metadata IPFS URI:', metadataUri);
 
