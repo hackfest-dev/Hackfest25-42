@@ -969,10 +969,7 @@ if (mysqli_num_rows($table_check) > 0) {
                     // Create multiple gateway URLs for fallback
                     const ipfsGateways = [
                         `https://gateway.pinata.cloud/ipfs/${ipfsHash}`,
-                        `https://ipfs.io/ipfs/${ipfsHash}`,
-                        `https://cloudflare-ipfs.com/ipfs/${ipfsHash}`,
-                        `https://ipfs.fleek.co/ipfs/${ipfsHash}`,
-                        `https://ipfs.infura.io/ipfs/${ipfsHash}`
+                        `https://ipfs.io/ipfs/${ipfsHash}`
                     ];
                     
                     // Use the first gateway as primary, but store all for metadata
