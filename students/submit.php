@@ -44,12 +44,16 @@ if (isset($_POST["exid"])) {
 
     // Determine the integrity category
     $integrity_category = '';
-    if ($integrity_score >= 75) {
+    if ($integrity_score >= 90) {
+        $integrity_category = 'Excellent';
+    } else if ($integrity_score >= 80) {
         $integrity_category = 'Good';
-    } else if ($integrity_score >= 50) {
-        $integrity_category = 'At-Risk';
+    } else if ($integrity_score >= 70) {
+        $integrity_category = 'Fair';
+    } else if ($integrity_score >= 60) {
+        $integrity_category = 'Poor';
     } else {
-        $integrity_category = 'Cheating Suspicion';
+        $integrity_category = 'Very Poor';
     }
 
     // First, alter the table to add the new columns if they don't exist yet

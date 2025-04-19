@@ -38,7 +38,7 @@ while ($rowd = mysqli_fetch_array($res)) {
     $nq = $rowd['nq'];
     $exname = $rowd['exname'];
     $desp = $rowd['desp'];
-    
+
     // Set a fixed duration of 10 minutes for all mock tests
     $duration = 10;
 }
@@ -158,27 +158,27 @@ while ($rowd = mysqli_fetch_array($res)) {
         var testDuration = <?php echo $duration; ?> * 60 * 1000; // Convert minutes to milliseconds
         var startTime = new Date().getTime();
         var endTime = startTime + testDuration;
-        
+
         // Update the countdown every 1 second
         var x = setInterval(function() {
-          // Get current time
-          var now = new Date().getTime();
-          // Calculate remaining time
-          var distance = endTime - now;
-          
-          // Time calculations for hours, minutes and seconds
-          var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-          var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-          var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-          
-          // Display the timer
-          document.getElementById("time").innerHTML = "Timer: " + hours + "h " + minutes + "m " + seconds + "s";
-          
-          // If timer expires, submit the form
-          if (distance < 0) {
-            clearInterval(x);
-            document.getElementById("form1").submit();
-          }
+            // Get current time
+            var now = new Date().getTime();
+            // Calculate remaining time
+            var distance = endTime - now;
+
+            // Time calculations for hours, minutes and seconds
+            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Display the timer
+            document.getElementById("time").innerHTML = "Timer: " + hours + "h " + minutes + "m " + seconds + "s";
+
+            // If timer expires, submit the form
+            if (distance < 0) {
+                clearInterval(x);
+                document.getElementById("form1").submit();
+            }
         }, 1000);
     </script>
 
@@ -231,12 +231,18 @@ while ($rowd = mysqli_fetch_array($res)) {
 
                 // Update colors based on category
                 let categoryColor, borderColor;
-                if (category === 'Good') {
+                if (category === 'Excellent') {
                     categoryColor = '#28a745'; // green
                     borderColor = '#28a745';
-                } else if (category === 'At-Risk') {
+                } else if (category === 'Good') {
+                    categoryColor = '#4caf50'; // green
+                    borderColor = '#4caf50';
+                } else if (category === 'Fair') {
                     categoryColor = '#ffc107'; // yellow
                     borderColor = '#ffc107';
+                } else if (category === 'Poor') {
+                    categoryColor = '#ff9800'; // orange
+                    borderColor = '#ff9800';
                 } else {
                     categoryColor = '#dc3545'; // red
                     borderColor = '#dc3545';
@@ -401,28 +407,90 @@ while ($rowd = mysqli_fetch_array($res)) {
             // Function to log violations to the server
             function logViolation(violationType) {
                 if (!examInitialized) return; // Don't log violations before exam starts
-                
-                fetch('log_mock_violation.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        mock_exam_id: examId,
-                        violation_type: violationType
+
+                console.log('Logging violation:', violationType, 'for exam ID:', examId);
+
+                fetch('debug_log_mock_violation.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            mock_exam_id: examId,
+                            violation_type: violationType
+                        })
                     })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        // Update integrity score display
-                        updateIntegrityDisplay(data.integrity_score, data.integrity_category);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error logging violation:', error);
-                });
+                    .then(response => {
+                        console.log('Response status:', response.status);
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('Violation response:', data);
+                        if (data.status === 'success') {
+                            // Update integrity score display
+                            console.log('Updating integrity score to:', data.integrity_score);
+                            updateIntegrityDisplay(data.integrity_score, data.integrity_category);
+
+                            // Force submit if integrity score falls below threshold
+                            if (data.integrity_score < 20) {
+                                showWarning(`
+                            <strong>⚠️ CRITICAL INTEGRITY VIOLATION!</strong><br>
+                            Your integrity score has fallen below the minimum threshold.<br>
+                            Your exam will be automatically submitted in 5 seconds.
+                        `);
+
+                                setTimeout(() => {
+                                    alert("Your exam is being submitted due to critical integrity violations. Your final integrity score is: " + data.integrity_score);
+                                    document.getElementById("form1").submit();
+                                }, 5000);
+
+                                return; // Skip showing regular violation warning
+                            }
+
+                            let violationTypeText = '';
+                            switch (violationType) {
+                                case 'tab_switch':
+                                    violationTypeText = 'Tab switching';
+                                    break;
+                                case 'window_blur':
+                                    violationTypeText = 'Window focus loss';
+                                    break;
+                                case 'combined':
+                                    violationTypeText = 'Combined violations';
+                                    break;
+                                case 'exit_fullscreen':
+                                    violationTypeText = 'Exit from fullscreen';
+                                    break;
+                                default:
+                                    violationTypeText = violationType;
+                            }
+
+                            let warningMessage = `
+                        <strong>⚠️ WARNING: ${violationTypeText} detected!</strong><br>
+                        Attempt #${data.occurrence}<br>
+                        Penalty: -${data.penalty} points<br>
+                        Current integrity score: ${data.integrity_score} (${data.integrity_category})
+                    `;
+                            showWarning(warningMessage);
+
+                            // If integrity score is in the "Cheating Suspicion" range, notify
+                            if (data.integrity_category === 'Cheating Suspicion' && !warningShown) {
+                                alert('WARNING: Your integrity score is critically low due to suspected cheating behavior. Your exam may be disqualified for review.');
+                            }
+
+                            // For combined violations, notify of mandatory review
+                            if (violationType === 'combined') {
+                                console.warn('NOTICE: Combined violations trigger mandatory manual review by instructors');
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error logging violation:', error);
+                    });
             }
+
+            // Display initial anti-cheat notification when exam starts
+            alert('⚠️ ANTI-CHEAT SYSTEM ACTIVATED: Tab switching, window focus loss, and other suspicious activities will be detected and penalized. Combined violations will trigger mandatory review. Your integrity score starts at 100 points.');
 
             // Phase 3: Variables to track combined violations
             let lastViolationTime = 0;
@@ -471,10 +539,10 @@ while ($rowd = mysqli_fetch_array($res)) {
                 const now = new Date().getTime();
 
                 // If we had a different violation type within the last 2 seconds
-                if (lastViolationType && 
-                    lastViolationType !== currentViolationType && 
+                if (lastViolationType &&
+                    lastViolationType !== currentViolationType &&
                     now - lastViolationTime < 2000) {
-                    
+
                     // This is potentially a combined violation (switching between different apps/tactics)
                     logViolation('combined');
                 }
@@ -492,6 +560,11 @@ while ($rowd = mysqli_fetch_array($res)) {
                     integrityField.value = currentIntegrityScore;
                 }
             });
+
+            // Set a small delay before enabling the violation tracking
+            setTimeout(() => {
+                examInitialized = true;
+            }, 2000); // 2 second delay to allow page to fully load and settle
         });
     </script>
 </head>

@@ -49,8 +49,10 @@ switch ($violation_type) {
             $penalty = 5;
         } else if ($occurrence == 3) {
             $penalty = 8;
+        } else if ($occurrence == 4) {
+            $penalty = 12;
         } else {
-            $penalty = 15; // 4th and subsequent occurrences
+            $penalty = 15; // 5th and subsequent occurrences
         }
         break;
 
@@ -68,7 +70,7 @@ switch ($violation_type) {
         break;
 
     case 'combined':
-        // Combined violation penalties (Phase 3)
+        // Combined violation penalties
         if ($occurrence == 1) {
             $penalty = 10;
         } else if ($occurrence == 2) {
@@ -85,7 +87,7 @@ switch ($violation_type) {
         } else if ($occurrence == 2) {
             $penalty = 10;
         } else {
-            $penalty = 15; // 3rd and subsequent occurrences
+            $penalty = 15;
         }
         break;
 
@@ -128,12 +130,16 @@ if ($stmt->execute()) {
 
     // Determine the integrity category
     $integrity_category = '';
-    if ($integrity_score >= 75) {
+    if ($integrity_score >= 90) {
+        $integrity_category = 'Excellent';
+    } else if ($integrity_score >= 80) {
         $integrity_category = 'Good';
-    } else if ($integrity_score >= 50) {
-        $integrity_category = 'At-Risk';
+    } else if ($integrity_score >= 70) {
+        $integrity_category = 'Fair';
+    } else if ($integrity_score >= 60) {
+        $integrity_category = 'Poor';
     } else {
-        $integrity_category = 'Cheating Suspicion';
+        $integrity_category = 'Very Poor';
     }
 
     // Return the response
@@ -149,4 +155,4 @@ if ($stmt->execute()) {
 } else {
     http_response_code(500);
     echo json_encode(['status' => 'error', 'message' => 'Failed to record violation']);
-} 
+}
