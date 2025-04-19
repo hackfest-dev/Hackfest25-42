@@ -175,6 +175,28 @@ error_log("User Answers Retrieved: " . json_encode($user_answers));
         .btn:hover {
             background-color: #0d3a80;
         }
+
+        /* Integrity score styling */
+        .integrity-score {
+            font-weight: bold;
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+        
+        .integrity-good {
+            color: #28a745;
+            background-color: #e6f7ee;
+        }
+        
+        .integrity-at-risk {
+            color: #ffc107;
+            background-color: #fff8e6;
+        }
+        
+        .integrity-cheating-suspicion {
+            color: #dc3545;
+            background-color: #f8e6e8;
+        }
     </style>
 </head>
 
@@ -257,7 +279,24 @@ error_log("User Answers Retrieved: " . json_encode($user_answers));
                             <strong>Score:</strong> <?php echo $attempt['cnq'].'/'.$attempt['nq']; ?>
                         </div>
                         <div class="score-item">
-                            <strong>Integrity Score:</strong> <?php echo $attempt['integrity_score']; ?>/100
+                            <?php
+                            // Determine the CSS class based on integrity category
+                            $integrityClass = 'integrity-good';
+                            if (isset($attempt['integrity_category'])) {
+                                if ($attempt['integrity_category'] == 'At-Risk') {
+                                    $integrityClass = 'integrity-at-risk';
+                                } else if ($attempt['integrity_category'] == 'Cheating Suspicion') {
+                                    $integrityClass = 'integrity-cheating-suspicion';
+                                }
+                            }
+                            ?>
+                            <strong>Integrity:</strong> 
+                            <span class="integrity-score <?php echo $integrityClass; ?>">
+                                <?php echo $attempt['integrity_score']; ?>/100
+                                <?php if (isset($attempt['integrity_category'])) { 
+                                    echo '('.$attempt['integrity_category'].')'; 
+                                } ?>
+                            </span>
                         </div>
                         <div class="score-item">
                             <strong>Completed:</strong> <?php echo date('M d, Y h:i A', strtotime($attempt['subtime'])); ?>

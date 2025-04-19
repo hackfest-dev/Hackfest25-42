@@ -188,7 +188,7 @@ while ($rowd = mysqli_fetch_array($res)) {
             // Get exam ID from hidden field
             const examId = document.querySelector('input[name="mock_exid"]').value;
             let warningShown = false;
-            let examInitialized = false;
+            let examInitialized = false; // Add flag to track if exam is initialized
             let isFullScreen = false;
             let currentIntegrityScore = 100; // Initial integrity score
             let currentIntegrityCategory = 'Good'; // Initial category
@@ -199,11 +199,23 @@ while ($rowd = mysqli_fetch_array($res)) {
             // Create integrity score display container
             const integrityContainer = document.createElement('div');
             integrityContainer.id = 'integrity-score-display';
+            integrityContainer.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 20px;
+                background-color: #f8f9fa;
+                padding: 10px 15px;
+                border-radius: 5px;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                font-family: Arial, sans-serif;
+                z-index: 1000;
+                border-left: 4px solid #28a745;
+            `;
             integrityContainer.innerHTML = `
-        <div style="font-weight: bold; margin-bottom: 5px;">Integrity Monitor</div>
-        <div>Score: <span id="integrity-score-value" style="font-weight: bold; color: #28a745;">100/100</span></div>
-        <div>Status: <span id="integrity-category" style="font-weight: bold; color: #28a745;">Good</span></div>
-      `;
+                <div style="font-weight: bold; margin-bottom: 5px;">Integrity Monitor</div>
+                <div>Score: <span id="integrity-score-value" style="font-weight: bold; color: #28a745;">100/100</span></div>
+                <div>Status: <span id="integrity-category" style="font-weight: bold; color: #28a745;">Good</span></div>
+            `;
             document.body.appendChild(integrityContainer);
 
             // Function to update integrity score display
@@ -250,115 +262,235 @@ while ($rowd = mysqli_fetch_array($res)) {
             const warningContainer = document.createElement('div');
             warningContainer.id = 'anti-cheat-warning';
             warningContainer.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background-color: #f8d7da;
-        color: #721c24;
-        padding: 15px;
-        border-radius: 5px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        z-index: 1000;
-        display: none;
-        max-width: 300px;
-        font-family: Arial, sans-serif;
-      `;
-            warningContainer.innerHTML = '<p style="margin: 0; font-weight: bold;">Warning: Potential academic integrity violation detected.</p><p style="margin: 5px 0 0 0; font-size: 14px;">Leaving this tab or using other applications is not allowed during the exam.</p>';
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background-color: #f8d7da;
+                color: #721c24;
+                padding: 15px;
+                border-radius: 5px;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                z-index: 1000;
+                max-width: 300px;
+                display: none;
+                font-weight: bold;
+            `;
             document.body.appendChild(warningContainer);
 
-            // Function to show warning
-            function showWarning() {
-                if (!warningShown) {
-                    warningContainer.style.display = 'block';
-                    warningShown = true;
+            // Create full screen button and container
+            const fullScreenContainer = document.createElement('div');
+            fullScreenContainer.id = 'fullscreen-prompt';
+            fullScreenContainer.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0,0,0,0.9);
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                z-index: 9999;
+            `;
 
-                    // Reduce integrity score
-                    updateIntegrityScore(-10);
+            const fullScreenMessage = document.createElement('div');
+            fullScreenMessage.style.cssText = `
+                color: white;
+                font-size: 24px;
+                margin-bottom: 20px;
+                text-align: center;
+                max-width: 600px;
+            `;
+            fullScreenMessage.innerHTML = '<strong>⚠️ EXAM SECURITY NOTICE</strong><br><br>This mock exam requires full screen mode to maintain integrity.<br>Please click the button below to enter full screen mode.';
 
-                    setTimeout(function() {
-                        warningContainer.style.display = 'none';
-                        warningShown = false;
-                    }, 5000);
+            const fullScreenButton = document.createElement('button');
+            fullScreenButton.textContent = 'Enter Full Screen Mode';
+            fullScreenButton.style.cssText = `
+                background-color: #0A2558;
+                color: white;
+                border: none;
+                padding: 12px 24px;
+                font-size: 18px;
+                border-radius: 5px;
+                cursor: pointer;
+                font-weight: bold;
+            `;
+
+            fullScreenContainer.appendChild(fullScreenMessage);
+            fullScreenContainer.appendChild(fullScreenButton);
+            document.body.appendChild(fullScreenContainer);
+
+            // Function to request full screen
+            function requestFullScreen() {
+                const element = document.documentElement;
+
+                if (element.requestFullscreen) {
+                    element.requestFullscreen();
+                } else if (element.mozRequestFullScreen) { // Firefox
+                    element.mozRequestFullScreen();
+                } else if (element.webkitRequestFullscreen) { // Chrome, Safari and Opera
+                    element.webkitRequestFullscreen();
+                } else if (element.msRequestFullscreen) { // IE/Edge
+                    element.msRequestFullscreen();
+                }
+
+                isFullScreen = true;
+                fullScreenContainer.style.display = 'none';
+                examInitialized = true;
+                showWarning('Full screen mode activated. Do not exit full screen during the exam.');
+            }
+
+            // Function to exit full screen
+            function exitFullScreen() {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.mozCancelFullScreen) { // Firefox
+                    document.mozCancelFullScreen();
+                } else if (document.webkitExitFullscreen) { // Chrome, Safari and Opera
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) { // IE/Edge
+                    document.msExitFullscreen();
+                }
+
+                isFullScreen = false;
+            }
+
+            // Event listener for full screen button
+            fullScreenButton.addEventListener('click', requestFullScreen);
+
+            // Function to check if browser is in full screen mode
+            function isInFullScreen() {
+                return (
+                    document.fullscreenElement ||
+                    document.webkitFullscreenElement ||
+                    document.mozFullScreenElement ||
+                    document.msFullscreenElement
+                );
+            }
+
+            // Listen for fullscreen change events
+            document.addEventListener('fullscreenchange', handleFullScreenChange);
+            document.addEventListener('webkitfullscreenchange', handleFullScreenChange);
+            document.addEventListener('mozfullscreenchange', handleFullScreenChange);
+            document.addEventListener('MSFullscreenChange', handleFullScreenChange);
+
+            function handleFullScreenChange() {
+                if (examInitialized && !isInFullScreen()) {
+                    showWarning('⚠️ WARNING: You exited full screen mode! This may be flagged as suspicious behavior.');
+                    fullScreenContainer.style.display = 'flex';
+                    logViolation('exit_fullscreen');
+                } else if (isInFullScreen()) {
+                    fullScreenContainer.style.display = 'none';
                 }
             }
 
-            // Function to update integrity score
-            function updateIntegrityScore(change) {
-                let newScore = Math.max(0, Math.min(100, currentIntegrityScore + change));
-                let category = 'Good';
+            // Function to show warning message
+            function showWarning(message) {
+                warningContainer.innerHTML = message;
+                warningContainer.style.display = 'block';
+                warningShown = true;
 
-                if (newScore < 70) {
-                    category = 'Poor';
-                } else if (newScore < 90) {
-                    category = 'At-Risk';
-                }
-
-                updateIntegrityDisplay(newScore, category);
+                // Hide warning after 5 seconds
+                setTimeout(() => {
+                    warningContainer.style.display = 'none';
+                    warningShown = false;
+                }, 5000);
             }
 
-            // Tab visibility change detection
-            document.addEventListener('visibilitychange', function() {
-                if (document.visibilityState === 'hidden') {
-                    // Tab lost focus
-                    lastFocusLossTime = new Date().getTime();
-                    showWarning();
-                    tabSwitchCount++;
-                } else if (document.visibilityState === 'visible' && lastFocusLossTime) {
-                    // Tab regained focus
-                    const focusReturnTime = new Date().getTime();
-                    const timeAway = focusReturnTime - lastFocusLossTime;
-                    focusLossTimeTotal += timeAway;
-
-                    // Additional penalty for being away for too long
-                    if (timeAway > 5000) { // More than 5 seconds
-                        updateIntegrityScore(-5);
+            // Function to log violations to the server
+            function logViolation(violationType) {
+                if (!examInitialized) return; // Don't log violations before exam starts
+                
+                fetch('log_mock_violation.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        mock_exam_id: examId,
+                        violation_type: violationType
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        // Update integrity score display
+                        updateIntegrityDisplay(data.integrity_score, data.integrity_category);
                     }
+                })
+                .catch(error => {
+                    console.error('Error logging violation:', error);
+                });
+            }
+
+            // Phase 3: Variables to track combined violations
+            let lastViolationTime = 0;
+            let lastViolationType = null;
+
+            // Track visibility change events
+            document.addEventListener('visibilitychange', function() {
+                if (examInitialized && document.visibilityState === 'hidden') {
+                    // User switched tabs or minimized window
+                    checkCombinedViolation('tab_switch');
+                    logViolation('tab_switch');
                 }
             });
 
-            // Window blur/focus events as backup
+            // Phase 2: Track window blur/focus events
+            let blurTime = null;
+            let isBlurred = false;
+
             window.addEventListener('blur', function() {
-                if (document.visibilityState !== 'hidden') {
-                    // Window lost focus but tab is still visible
-                    lastFocusLossTime = new Date().getTime();
-                    showWarning();
-                    tabSwitchCount++;
+                if (examInitialized && !isBlurred) {
+                    isBlurred = true;
+                    blurTime = new Date().getTime();
+                    // Log window blur violation
+                    checkCombinedViolation('window_blur');
+                    logViolation('window_blur');
                 }
             });
 
             window.addEventListener('focus', function() {
-                if (lastFocusLossTime && document.visibilityState !== 'hidden') {
-                    // Window regained focus
-                    const focusReturnTime = new Date().getTime();
-                    const timeAway = focusReturnTime - lastFocusLossTime;
-                    focusLossTimeTotal += timeAway;
+                if (examInitialized && isBlurred) {
+                    isBlurred = false;
+                    // Calculate the time spent outside the window
+                    const focusTime = new Date().getTime();
+                    const timeSpentOutside = focusTime - blurTime;
 
-                    if (timeAway > 5000) {
-                        updateIntegrityScore(-5);
+                    // If time spent outside is significant (more than 5 seconds),
+                    // it could be considered as an app switching attempt
+                    if (timeSpentOutside > 5000) {
+                        console.log('Potential app switching detected:', timeSpentOutside / 1000, 'seconds');
                     }
                 }
             });
 
+            // Function to check for combined violations (Phase 3)
+            function checkCombinedViolation(currentViolationType) {
+                const now = new Date().getTime();
+
+                // If we had a different violation type within the last 2 seconds
+                if (lastViolationType && 
+                    lastViolationType !== currentViolationType && 
+                    now - lastViolationTime < 2000) {
+                    
+                    // This is potentially a combined violation (switching between different apps/tactics)
+                    logViolation('combined');
+                }
+
+                // Update the last violation info
+                lastViolationType = currentViolationType;
+                lastViolationTime = now;
+            }
+
             // Submit event listener to send integrity data
             document.getElementById('form1').addEventListener('submit', function() {
-                // Calculate final integrity score based on various factors
-                let finalScore = currentIntegrityScore;
-
-                // Adjust for tab switch count
-                if (tabSwitchCount > 0) {
-                    finalScore -= Math.min(30, tabSwitchCount * 5);
+                // Update the integrity score field before submission
+                let integrityField = document.getElementById('integrity_score');
+                if (integrityField) {
+                    integrityField.value = currentIntegrityScore;
                 }
-
-                // Adjust for total time away
-                if (focusLossTimeTotal > 10000) { // More than 10 seconds
-                    finalScore -= Math.min(20, Math.floor(focusLossTimeTotal / 5000) * 5);
-                }
-
-                // Ensure score doesn't go below 0
-                finalScore = Math.max(0, finalScore);
-
-                // Update the integrity score field
-                document.getElementById('integrity_score').value = finalScore;
             });
         });
     </script>

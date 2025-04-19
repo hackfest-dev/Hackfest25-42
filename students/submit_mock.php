@@ -15,6 +15,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $uname = $_SESSION['uname'];
     $integrity_score = isset($_POST['integrity_score']) ? intval($_POST['integrity_score']) : 100;
 
+    // Determine integrity category based on score
+    $integrity_category = 'Good';
+    if ($integrity_score < 50) {
+        $integrity_category = 'Cheating Suspicion';
+    } else if ($integrity_score < 75) {
+        $integrity_category = 'At-Risk';
+    }
+
     // Count correct answers
     $cnq = 0;
 
@@ -99,8 +107,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $ptg = ($cnq / $nq) * 100;
 
     // Insert result into mock_atmpt_list
-    $sql = "INSERT INTO mock_atmpt_list (mock_exid, uname, nq, cnq, ptg, status, integrity_score) 
-            VALUES ('$mock_exid', '$uname', '$nq', '$cnq', '$ptg', '1', '$integrity_score')";
+    $sql = "INSERT INTO mock_atmpt_list (mock_exid, uname, nq, cnq, ptg, status, integrity_score, integrity_category) 
+            VALUES ('$mock_exid', '$uname', '$nq', '$cnq', '$ptg', '1', '$integrity_score', '$integrity_category')";
 
     if (mysqli_query($conn, $sql)) {
         // Get the ID of the inserted attempt
