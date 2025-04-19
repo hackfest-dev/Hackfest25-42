@@ -877,12 +877,14 @@ if (mysqli_num_rows($table_check) > 0) {
 </head>
 
 <body>
+    <?php if ($nft_minted): ?>
     <a href="results.php" class="back-btn">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
             <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z" />
         </svg>
         Back to Results
     </a>
+    <?php endif; ?>
 
     <div class="page-title">
         <h1>Blockchain-Verified Certificate</h1>
@@ -1120,17 +1122,24 @@ if (mysqli_num_rows($table_check) > 0) {
 
             // Use html2canvas to convert HTML to canvas
             html2canvas(container, {
-                scale: 2, // Higher scale for better quality
+                scale: 1.2, // Reduced scale from 2 to 1.2 (40% reduction)
                 useCORS: true,
                 backgroundColor: '#ffffff'
             }).then(function(canvas) {
-                // Convert canvas to data URL
-                const imgData = canvas.toDataURL('image/png');
+                // Convert canvas to blob with reduced quality
+                const imgBlob = new Promise(resolve => {
+                    canvas.toBlob(resolve, 'image/png', 0.8); // Reduced quality from 0.95 to 0.8
+                });
+
+                // Create file from blob
+                const imgFile = new File([imgBlob], 'certificate_<?php echo $attempt_id; ?>.png', {
+                    type: 'image/png'
+                });
 
                 // Create download link
                 const link = document.createElement('a');
                 link.download = 'certificate_<?php echo $attempt_id; ?>.png';
-                link.href = imgData;
+                link.href = URL.createObjectURL(imgBlob);
 
                 // Trigger download
                 document.body.appendChild(link);
@@ -1157,14 +1166,14 @@ if (mysqli_num_rows($table_check) > 0) {
                 // First, generate the PNG image
                 const container = document.querySelector('.certificate-container');
                 const canvas = await html2canvas(container, {
-                    scale: 2,
+                    scale: 1.2, // Reduced scale from 2 to 1.2 (40% reduction)
                     useCORS: true,
                     backgroundColor: '#ffffff'
                 });
 
-                // Convert canvas to blob
+                // Convert canvas to blob with reduced quality
                 const imgBlob = await new Promise(resolve => {
-                    canvas.toBlob(resolve, 'image/png', 0.95);
+                    canvas.toBlob(resolve, 'image/png', 0.8); // Reduced quality from 0.95 to 0.8
                 });
 
                 // Create file from blob
@@ -1418,10 +1427,10 @@ if (mysqli_num_rows($table_check) > 0) {
                 }
 
                 // Update status
-                document.getElementById('mint-status-message').textContent = 'Waiting for IPFS propagation (4 seconds)...';
+                document.getElementById('mint-status-message').textContent = 'Waiting for IPFS propagation (8 seconds)...';
 
                 // Add a delay to ensure IPFS propagation before sending blockchain transaction
-                await new Promise(resolve => setTimeout(resolve, 4000));
+                await new Promise(resolve => setTimeout(resolve, 8000));
 
                 document.getElementById('mint-status-message').textContent = 'Signing and sending blockchain transaction...';
 
@@ -1459,13 +1468,14 @@ if (mysqli_num_rows($table_check) > 0) {
 
                     // Add gas price information for faster transaction processing
                     const gasPrice = await provider.getGasPrice();
-                    // Double the gas price (multiply by 200%)
-                    const doubledGasPrice = gasPrice.mul(2);
-                    console.log('Using doubled gas price:', ethers.utils.formatUnits(doubledGasPrice, 'gwei'), 'gwei');
+                    // Triple the gas price (multiply by 300%) for faster processing and more reliability
+                    const increasedGasPrice = gasPrice.mul(3);
+                    console.log('Using increased gas price:', ethers.utils.formatUnits(increasedGasPrice, 'gwei'), 'gwei');
 
-                    // Call mint function with doubled gas price
+                    // Call mint function with increased gas price
                     const tx = await contract.mint(metadataUri, {
-                        gasPrice: doubledGasPrice
+                        gasPrice: increasedGasPrice,
+                        gasLimit: 300000 // Set explicit gas limit to avoid underestimation
                     });
 
                     // Update status with transaction hash
