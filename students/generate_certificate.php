@@ -107,7 +107,7 @@ if (mysqli_num_rows($table_check) > 0) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Certificate of Completion</title>
+    <title>Certificate of Completion - Blockchain Verified</title>
     <!-- Include libraries -->
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
@@ -218,8 +218,15 @@ if (mysqli_num_rows($table_check) > 0) {
     <!-- Include better fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Cormorant+Garamond:wght@400;700&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        /* Reset and base styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         @media print {
             body {
                 -webkit-print-color-adjust: exact;
@@ -227,19 +234,49 @@ if (mysqli_num_rows($table_check) > 0) {
             }
 
             .print-btn,
-            .blockchain-section {
+            .blockchain-section,
+            .back-btn {
                 display: none;
+            }
+
+            .main-container {
+                flex-direction: column;
+            }
+
+            .certificate-container {
+                box-shadow: none !important;
+                margin: 0 auto !important;
             }
         }
 
         body {
             font-family: 'Montserrat', sans-serif;
-            background-color: #f5f5f5;
+            background-color: #f8f9fa;
             margin: 0;
             padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 30px;
+            width: 100%;
+        }
+
+        .page-title h1 {
+            font-size: 28px;
+            color: #0A2558;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .page-title p {
+            font-size: 16px;
+            color: #666;
         }
 
         .back-btn {
@@ -248,21 +285,25 @@ if (mysqli_num_rows($table_check) > 0) {
             background-color: #0A2558;
             color: white;
             border: none;
-            padding: 8px 16px;
+            padding: 10px 16px;
             font-size: 14px;
             cursor: pointer;
-            border-radius: 4px;
+            border-radius: 6px;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
         }
 
         .back-btn:hover {
             background-color: #0d3a80;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
         .back-btn svg {
-            margin-right: 5px;
+            margin-right: 8px;
         }
 
         .main-container {
@@ -270,7 +311,7 @@ if (mysqli_num_rows($table_check) > 0) {
             flex-direction: row;
             flex-wrap: wrap;
             max-width: 1600px;
-            gap: 20px;
+            gap: 30px;
             justify-content: center;
         }
 
@@ -286,10 +327,11 @@ if (mysqli_num_rows($table_check) > 0) {
             flex: 1;
             min-width: 400px;
             max-width: 600px;
-            padding: 20px;
+            padding: 30px;
             background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.05);
         }
 
         .certificate-container {
@@ -301,85 +343,12 @@ if (mysqli_num_rows($table_check) > 0) {
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
             border: 2px solid #d4af37;
             position: relative;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
             overflow: hidden;
         }
 
-        /* Blockchain section styles */
-        .blockchain-section {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .blockchain-section h2 {
-            color: #0A2558;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #d4af37;
-            padding-bottom: 10px;
-        }
-
-        .mint-status {
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 20px;
-        }
-
-        .status-pending {
-            color: #f39c12;
-        }
-
-        .status-success {
-            color: #2ecc71;
-        }
-
-        .status-error {
-            color: #e74c3c;
-        }
-
-        .status-note {
-            color: #777;
-            font-size: 0.85em;
-            font-style: italic;
-        }
-
-        .nft-details {
-            background-color: #f0f8ff;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 20px;
-        }
-
-        .nft-link {
-            display: block;
-            margin: 15px 0;
-            padding: 10px;
-            background-color: #e8f4fd;
-            border-radius: 5px;
-            word-break: break-all;
-        }
-
-        .mint-btn {
-            background-color: #d4af37;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 5px;
-            margin-top: 10px;
-            font-weight: bold;
-            transition: background-color 0.3s;
-        }
-
-        .mint-btn:hover {
-            background-color: #c4a028;
-        }
-
-        .mint-btn:disabled {
-            background-color: #cccccc;
-            cursor: not-allowed;
+        .certificate-container:hover {
+            transform: scale(1.01);
         }
 
         /* Fancy border with corner decorations */
@@ -389,17 +358,17 @@ if (mysqli_num_rows($table_check) > 0) {
             left: 0;
             right: 0;
             bottom: 0;
-            border: 2px solid #d4af37;
+            border: 2px solid rgba(212, 175, 55, 0.5);
             margin: 10px;
             pointer-events: none;
             z-index: 1;
-            box-shadow: inset 0 0 10px rgba(212, 175, 55, 0.2);
+            box-shadow: inset 0 0 15px rgba(212, 175, 55, 0.15);
         }
 
         .corner {
             position: absolute;
-            width: 35px;
-            height: 35px;
+            width: 40px;
+            height: 40px;
             border-color: #d4af37;
             z-index: 2;
         }
@@ -439,9 +408,10 @@ if (mysqli_num_rows($table_check) > 0) {
             right: 30px;
             width: 110px;
             height: 110px;
-            background: radial-gradient(circle, #d4af37 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.7) 0%, rgba(212, 175, 55, 0.1) 70%);
             border-radius: 50%;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             color: #7a5c00;
@@ -450,29 +420,29 @@ if (mysqli_num_rows($table_check) > 0) {
             font-weight: bold;
             font-family: 'Playfair Display', serif;
             transform: rotate(10deg);
-            opacity: 0.9;
             text-transform: uppercase;
             line-height: 1.3;
             padding: 10px;
             z-index: 3;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border: 1px dashed #7a5c00;
         }
 
         .certificate-seal::before {
             content: '';
             position: absolute;
-            width: 100px;
-            height: 100px;
+            width: 102px;
+            height: 102px;
             border: 1px dashed #7a5c00;
             border-radius: 50%;
         }
 
         .certificate-header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 15px;
             position: relative;
             z-index: 2;
-            padding-bottom: 10px;
+            padding-bottom: 8px;
             border-bottom: 2px solid rgba(212, 175, 55, 0.3);
             width: 80%;
             margin-left: auto;
@@ -481,70 +451,72 @@ if (mysqli_num_rows($table_check) > 0) {
 
         .certificate-title {
             color: #0A2558;
-            font-size: 32px;
+            font-size: 28px;
             font-weight: bold;
             margin-bottom: 5px;
             font-family: 'Playfair Display', serif;
             letter-spacing: 2px;
             text-transform: uppercase;
-            margin-top: 30px;
+            margin-top: 25px;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
         }
 
         .certificate-subtitle {
             color: #0A2558;
-            font-size: 24px;
+            font-size: 20px;
             font-weight: bold;
             font-family: 'Cormorant Garamond', serif;
             letter-spacing: 1px;
         }
 
         .certificate-content {
-            padding: 20px 60px;
+            padding: 10px 40px;
             text-align: center;
             position: relative;
             z-index: 2;
         }
 
         .student-name {
-            font-size: 28px;
+            font-size: 24px;
             font-weight: bold;
             color: #0A2558;
-            margin: 15px 0;
+            margin: 8px 0;
             font-family: 'Playfair Display', serif;
             border-bottom: 1px solid #d4af37;
             display: inline-block;
-            padding: 0 20px 5px;
+            padding: 0 20px 3px;
             text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.05);
             letter-spacing: 0.5px;
         }
 
         .certificate-text {
-            font-size: 18px;
-            margin: 10px 0;
-            line-height: 1.5;
+            font-size: 16px;
+            margin: 6px 0;
+            line-height: 1.4;
             font-family: 'Cormorant Garamond', serif;
             font-weight: 500;
         }
 
         .certificate-details {
-            margin: 30px 0;
+            margin: 15px 0;
             text-align: center;
             position: relative;
             z-index: 2;
             background-color: rgba(255, 255, 255, 0.7);
-            padding: 15px;
+            padding: 12px;
             border-radius: 8px;
-            width: 80%;
+            width: 90%;
             margin-left: auto;
             margin-right: auto;
             border: 1px solid rgba(212, 175, 55, 0.3);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
         }
 
         .certificate-detail {
-            font-size: 16px;
-            margin: 10px 0;
+            font-size: 15px;
+            margin: 8px 0;
             font-family: 'Montserrat', sans-serif;
+            line-height: 1.3;
         }
 
         .integrity-score-good {
@@ -553,6 +525,7 @@ if (mysqli_num_rows($table_check) > 0) {
             padding: 2px 6px;
             background-color: rgba(40, 167, 69, 0.1);
             border-radius: 4px;
+            border: 1px solid rgba(40, 167, 69, 0.2);
         }
 
         .integrity-score-at-risk {
@@ -561,6 +534,7 @@ if (mysqli_num_rows($table_check) > 0) {
             padding: 2px 6px;
             background-color: rgba(255, 193, 7, 0.1);
             border-radius: 4px;
+            border: 1px solid rgba(255, 193, 7, 0.2);
         }
 
         .integrity-score-cheating {
@@ -569,6 +543,7 @@ if (mysqli_num_rows($table_check) > 0) {
             padding: 2px 6px;
             background-color: rgba(220, 53, 69, 0.1);
             border-radius: 4px;
+            border: 1px solid rgba(220, 53, 69, 0.2);
         }
 
         .certificate-date {
@@ -577,7 +552,7 @@ if (mysqli_num_rows($table_check) > 0) {
 
         .certificate-footer {
             position: absolute;
-            bottom: 20px;
+            bottom: 15px;
             width: calc(100% - 40px);
             text-align: center;
             z-index: 2;
@@ -587,7 +562,7 @@ if (mysqli_num_rows($table_check) > 0) {
             width: 200px;
             height: 1px;
             background-color: #000;
-            margin: 50px auto 10px auto;
+            margin: 30px auto 5px auto;
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
         }
 
@@ -597,29 +572,29 @@ if (mysqli_num_rows($table_check) > 0) {
             margin-top: 5px;
             font-weight: 600;
             color: #333;
+            font-size: 14px;
+            display: none;
         }
 
         .print-btn {
             background-color: #0A2558;
             color: white;
             border: none;
-            padding: 10px 20px;
-            font-size: 16px;
+            padding: 12px 24px;
+            font-size: 15px;
             cursor: pointer;
-            border-radius: 5px;
+            border-radius: 8px;
             margin-top: 20px;
             font-family: 'Montserrat', sans-serif;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .print-btn:hover {
             background-color: #0d3a80;
-        }
-
-        .powered-by {
-            font-size: 14px;
-            margin-top: 20px;
-            color: #555;
-            font-family: 'Montserrat', sans-serif;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
         }
 
         /* Ribbon decoration */
@@ -630,7 +605,7 @@ if (mysqli_num_rows($table_check) > 0) {
             width: 80px;
             height: 80px;
             z-index: 3;
-            opacity: 0.8;
+            opacity: 0.9;
         }
 
         .ribbon-circle {
@@ -641,6 +616,18 @@ if (mysqli_num_rows($table_check) > 0) {
             border-radius: 50%;
             border: 1px solid #946e00;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ribbon-circle::after {
+            content: '';
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border: 1px dashed rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
         }
 
         .ribbon-tail {
@@ -667,7 +654,7 @@ if (mysqli_num_rows($table_check) > 0) {
             width: 30px;
             height: 30px;
             animation: spin 1s linear infinite;
-            margin: 10px auto;
+            margin: 15px auto;
         }
 
         @keyframes spin {
@@ -679,6 +666,213 @@ if (mysqli_num_rows($table_check) > 0) {
                 transform: rotate(360deg);
             }
         }
+
+        #mint-progress {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+            text-align: center;
+        }
+
+        #mint-status-message {
+            margin: 10px 0;
+            font-weight: 500;
+        }
+
+        .demo-note {
+            background-color: #fffde7;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 25px;
+            border-left: 4px solid #f39c12;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .demo-note p {
+            margin: 8px 0;
+            line-height: 1.5;
+        }
+
+        .demo-note ol {
+            margin-top: 10px;
+            padding-left: 20px;
+        }
+
+        .demo-note li {
+            margin-bottom: 8px;
+        }
+
+        /* Button styles */
+        .btn-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: normal;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .btn-primary {
+            background-color: #0A2558;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #0d3a80;
+        }
+
+        .btn-success {
+            background-color: #19875b;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #156b49;
+        }
+
+        .btn-gold {
+            background-color: #d4af37;
+            color: white;
+            font-weight: bold;
+        }
+
+        .btn-gold:hover {
+            background-color: #c4a028;
+        }
+
+        .btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        /* Blockchain section styles */
+        .blockchain-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .blockchain-section h2 {
+            color: #0A2558;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #d4af37;
+            padding-bottom: 10px;
+            font-size: 24px;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            position: relative;
+        }
+
+        .blockchain-section h2:after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background-color: #d4af37;
+            border-radius: 2px;
+        }
+
+        .mint-status {
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #d4af37;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .status-pending {
+            color: #f39c12;
+            font-weight: 600;
+        }
+
+        .status-success {
+            color: #2ecc71;
+            font-weight: 600;
+        }
+
+        .status-error {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+
+        .status-note {
+            color: #777;
+            font-size: 0.85em;
+            font-style: italic;
+            margin-top: 8px;
+        }
+
+        .nft-details {
+            background-color: #f7fafd;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(10, 37, 88, 0.1);
+        }
+
+        .nft-details p {
+            margin: 12px 0 8px;
+            font-weight: 500;
+        }
+
+        /* NFT Link and transaction hash fixes */
+        .nft-link {
+            display: block;
+            margin: 10px 0 20px;
+            padding: 15px;
+            background-color: #e8f4fd;
+            border-radius: 8px;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            color: #0A2558;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            border: 1px solid rgba(10, 37, 88, 0.1);
+            transition: all 0.2s ease;
+            text-decoration: none;
+            max-width: 100%;
+            overflow: hidden;
+        }
+
+        .nft-link:hover {
+            background-color: #d9edfb;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .nft-link span {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .nft-link span svg {
+            flex-shrink: 0;
+        }
+
+        .transaction-hash {
+            word-break: break-all;
+            overflow-wrap: break-word;
+            font-size: 12px;
+            display: inline-block;
+            width: 100%;
+        }
     </style>
 </head>
 
@@ -689,6 +883,11 @@ if (mysqli_num_rows($table_check) > 0) {
         </svg>
         Back to Results
     </a>
+
+    <div class="page-title">
+        <h1>Blockchain-Verified Certificate</h1>
+        <p>Your digital credential for academic achievement</p>
+    </div>
 
     <div class="main-container">
         <!-- Left column: Certificate display -->
@@ -702,7 +901,16 @@ if (mysqli_num_rows($table_check) > 0) {
                 <div class="corner corner-bottom-right"></div>
 
                 <!-- Certificate seal -->
-                <div class="certificate-seal">Blockchain<br>Verified</div>
+                <div class="certificate-seal">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#7a5c00" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 4px;">
+                        <path d="M13 2H4a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9z"></path>
+                        <polyline points="13 2 13 9 20 9"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polygon points="10 9 9 9 8 9"></polygon>
+                    </svg>
+                    Blockchain<br>Verified
+                </div>
 
                 <!-- Ribbon decoration -->
                 <div class="ribbon">
@@ -735,42 +943,97 @@ if (mysqli_num_rows($table_check) > 0) {
                 </div>
             </div>
 
-            <button class="print-btn" onclick="window.print();">Print Certificate</button>
-            <button class="print-btn" onclick="downloadAsPNG();" style="margin-left: 10px; background-color: #19875b;">Download as PNG</button>
+            <div class="btn-container">
+                <button class="btn btn-primary" onclick="window.print();">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                        <rect x="6" y="14" width="12" height="8"></rect>
+                    </svg>
+                    Print Certificate
+                </button>
+                <button class="btn btn-success" onclick="downloadAsPNG();">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    Download as PNG
+                </button>
+            </div>
         </div>
 
         <!-- Right column: Blockchain & NFT section -->
         <div class="right-column">
             <div class="blockchain-section">
-                <h2>Certificate NFT</h2>
+                <h2>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: -5px;">
+                        <path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"></path>
+                        <path d="M4 6v12c0 1.1.9 2 2 2h14v-4"></path>
+                        <path d="M18 12a2 2 0 0 0 0 4h2v-4h-2z"></path>
+                    </svg>
+                    Blockchain Certification
+                </h2>
 
                 <?php if (!$nft_minted): ?>
                     <div class="mint-status">
-                        <p>Your certificate can be converted to an NFT on the blockchain.</p>
-                        <p>This will create a permanent, verifiable record of your achievement that can be shared on various platforms.</p>
+                        <h3 style="margin-top: 0; color: #0A2558; font-size: 18px;">Digital Credential</h3>
+                        <p>Convert your certificate to a blockchain-secured NFT for a permanent, tamper-proof record of your achievement.</p>
+                        <p style="display: flex; align-items: center; margin-top: 15px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A2558" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 10px; min-width: 20px;">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                            <span>Mint time: ~1-2 minutes</span>
+                        </p>
                         <?php if (isset($_GET['auto_mint']) && $_GET['auto_mint'] == 1): ?>
-                            <div class="status-pending" style="background-color: #fff3cd; padding: 10px; border-radius: 5px; margin-top: 10px;">
-                                <strong>Automatic Processing:</strong> Your certificate is being converted to an NFT automatically. Please wait...
+                            <div class="status-pending" style="background-color: #fff3cd; padding: 15px; border-radius: 8px; margin-top: 15px; display: flex; align-items: center;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 10px; color: #f39c12;">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                                </svg>
+                                <span><strong>Automatic Processing:</strong> Your certificate is being converted to an NFT. Please wait...</span>
                             </div>
                         <?php endif; ?>
                     </div>
-                    <button id="mint-nft-btn" class="mint-btn">Mint Certificate as NFT</button>
+                    <button id="mint-nft-btn" class="btn btn-gold">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                        </svg>
+                        Mint Certificate as NFT
+                    </button>
                     <div id="mint-progress" style="display: none;">
                         <div class="spinner"></div>
                         <p id="mint-status-message">Processing your NFT...</p>
                     </div>
                 <?php else: ?>
                     <div class="mint-status">
-                        <p class="status-success">✓ Certificate successfully minted as NFT</p>
-                        <?php if ($nft_data['is_demo'] == 1): ?>
+                        <p class="status-success" style="display: flex; align-items: center;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; color: #2ecc71;">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                            </svg>
+                            Certificate successfully minted as NFT
+                        </p>
+                        <?php if (isset($nft_data['is_demo']) && $nft_data['is_demo'] == 1): ?>
                             <p class="status-note"><i>Note: This is a demonstration NFT using simulated blockchain transactions.</i></p>
                         <?php endif; ?>
                     </div>
                     <div class="nft-details">
+                        <h3 style="margin-top: 0; color: #0A2558; font-size: 18px; margin-bottom: 20px;">NFT Details</h3>
+
                         <p><strong>Transaction Hash:</strong></p>
                         <a href="https://sepolia.etherscan.io/tx/<?php echo $nft_data['transaction_hash']; ?>" target="_blank" class="nft-link">
-                            <?php echo $nft_data['transaction_hash']; ?>
-                            <?php if ($nft_data['is_demo'] == 1): ?>
+                            <span style="display: flex; align-items: center; gap: 8px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="7 10 12 15 17 10"></polyline>
+                                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                                </svg>
+                                <span class="transaction-hash"><?php echo $nft_data['transaction_hash']; ?></span>
+                            </span>
+                            <?php if (isset($nft_data['is_demo']) && $nft_data['is_demo'] == 1): ?>
                                 <br><span class="status-note"><i>(Demo transaction - may not be found on blockchain)</i></span>
                             <?php endif; ?>
                         </a>
@@ -779,18 +1042,36 @@ if (mysqli_num_rows($table_check) > 0) {
 
                         <p><strong>View on OpenSea:</strong></p>
                         <a href="https://testnets.opensea.io/assets/sepolia/<?php echo $nft_data['contract_address']; ?>/<?php echo $nft_data['token_id']; ?>" target="_blank" class="nft-link">
-                            View your NFT
-                            <?php if ($nft_data['is_demo'] == 1): ?>
+                            <span style="display: flex; align-items: center; gap: 8px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="2" y1="12" x2="22" y2="12"></line>
+                                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                                </svg>
+                                View your NFT on OpenSea
+                            </span>
+                            <?php if (isset($nft_data['is_demo']) && $nft_data['is_demo'] == 1): ?>
                                 <br><span class="status-note"><i>(Demo NFT - may not be found on OpenSea)</i></span>
                             <?php endif; ?>
                         </a>
 
                         <p><strong>IPFS Metadata:</strong></p>
-                        <a href="<?php echo $nft_data['metadata_url']; ?>" target="_blank" class="nft-link"><?php echo $nft_data['metadata_url']; ?></a>
+                        <a href="<?php echo $nft_data['metadata_url']; ?>" target="_blank" class="nft-link">
+                            <span style="display: flex; align-items: center; gap: 8px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                                    <polyline points="10 9 9 9 8 9"></polyline>
+                                </svg>
+                                View metadata
+                            </span>
+                        </a>
 
-                        <?php if ($nft_data['is_demo'] == 1): ?>
-                            <div class="demo-note" style="margin-top: 20px; padding: 10px; background-color: #fffde7; border-radius: 5px;">
-                                <p><strong>About Demo NFTs:</strong></p>
+                        <?php if (isset($nft_data['is_demo']) && $nft_data['is_demo'] == 1): ?>
+                            <div class="demo-note">
+                                <h4 style="margin-top: 0; color: #f39c12;">About Demo NFTs</h4>
                                 <p>This is a demonstration NFT to show how the system would work. In a production environment, real blockchain transactions would be used to mint actual NFTs on the Ethereum network.</p>
                                 <p>To implement real NFT minting, the system administrator would need to:</p>
                                 <ol>
@@ -1130,7 +1411,7 @@ if (mysqli_num_rows($table_check) > 0) {
                 if (!mintResult.success) {
                     throw new Error(mintResult.error || 'Failed to prepare NFT transaction');
                 }
-                
+
                 // Show email status if available
                 if (mintResult.data.email_sent) {
                     document.getElementById('mint-status-message').textContent = 'NFT certificate has been emailed to your registered email address.';
@@ -1138,12 +1419,12 @@ if (mysqli_num_rows($table_check) > 0) {
 
                 // Update status
                 document.getElementById('mint-status-message').textContent = 'Waiting for IPFS propagation (4 seconds)...';
-                
+
                 // Add a delay to ensure IPFS propagation before sending blockchain transaction
                 await new Promise(resolve => setTimeout(resolve, 4000));
-                
+
                 document.getElementById('mint-status-message').textContent = 'Signing and sending blockchain transaction...';
-                
+
                 // REAL BLOCKCHAIN INTERACTION
                 // Use ethers.js to sign and send the transaction
                 try {
@@ -1241,7 +1522,7 @@ if (mysqli_num_rows($table_check) > 0) {
                     } else {
                         document.getElementById('mint-status-message').textContent = 'NFT successfully minted!';
                     }
-                    
+
                     // Reload the page after 3 seconds
                     setTimeout(() => {
                         window.location.reload();
@@ -1254,7 +1535,7 @@ if (mysqli_num_rows($table_check) > 0) {
 
                     // Show retry button
                     setTimeout(() => {
-                        document.getElementById('mint-progress').innerHTML += '<button class="mint-btn" onclick="window.location.reload()">Retry</button>';
+                        document.getElementById('mint-progress').innerHTML += '<button class="btn btn-gold" onclick="window.location.reload()">Retry</button>';
                     }, 3000);
                 }
 
@@ -1272,7 +1553,7 @@ if (mysqli_num_rows($table_check) > 0) {
 
                 // Show a retry button after 3 seconds
                 setTimeout(() => {
-                    document.getElementById('mint-progress').innerHTML += '<button class="mint-btn" onclick="window.location.reload()">Retry</button>';
+                    document.getElementById('mint-progress').innerHTML += '<button class="btn btn-gold" onclick="window.location.reload()">Retry</button>';
                 }, 3000);
             }
         });
