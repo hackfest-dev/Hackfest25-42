@@ -32,13 +32,13 @@ ExamFlow's cutting-edge blockchain integration ensures absolute credential authe
 
 ### Comprehensive Certificate Security
 
-| Security Layer | Implementation | Benefit |
-|----------------|----------------|---------|
-| Blockchain Record | Ethereum Sepolia Network | Immutable timestamped proof that cannot be altered |
-| Decentralized Storage | IPFS via Pinata | Tamper-proof file storage without centralized vulnerability |
-| Smart Contract | ERC-721 NFT Standard | Cryptographic ownership with transfer capabilities |
-| Verification Portal | Public blockchain explorer | Universal accessibility for verification |
-| Digital Signature | Institutional cryptographic keys | Authorized issuance verification |
+| Security Layer        | Implementation                   | Benefit                                                     |
+| --------------------- | -------------------------------- | ----------------------------------------------------------- |
+| Blockchain Record     | Ethereum Sepolia Network         | Immutable timestamped proof that cannot be altered          |
+| Decentralized Storage | IPFS via Pinata                  | Tamper-proof file storage without centralized vulnerability |
+| Smart Contract        | ERC-721 NFT Standard             | Cryptographic ownership with transfer capabilities          |
+| Verification Portal   | Public blockchain explorer       | Universal accessibility for verification                    |
+| Digital Signature     | Institutional cryptographic keys | Authorized issuance verification                            |
 
 ### Immediate Benefits
 
@@ -60,12 +60,12 @@ ExamFlow's revolutionary Integrity Scoring system provides objective, transparen
 
 ### Sophisticated Classification System
 
-| Category | Score Range | Interpretation | Action |
-|----------|-------------|----------------|--------|
-| Exemplary | 90-100 | Perfect examination conduct | Normal certificate issuance |
-| Good | 75-89 | Minor issues but acceptable behavior | Standard certificate with note |
-| At-Risk | 50-74 | Concerning patterns requiring review | Certificate with integrity warning |
-| Violation | 0-49 | Significant evidence of academic dishonesty | Potential examination invalidation |
+| Category  | Score Range | Interpretation                              | Action                             |
+| --------- | ----------- | ------------------------------------------- | ---------------------------------- |
+| Exemplary | 90-100      | Perfect examination conduct                 | Normal certificate issuance        |
+| Good      | 75-89       | Minor issues but acceptable behavior        | Standard certificate with note     |
+| At-Risk   | 50-74       | Concerning patterns requiring review        | Certificate with integrity warning |
+| Violation | 0-49        | Significant evidence of academic dishonesty | Potential examination invalidation |
 
 ### Comprehensive Violation Detection
 
@@ -240,7 +240,7 @@ ExamFlow's analytical engine transforms examination data into actionable insight
    ```bash
    # Set up analytics tables
    php setup_analytics_db.php
-   
+
    # Set up mock exam system
    php install_mock_tables.php
    ```
@@ -271,6 +271,77 @@ ExamFlow's analytical engine transforms examination data into actionable insight
    chmod -R 755 .
    chmod -R 777 uploads/
    ```
+
+## How to Use
+
+### For Administrators
+
+1. **Login to Admin Panel**
+
+   - Navigate to `/admin` directory
+   - Use your administrator credentials to login
+
+2. **Create an Examination**
+
+   - From the dashboard, select "Create Exam"
+   - Configure exam settings including duration, passing score, and integrity thresholds
+   - Add questions from the question bank or create new ones
+   - Set the exam availability window
+
+3. **Monitor Exams**
+
+   - Use the proctor dashboard to view active examinations
+   - Monitor student integrity scores in real-time
+   - Review automated violation reports
+   - Export results after completion
+
+4. **Manage Certificates**
+   - Review and approve certificate issuance
+   - Monitor blockchain verification status
+   - Access certificate analytics
+
+### For Instructors
+
+1. **Create Question Banks**
+
+   - Build reusable question repositories
+   - Configure difficulty levels and categories
+   - Set up rubrics for essay/open-ended questions
+
+2. **Generate Mock Exams**
+
+   - Use the AI system to create practice tests
+   - Customize mock exam parameters
+   - Review student performance on practice attempts
+
+3. **Analyze Results**
+   - Access detailed performance analytics
+   - Identify knowledge gaps and class-wide trends
+   - Generate comprehensive reports
+
+### For Students
+
+1. **Register and Enroll**
+
+   - Create a student account
+   - Enroll in available courses and examinations
+
+2. **Prepare with Mock Tests**
+
+   - Access AI-generated practice exams
+   - Review performance feedback
+   - Focus on identified knowledge gaps
+
+3. **Take Examinations**
+
+   - Follow the proctoring guidelines
+   - Complete assessments within the allocated time
+   - Maintain integrity standards throughout
+
+4. **Access Certificates**
+   - View and download blockchain-verified credentials
+   - Share certificates via secure links
+   - Verify certificate authenticity
 
 ## Security Features
 
