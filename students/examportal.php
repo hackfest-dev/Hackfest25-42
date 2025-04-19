@@ -333,12 +333,86 @@ while ($rowd = mysqli_fetch_array($res)) {
         width: 100%;
         height: 100%;
         background-color: rgba(0,0,0,0.9);
-        display: flex;
+        display: none;
         flex-direction: column;
         justify-content: center;
         align-items: center;
         z-index: 9999;
       `;
+
+      // Create test info modal that appears before full screen prompt
+      const testInfoModal = document.createElement('div');
+      testInfoModal.id = 'test-info-modal';
+      testInfoModal.style.cssText = `
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0,0,0,0.9);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          z-index: 10000;
+      `;
+      
+      const modalContent = document.createElement('div');
+      modalContent.style.cssText = `
+          background-color: white;
+          border-radius: 8px;
+          padding: 30px;
+          max-width: 600px;
+          width: 90%;
+          box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+          text-align: center;
+      `;
+      
+      modalContent.innerHTML = `
+          <h2 style="color: #0A2558; margin-bottom: 20px; font-size: 24px;">Exam Information</h2>
+          <div style="text-align: left; margin-bottom: 25px;">
+              <p style="margin-bottom: 10px; font-size: 16px;"><strong>Exam Name:</strong> <?php echo $exname; ?></p>
+              <p style="margin-bottom: 10px; font-size: 16px;"><strong>Subject:</strong> <?php echo $desp; ?></p>
+              <p style="margin-bottom: 10px; font-size: 16px;"><strong>Number of Questions:</strong> <?php echo $nq; ?></p>
+              <p style="margin-bottom: 10px; font-size: 16px;"><strong>Duration:</strong> <?php echo $duration; ?> minutes</p>
+          </div>
+          
+          <h3 style="color: #dc3545; margin-bottom: 15px; font-size: 18px;">Important: Anti-Cheat System</h3>
+          <div style="text-align: left; margin-bottom: 25px; background-color: #f8f9fa; padding: 15px; border-radius: 5px; border-left: 4px solid #dc3545;">
+              <p style="margin-bottom: 10px; font-size: 15px;">This exam employs the following integrity monitoring features:</p>
+              <ul style="margin-left: 20px; margin-bottom: 15px;">
+                  <li style="margin-bottom: 8px; font-size: 15px;">Full-screen mode is required throughout the exam</li>
+                  <li style="margin-bottom: 8px; font-size: 15px;">Tab switching detection</li>
+                  <li style="margin-bottom: 8px; font-size: 15px;">Window focus/blur monitoring</li>
+                  <li style="margin-bottom: 8px; font-size: 15px;">Real-time integrity score calculation</li>
+              </ul>
+              <p style="font-size: 15px; color: #dc3545; font-weight: bold;">Any attempt to exit full-screen mode, switch tabs, or use other applications during the exam will lower your integrity score and may result in automatic test submission.</p>
+          </div>
+          
+          <button id="start-test-btn" style="
+              background-color: #0A2558;
+              color: white;
+              border: none;
+              padding: 12px 24px;
+              font-size: 18px;
+              border-radius: 5px;
+              cursor: pointer;
+              font-weight: bold;
+              margin-top: 10px;
+          ">I Understand & Start Exam</button>
+      `;
+      
+      testInfoModal.appendChild(modalContent);
+      document.body.appendChild(testInfoModal);
+      
+      // Start test button event handler
+      document.getElementById('start-test-btn').addEventListener('click', function() {
+          testInfoModal.style.display = 'none';
+          fullScreenContainer.style.display = 'flex';
+      });
+
+      // Make sure test info modal is displayed when page loads
+      testInfoModal.style.display = 'flex';
+      fullScreenContainer.style.display = 'none';
 
       const fullScreenMessage = document.createElement('div');
       fullScreenMessage.style.cssText = `
@@ -382,6 +456,7 @@ while ($rowd = mysqli_fetch_array($res)) {
         }
 
         isFullScreen = true;
+        examInitialized = true; // Set exam as initialized when entering fullscreen
         fullScreenContainer.style.display = 'none';
         showWarning('Full screen mode activated. Do not exit full screen during the exam.');
       }
