@@ -131,9 +131,9 @@ $result = mysqli_query($conn, $sql);
                         echo "<span class='integrity-score ";
                         // Add class based on integrity category
                         if (isset($row['integrity_category'])) {
-                          if ($row['integrity_category'] === 'Good') {
+                          if ($row['integrity_category'] === 'Excellent' || $row['integrity_category'] === 'Good') {
                             echo "good";
-                          } else if ($row['integrity_category'] === 'At-Risk') {
+                          } else if ($row['integrity_category'] === 'Fair' || $row['integrity_category'] === 'At-Risk') {
                             echo "at-risk";
                           } else {
                             echo "cheating";
@@ -201,17 +201,21 @@ $result = mysqli_query($conn, $sql);
       display: inline-block;
     }
 
-    .integrity-score.good {
+    .integrity-score.good,
+    .integrity-score.excellent {
       background-color: #d4edda;
       color: #155724;
     }
 
-    .integrity-score.at-risk {
+    .integrity-score.at-risk,
+    .integrity-score.fair {
       background-color: #fff3cd;
       color: #856404;
     }
 
-    .integrity-score.cheating {
+    .integrity-score.cheating,
+    .integrity-score.poor,
+    .integrity-score.very-poor {
       background-color: #f8d7da;
       color: #721c24;
     }

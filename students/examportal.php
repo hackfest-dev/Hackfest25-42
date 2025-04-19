@@ -409,7 +409,8 @@ while ($rowd = mysqli_fetch_array($res)) {
       // Start test button event handler
       document.getElementById('start-test-btn').addEventListener('click', function() {
         testInfoModal.style.display = 'none';
-        fullScreenContainer.style.display = 'flex';
+        // Enter full screen mode immediately instead of showing the prompt
+        requestFullScreen();
       });
 
       // Make sure test info modal is displayed when page loads
@@ -607,13 +608,13 @@ while ($rowd = mysqli_fetch_array($res)) {
                 showWarning(`
                   <strong>⚠️ CRITICAL INTEGRITY VIOLATION!</strong><br>
                   Your integrity score has fallen below the minimum threshold.<br>
-                  Your exam will be automatically submitted in 5 seconds.
+                  Your exam will be automatically submitted in 1 second.
                 `);
 
                 setTimeout(() => {
                   alert("Your exam is being submitted due to critical integrity violations. Your final integrity score is: " + data.integrity_score);
                   document.getElementById("form1").submit();
-                }, 5000);
+                }, 1000);
 
                 return; // Skip showing regular violation warning
               }
@@ -658,7 +659,8 @@ while ($rowd = mysqli_fetch_array($res)) {
       }
 
       // Display initial anti-cheat notification and show full screen prompt
-      alert('⚠️ ANTI-CHEAT SYSTEM ACTIVATED: Tab switching, window focus loss, and other suspicious activities will be detected and penalized. Combined violations will trigger mandatory review. Your integrity score starts at 100 points.');
+      // Remove the alert message
+      // alert('⚠️ ANTI-CHEAT SYSTEM ACTIVATED: Tab switching, window focus loss, and other suspicious activities will be detected and penalized. Combined violations will trigger mandatory review. Your integrity score starts at 100 points.');
 
       // Set a small delay before enabling the violation tracking
       setTimeout(() => {

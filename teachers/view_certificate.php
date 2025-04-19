@@ -279,18 +279,22 @@ if (mysqli_num_rows($table_check) > 0) {
         }
 
         /* CSS for integrity score classes */
-        .integrity-good {
+        .integrity-good,
+        .integrity-excellent {
             color: #28a745;
             font-weight: bold;
         }
 
-        .integrity-at-risk {
+        .integrity-at-risk,
+        .integrity-fair {
             color: #ffc107;
             font-weight: bold;
         }
 
         .integrity-cheating,
-        .integrity-cheating-suspicion {
+        .integrity-cheating-suspicion,
+        .integrity-poor,
+        .integrity-very-poor {
             color: #dc3545;
             font-weight: bold;
         }

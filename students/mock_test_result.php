@@ -78,7 +78,7 @@ error_log("User Answers Retrieved: " . json_encode($user_answers));
             margin: 0 auto;
             padding: 20px;
         }
-        
+
         .score-card {
             background-color: #fff;
             border-radius: 8px;
@@ -87,33 +87,33 @@ error_log("User Answers Retrieved: " . json_encode($user_answers));
             text-align: center;
             margin-bottom: 30px;
         }
-        
+
         .score-title {
             color: #0A2558;
             font-size: 24px;
             margin-bottom: 15px;
         }
-        
+
         .score-value {
             font-size: 48px;
             font-weight: bold;
             color: #0A2558;
             margin-bottom: 10px;
         }
-        
+
         .score-details {
             display: flex;
             justify-content: center;
             gap: 20px;
             margin: 20px 0;
         }
-        
+
         .score-item {
             padding: 10px 15px;
             background-color: #f8f9fa;
             border-radius: 4px;
         }
-        
+
         .question-card {
             background-color: #fff;
             border-radius: 8px;
@@ -121,45 +121,45 @@ error_log("User Answers Retrieved: " . json_encode($user_answers));
             padding: 20px;
             margin-bottom: 20px;
         }
-        
+
         .question-text {
             font-size: 18px;
             color: #0A2558;
             margin-bottom: 15px;
         }
-        
+
         .options-list {
             list-style-type: none;
             padding: 0;
         }
-        
+
         .option-item {
             padding: 10px;
             margin-bottom: 8px;
             border-radius: 4px;
             border: 1px solid #e0e0e0;
         }
-        
+
         .option-correct {
             background-color: #d4edda;
             border-color: #c3e6cb;
         }
-        
+
         .option-incorrect {
             background-color: #f8d7da;
             border-color: #f5c6cb;
         }
-        
+
         .option-user-selected {
             border-left: 4px solid #0A2558;
         }
-        
+
         .actions {
             display: flex;
             justify-content: center;
             margin-top: 30px;
         }
-        
+
         .btn {
             background-color: #0A2558;
             color: white;
@@ -171,7 +171,7 @@ error_log("User Answers Retrieved: " . json_encode($user_answers));
             font-size: 16px;
             transition: background-color 0.3s;
         }
-        
+
         .btn:hover {
             background-color: #0d3a80;
         }
@@ -182,17 +182,21 @@ error_log("User Answers Retrieved: " . json_encode($user_answers));
             padding: 3px 8px;
             border-radius: 4px;
         }
-        
-        .integrity-good {
+
+        .integrity-good,
+        .integrity-excellent {
             color: #28a745;
             background-color: #e6f7ee;
         }
-        
+
+        .integrity-fair,
         .integrity-at-risk {
             color: #ffc107;
             background-color: #fff8e6;
         }
-        
+
+        .integrity-poor,
+        .integrity-very-poor,
         .integrity-cheating-suspicion {
             color: #dc3545;
             background-color: #f8e6e8;
@@ -276,25 +280,27 @@ error_log("User Answers Retrieved: " . json_encode($user_answers));
                     <div class="score-value"><?php echo $attempt['ptg']; ?>%</div>
                     <div class="score-details">
                         <div class="score-item">
-                            <strong>Score:</strong> <?php echo $attempt['cnq'].'/'.$attempt['nq']; ?>
+                            <strong>Score:</strong> <?php echo $attempt['cnq'] . '/' . $attempt['nq']; ?>
                         </div>
                         <div class="score-item">
                             <?php
                             // Determine the CSS class based on integrity category
                             $integrityClass = 'integrity-good';
                             if (isset($attempt['integrity_category'])) {
-                                if ($attempt['integrity_category'] == 'At-Risk') {
-                                    $integrityClass = 'integrity-at-risk';
-                                } else if ($attempt['integrity_category'] == 'Cheating Suspicion') {
-                                    $integrityClass = 'integrity-cheating-suspicion';
+                                if ($attempt['integrity_category'] == 'Excellent' || $attempt['integrity_category'] == 'Good') {
+                                    $integrityClass = 'integrity-good';
+                                } else if ($attempt['integrity_category'] == 'Fair' || $attempt['integrity_category'] == 'At-Risk') {
+                                    $integrityClass = 'integrity-fair';
+                                } else if ($attempt['integrity_category'] == 'Poor' || $attempt['integrity_category'] == 'Very Poor' || $attempt['integrity_category'] == 'Cheating Suspicion') {
+                                    $integrityClass = 'integrity-poor';
                                 }
                             }
                             ?>
-                            <strong>Integrity:</strong> 
+                            <strong>Integrity:</strong>
                             <span class="integrity-score <?php echo $integrityClass; ?>">
                                 <?php echo $attempt['integrity_score']; ?>/100
-                                <?php if (isset($attempt['integrity_category'])) { 
-                                    echo '('.$attempt['integrity_category'].')'; 
+                                <?php if (isset($attempt['integrity_category'])) {
+                                    echo '(' . $attempt['integrity_category'] . ')';
                                 } ?>
                             </span>
                         </div>
@@ -302,13 +308,13 @@ error_log("User Answers Retrieved: " . json_encode($user_answers));
                             <strong>Completed:</strong> <?php echo date('M d, Y h:i A', strtotime($attempt['subtime'])); ?>
                         </div>
                     </div>
-                    
+
                     <div class="performance-summary" style="margin-top: 20px; padding: 15px; background-color: #f8f9fa; border-radius: 8px; text-align: left;">
                         <h3 style="margin-top: 0; color: #0A2558;">Performance Summary</h3>
                         <?php
                         // Calculate performance metrics
                         $scorePercentage = $attempt['ptg'];
-                        
+
                         if ($scorePercentage >= 90) {
                             $performanceLevel = "Excellent";
                             $performanceColor = "#28a745";
@@ -327,7 +333,7 @@ error_log("User Answers Retrieved: " . json_encode($user_answers));
                             $feedback = "You should review the material again and focus on the areas where you made mistakes.";
                         }
                         ?>
-                        
+
                         <div style="display: flex; align-items: center; margin-bottom: 10px;">
                             <span style="font-weight: bold; color: <?php echo $performanceColor; ?>; font-size: 18px; margin-right: 10px;">
                                 <?php echo $performanceLevel; ?>
@@ -337,23 +343,23 @@ error_log("User Answers Retrieved: " . json_encode($user_answers));
                             </div>
                             <span style="margin-left: 10px; font-weight: bold;"><?php echo $scorePercentage; ?>%</span>
                         </div>
-                        
+
                         <p style="margin-bottom: 0;"><?php echo $feedback; ?></p>
                     </div>
                 </div>
 
                 <h2>Questions and Answers</h2>
-                
+
                 <?php
                 $question_number = 1;
                 while ($question = mysqli_fetch_assoc($questionsResult)) {
                     $sno = $question['sno'];
                     $user_answer = isset($user_answers[$sno]) ? $user_answers[$sno] : null;
-                    
+
                     echo '<div class="question-card">';
-                    echo '<div class="question-text">Question '.$question_number.': '.$question['qstn'].'</div>';
+                    echo '<div class="question-text">Question ' . $question_number . ': ' . $question['qstn'] . '</div>';
                     echo '<ul class="options-list">';
-                    
+
                     // Get the option names and values
                     $options = [
                         'option1' => $question['qstn_o1'],
@@ -361,31 +367,31 @@ error_log("User Answers Retrieved: " . json_encode($user_answers));
                         'option3' => $question['qstn_o3'],
                         'option4' => $question['qstn_o4']
                     ];
-                    
+
                     // Debug logging for this question
                     error_log("Question $sno - Correct Answer: {$question['qstn_ans']}, User Answer: " . (isset($user_answers[$sno]) ? $user_answers[$sno] : 'Not Found'));
-                    
+
                     foreach ($options as $option_key => $option_text) {
                         $is_correct = ($question['qstn_ans'] == $option_key);
                         $is_user_selected = (isset($user_answers[$sno]) && $user_answers[$sno] == $option_key);
-                        
+
                         echo '<li class="option-item">';
                         echo htmlspecialchars($option_text);
                         echo '</li>';
                     }
-                    
+
                     // Display correct and marked answers
                     echo '<div style="margin-top: 10px; padding: 10px; background-color: #f8f9fa; border-radius: 4px;">';
-                    
+
                     // Get the correct answer text directly from the database
                     $correct_answer_text = $question['qstn_ans'];
-                    
+
                     // Get the user's marked answer text
                     $marked_answer_text = isset($user_answers[$sno]) ? $user_answers[$sno] : 'Not answered';
-                    
+
                     // Determine if the answer is correct
                     $is_correct = ($marked_answer_text === $correct_answer_text);
-                    
+
                     if ($marked_answer_text === 'Not answered') {
                         echo '<div><strong>Your Answer:</strong> <span style="color: #666;">Not answered</span></div>';
                         echo '<div><strong>Correct Answer:</strong> <span style="color: #28a745;">' . htmlspecialchars($correct_answer_text) . '</span></div>';
@@ -398,14 +404,14 @@ error_log("User Answers Retrieved: " . json_encode($user_answers));
                         }
                     }
                     echo '</div>';
-                    
+
                     echo '</ul>';
                     echo '</div>';
-                    
+
                     $question_number++;
                 }
                 ?>
-                
+
                 <div class="actions">
                     <a href="mock_exams.php" class="btn">Return to Mock Exams</a>
                 </div>
@@ -416,4 +422,4 @@ error_log("User Answers Retrieved: " . json_encode($user_answers));
     <script src="../js/script.js"></script>
 </body>
 
-</html> 
+</html>
