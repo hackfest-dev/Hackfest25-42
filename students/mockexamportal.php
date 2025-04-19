@@ -188,8 +188,8 @@ while ($rowd = mysqli_fetch_array($res)) {
         /* Integrity Score Display */
         #integrity-score-display {
             position: fixed;
-            top: 20px;
-            left: 20px;
+            bottom: 20px;
+            right: 20px;
             background-color: #f8f9fa;
             padding: 10px 15px;
             border-radius: 5px;
@@ -253,8 +253,8 @@ while ($rowd = mysqli_fetch_array($res)) {
             integrityContainer.id = 'integrity-score-display';
             integrityContainer.style.cssText = `
                 position: fixed;
-                top: 20px;
-                left: 20px;
+                bottom: 20px;
+                right: 20px;
                 background-color: #f8f9fa;
                 padding: 10px 15px;
                 border-radius: 5px;
