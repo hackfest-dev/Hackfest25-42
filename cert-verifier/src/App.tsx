@@ -3,7 +3,7 @@ import { ethers } from 'ethers';
 import './App.css';
 
 // Contract address on Sepolia - same as in main app
-const contractAddress = '0x8cFe8F5395c87522Ce96915c2B492960bd63633E';
+const contractAddress = '0xfE9c584F6360966B949a8804414B07C546a6F69F';
 
 // Contract ABI - same as in main app
 const contractABI = [

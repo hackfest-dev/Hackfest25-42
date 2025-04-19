@@ -53,7 +53,7 @@ try {
 // Direct blockchain configuration values (hardcoded)
 // The nft/.env file is no longer required with this approach
 $env_vars = [
-    'REACT_APP_PRIVATE_KEY' => 'f4bdb26109469f0210291188519001dc5ff2e7458ea0bd81e77392b9a5bbf535',
+    'REACT_APP_PRIVATE_KEY' => '9d534e074ad4794147941c272511656e5dbbe9044cc69ef3420dc077a347ce57',
     'REACT_APP_SEPOLIA_RPC_URL' => 'https://eth-sepolia.g.alchemy.com/v2/MGXla7xn3bEXIthLSYDJSw24tWE_EWl_',
     'REACT_APP_INFURA_PROJECT_ID' => '932d4a93ba314e2d924642fc81f98a05'
 ];
@@ -116,7 +116,7 @@ if (mysqli_num_rows($nft_result) > 0) {
 // Set up blockchain configuration
 $privateKey = $env_vars['REACT_APP_PRIVATE_KEY'] ?? '';
 $rpcUrl = $env_vars['REACT_APP_SEPOLIA_RPC_URL'] ?? '';
-$contractAddress = '0x8cFe8F5395c87522Ce96915c2B492960bd63633E'; // From blockchain.md
+$contractAddress = '0xfE9c584F6360966B949a8804414B07C546a6F69F'; // From blockchain.md
 
 if (empty($privateKey) || empty($rpcUrl)) {
     header('Content-Type: application/json');
