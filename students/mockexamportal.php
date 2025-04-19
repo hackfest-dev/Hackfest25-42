@@ -94,43 +94,95 @@ while ($rowd = mysqli_fetch_array($res)) {
             border-radius: 5px;
         }
 
-        /* Enhanced option styling */
-        .options-container {
-            margin-top: 20px;
-        }
-
-        .option-item {
-            margin-bottom: 15px;
-            padding: 10px;
+        /* Question Navigation Box */
+        .question-nav-box {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            width: 200px;
             border: 1px solid #ddd;
             border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: #f8f9fa;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+
+        .question-nav-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 14px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 8px;
+        }
+
+        .question-number-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .question-number-btn {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f8d7da;
+            /* Red for unattempted */
+            color: #721c24;
             cursor: pointer;
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
             transition: all 0.2s ease;
+        }
+
+        .question-number-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .question-number-btn.current {
+            border: 2px solid #0A2558;
+        }
+
+        .question-number-btn.attempted {
+            background-color: #d4edda;
+            /* Green for attempted */
+            color: #155724;
+        }
+
+        /* Status indicators */
+        .status-indicators {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            font-size: 12px;
+            border-top: 1px solid #ddd;
+            padding-top: 8px;
+        }
+
+        .status-indicator {
             display: flex;
             align-items: center;
         }
 
-        .option-item:hover {
-            background-color: #f5f5f5;
-            border-color: #ccc;
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 5px;
         }
 
-        .option-item input[type="radio"] {
-            margin-right: 10px;
-            transform: scale(1.2);
-            cursor: pointer;
+        .status-dot.unattempted {
+            background-color: #f8d7da;
+            border: 1px solid #721c24;
         }
 
-        .option-item label {
-            cursor: pointer;
-            font-size: 15px;
-            flex: 1;
-        }
-
-        /* Selected option style */
-        .option-item.selected {
-            background-color: #e6f7ff;
-            border-color: #1890ff;
+        .status-dot.attempted {
+            background-color: #d4edda;
+            border: 1px solid #155724;
         }
 
         /* Integrity Score Display */
@@ -315,7 +367,7 @@ while ($rowd = mysqli_fetch_array($res)) {
                 align-items: center;
                 z-index: 10000;
             `;
-            
+
             const modalContent = document.createElement('div');
             modalContent.style.cssText = `
                 background-color: white;
@@ -326,7 +378,7 @@ while ($rowd = mysqli_fetch_array($res)) {
                 box-shadow: 0 5px 15px rgba(0,0,0,0.3);
                 text-align: center;
             `;
-            
+
             modalContent.innerHTML = `
                 <h2 style="color: #0A2558; margin-bottom: 20px; font-size: 24px;">Test Information</h2>
                 <div style="text-align: left; margin-bottom: 25px;">
@@ -360,10 +412,10 @@ while ($rowd = mysqli_fetch_array($res)) {
                     margin-top: 10px;
                 ">I Understand & Start Test</button>
             `;
-            
+
             testInfoModal.appendChild(modalContent);
             document.body.appendChild(testInfoModal);
-            
+
             // Start test button event handler
             document.getElementById('start-test-btn').addEventListener('click', function() {
                 testInfoModal.style.display = 'none';
@@ -644,7 +696,7 @@ while ($rowd = mysqli_fetch_array($res)) {
 </head>
 
 <body>
-    <div class="sidebar">
+    <div class="sidebar active">
         <div class="logo-details">
             <i class='bx bx-diamond'></i>
             <span class="logo_name">Welcome</span>
@@ -663,7 +715,7 @@ while ($rowd = mysqli_fetch_array($res)) {
                 </a>
             </li>
             <li>
-                <a href="mock_exams.php">
+                <a href="mock_exams.php" class="active">
                     <i class='bx bx-edit'></i>
                     <span class="links_name">Mock Exams</span>
                 </a>
@@ -675,204 +727,280 @@ while ($rowd = mysqli_fetch_array($res)) {
                 </a>
             </li>
             <li>
-                <a href="messages.php">
+                <a>
                     <i class='bx bx-message'></i>
                     <span class="links_name">Announcements</span>
                 </a>
             </li>
             <li>
-                <a href="settings.php">
+                <a>
                     <i class='bx bx-cog'></i>
                     <span class="links_name">Settings</span>
                 </a>
             </li>
             <li>
-                <a href="help.php">
+                <a>
                     <i class='bx bx-help-circle'></i>
                     <span class="links_name">Help</span>
                 </a>
             </li>
             <li class="log_out">
-                <a href="../logout.php">
+                <a>
                     <i class='bx bx-log-out-circle'></i>
                     <span class="links_name">Log out</span>
                 </a>
             </li>
         </ul>
     </div>
+
+    <!-- Question Navigation Box - Outside the main container, fixed on the right -->
+    <div class="question-nav-box">
+        <div class="question-nav-title">Question Navigation</div>
+        <div class="question-number-grid" id="question-nav-grid">
+            <!-- Question number buttons will be generated by JavaScript -->
+        </div>
+        <div class="status-indicators">
+            <div class="status-indicator">
+                <div class="status-dot unattempted"></div>
+                <span>Unattempted</span>
+            </div>
+            <div class="status-indicator">
+                <div class="status-dot attempted"></div>
+                <span>Attempted</span>
+            </div>
+        </div>
+    </div>
     <section class="home-section">
         <nav>
             <div class="sidebar-button">
-                <i class='bx bx-menu sidebarBtn'></i>
-                <span class="dashboard">Mock Exam Portal</span>
-            </div>
-            <div class="profile-details">
-                <img src="<?php echo $_SESSION['img']; ?>" alt="pro">
-                <span class="admin_name"><?php echo $_SESSION['fname']; ?></span>
+                <i class='bx bx-menu-alt-right sidebarBtn'></i>
+                <span class="dashboard">Student Dashboard</span>
             </div>
         </nav>
 
         <div class="home-content">
             <div class="stat-boxes">
-                <div class="recent-stat box" style="width:100%">
-                    <div class="title" style="text-align:center;">
-                        <h2><?php echo $exname; ?></h2>
-                        <div style="display: flex; justify-content: space-between; margin-top: 10px;">
-                            <p style="font-size: 15px;"><?php echo "Subject: " . $desp; ?></p>
-                            <p id="time" style="font-size: 15px; color: #0A2558; font-weight: bold;"></p>
-                        </div>
+                <div class="recent-stat box">
+                    <div>
+                        <h3>Exam name: <?php echo $exname ?><?php echo '
+                    <p id="time" style="float:right"></p>'; ?></h3>
                     </div>
-                    <div class="stat-details">
-                        <?php
-                        $uname = $_SESSION['uname'];
-                        $i = 1;
-                        $questions = array();
-
-                        while ($row = mysqli_fetch_assoc($result)) {
-                            $questions[] = array(
-                                'qid' => $row['mock_qid'],
-                                'qstn' => $row['qstn'],
-                                'o1' => $row['qstn_o1'],
-                                'o2' => $row['qstn_o2'],
-                                'o3' => $row['qstn_o3'],
-                                'o4' => $row['qstn_o4']
-                            );
-                        }
-                        ?>
-                        <form id="form1" method="post" action="submit_mock.php">
-                            <input type="hidden" name="mock_exid" value="<?php echo $mock_exid; ?>">
-                            <input type="hidden" name="nq" value="<?php echo $nq; ?>">
-
-                            <div id="questions-container">
-                                <?php
-                                for ($i = 0; $i < count($questions); $i++) {
-                                    $q = $questions[$i];
-                                    $display = ($i === 0) ? 'block' : 'none';
-                                    echo '
-                    <div id="question-' . ($i + 1) . '" class="question" style="display: ' . $display . ';">
-                      <h3>Question ' . ($i + 1) . '</h3>
-                      <p style="font-size: 16px; margin-bottom: 20px;">' . $q['qstn'] . '</p>
-                      
-                      <div class="options-container" style="margin-top: 20px;">
-                        <div class="option-item" style="margin-bottom: 15px; padding: 10px; border: 1px solid #ddd; border-radius: 5px; cursor: pointer; transition: all 0.2s ease;">
-                          <input type="radio" id="q' . ($i + 1) . 'o1" name="a' . ($i + 1) . '" value="' . $q['o1'] . '" style="margin-right: 10px; transform: scale(1.2);">
-                          <label for="q' . ($i + 1) . 'o1" style="cursor: pointer; font-size: 15px;">' . $q['o1'] . '</label>
-                        </div>
-                        
-                        <div class="option-item" style="margin-bottom: 15px; padding: 10px; border: 1px solid #ddd; border-radius: 5px; cursor: pointer; transition: all 0.2s ease;">
-                          <input type="radio" id="q' . ($i + 1) . 'o2" name="a' . ($i + 1) . '" value="' . $q['o2'] . '" style="margin-right: 10px; transform: scale(1.2);">
-                          <label for="q' . ($i + 1) . 'o2" style="cursor: pointer; font-size: 15px;">' . $q['o2'] . '</label>
-                        </div>
-                        
-                        <div class="option-item" style="margin-bottom: 15px; padding: 10px; border: 1px solid #ddd; border-radius: 5px; cursor: pointer; transition: all 0.2s ease;">
-                          <input type="radio" id="q' . ($i + 1) . 'o3" name="a' . ($i + 1) . '" value="' . $q['o3'] . '" style="margin-right: 10px; transform: scale(1.2);">
-                          <label for="q' . ($i + 1) . 'o3" style="cursor: pointer; font-size: 15px;">' . $q['o3'] . '</label>
-                        </div>
-                        
-                        <div class="option-item" style="margin-bottom: 15px; padding: 10px; border: 1px solid #ddd; border-radius: 5px; cursor: pointer; transition: all 0.2s ease;">
-                          <input type="radio" id="q' . ($i + 1) . 'o4" name="a' . ($i + 1) . '" value="' . $q['o4'] . '" style="margin-right: 10px; transform: scale(1.2);">
-                          <label for="q' . ($i + 1) . 'o4" style="cursor: pointer; font-size: 15px;">' . $q['o4'] . '</label>
-                        </div>
-                      </div>
-                    </div>
-                  ';
+                    <span style="font-size: 17px;">Description: <?php echo $desp ?></span>
+                    <br><br><br>
+                    <form action="submit_mock.php" id="form1" method="post">
+                        <div class="radio-container">
+                            <?php
+                            $questions = array();
+                            if (mysqli_num_rows($result) > 0) {
+                                $i = 1;
+                                while ($row = mysqli_fetch_assoc($result)) {
+                                    $questions[] = array(
+                                        'qid' => $row['mock_qid'],
+                                        'qstn' => $row['qstn'],
+                                        'qstn_o1' => $row['qstn_o1'],
+                                        'qstn_o2' => $row['qstn_o2'],
+                                        'qstn_o3' => $row['qstn_o3'],
+                                        'qstn_o4' => $row['qstn_o4']
+                                    );
+                                    echo '<input type="hidden" name="mock_qid' . $i . '" value="' . $row['mock_qid'] . '">';
+                                    $i++;
                                 }
-                                ?>
-                            </div>
+                                $totalQuestions = count($questions);
+                            ?>
 
-                            <div class="navigation-buttons">
-                                <button type="button" id="prev-btn" class="nav-btn" disabled>Previous</button>
-                                <span id="question-number">Question 1 of <?php echo count($questions); ?></span>
-                                <button type="button" id="next-btn" class="nav-btn">Next</button>
-                            </div>
+                                <div id="question-container">
+                                    <!-- Questions will be displayed here by JavaScript -->
+                                </div>
 
-                            <div style="margin-top: 20px; text-align: center;">
-                                <button type="submit" style="padding: 10px 20px; background-color: #0A2558; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px;">Submit Exam</button>
-                                <button type="reset" style="padding: 10px 20px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; margin-left: 10px;">Reset</button>
-                            </div>
-                        </form>
-                    </div>
+                                <div class="navigation-buttons">
+                                    <button type="button" id="prev-btn" class="nav-btn" disabled>Previous</button>
+                                    <span id="question-number">Question 1 of <?php echo $totalQuestions; ?></span>
+                                    <button type="button" id="next-btn" class="nav-btn">Next</button>
+                                </div>
+
+                            <?php
+                            }
+                            ?>
+                        </div>
+                        <input type="hidden" name="mock_exid" value="<?php echo $mock_exid ?>">
+                        <input type="hidden" name="nq" value="<?php echo $nq ?>">
+                        <button type="reset" id="reset-btn" class="rbtn">Reset current</button>
+                        <br><br>
+                        <input type="submit" name="ans_sub" value="Submit" class="btn" />
+                    </form>
                 </div>
             </div>
         </div>
     </section>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const totalQuestions = <?php echo count($questions); ?>;
-            let currentQuestion = 1;
+        // Store questions data from PHP to JavaScript
+        const questions = <?php echo json_encode($questions); ?>;
+        const totalQuestions = <?php echo $totalQuestions; ?>;
+        let currentQuestion = 0;
 
-            const prevBtn = document.getElementById('prev-btn');
-            const nextBtn = document.getElementById('next-btn');
-            const questionNumberSpan = document.getElementById('question-number');
+        // DOM elements
+        const questionContainer = document.getElementById('question-container');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const questionNumber = document.getElementById('question-number');
+        const resetBtn = document.getElementById('reset-btn');
+        const questionNavGrid = document.getElementById('question-nav-grid');
 
-            // Navigation functions
-            function showQuestion(questionNumber) {
-                // Hide all questions
-                for (let i = 1; i <= totalQuestions; i++) {
-                    document.getElementById('question-' + i).style.display = 'none';
+        // Track attempted questions
+        const attemptedQuestions = new Set();
+
+        // Generate question navigation grid
+        function generateQuestionNavGrid() {
+            questionNavGrid.innerHTML = '';
+
+            for (let i = 0; i < totalQuestions; i++) {
+                const qNum = i + 1;
+                const btn = document.createElement('div');
+                btn.className = 'question-number-btn';
+                if (attemptedQuestions.has(qNum)) {
+                    btn.classList.add('attempted');
                 }
+                if (currentQuestion === i) {
+                    btn.classList.add('current');
+                }
+                btn.textContent = qNum;
+                btn.dataset.question = i;
 
-                // Show the current question
-                document.getElementById('question-' + questionNumber).style.display = 'block';
+                btn.addEventListener('click', function() {
+                    currentQuestion = parseInt(this.dataset.question);
+                    displayQuestion();
+                });
 
-                // Update question number text
-                questionNumberSpan.textContent = 'Question ' + questionNumber + ' of ' + totalQuestions;
+                questionNavGrid.appendChild(btn);
+            }
+        }
 
-                // Update button states
-                prevBtn.disabled = (questionNumber === 1);
-                nextBtn.disabled = (questionNumber === totalQuestions);
+        // Function to display current question
+        function displayQuestion() {
+            const q = questions[currentQuestion];
+            const qNum = currentQuestion + 1;
+
+            // Update question number display
+            questionNumber.textContent = `Question ${qNum} of ${totalQuestions}`;
+
+            // Enable/disable navigation buttons as needed
+            prevBtn.disabled = currentQuestion === 0;
+            nextBtn.disabled = currentQuestion === totalQuestions - 1;
+            nextBtn.textContent = currentQuestion === totalQuestions - 1 ? "Review" : "Next";
+
+            // Generate question HTML
+            let questionHTML = `
+                <div class="question" data-index="${qNum}">
+                <span><b>Q${qNum}. ${q.qstn}</b></span><br><br>
+                
+                <input type="radio" id="o1${qNum}" name="a${qNum}" value="${q.qstn_o1}" />
+                <label class="lbl" for="o1${qNum}">${q.qstn_o1}</label><br>
+                
+                <input type="radio" id="o2${qNum}" name="a${qNum}" value="${q.qstn_o2}" />
+                <label class="lbl" for="o2${qNum}">${q.qstn_o2}</label><br>
+                
+                <input type="radio" id="o3${qNum}" name="a${qNum}" value="${q.qstn_o3}" />
+                <label class="lbl" for="o3${qNum}">${q.qstn_o3}</label><br>
+                
+                <input type="radio" id="o4${qNum}" name="a${qNum}" value="${q.qstn_o4}" />
+                <label class="lbl" for="o4${qNum}">${q.qstn_o4}</label><br>
+                </div>
+            `;
+
+            questionContainer.innerHTML = questionHTML;
+
+            // Check if this question was previously attempted
+            if (attemptedQuestions.has(qNum)) {
+                // Check if there's a hidden input field for this question
+                const hiddenInput = document.querySelector(`input[name="stored_ans_${qNum}"]`);
+                if (hiddenInput) {
+                    const savedValue = hiddenInput.value;
+                    const radioBtn = document.querySelector(`input[name="a${qNum}"][value="${savedValue}"]`);
+                    if (radioBtn) radioBtn.checked = true;
+                }
             }
 
-            // Button event listeners
-            prevBtn.addEventListener('click', function() {
-                if (currentQuestion > 1) {
-                    currentQuestion--;
-                    showQuestion(currentQuestion);
-                }
-            });
+            // Add event listeners to save answers
+            const radioButtons = document.querySelectorAll(`input[name="a${qNum}"]`);
+            radioButtons.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    attemptedQuestions.add(qNum);
 
-            nextBtn.addEventListener('click', function() {
-                if (currentQuestion < totalQuestions) {
-                    currentQuestion++;
-                    showQuestion(currentQuestion);
-                }
-            });
-
-            // Enhance option selection
-            const optionItems = document.querySelectorAll('.option-item');
-            optionItems.forEach(function(item) {
-                // Add click handler to the entire option div
-                item.addEventListener('click', function() {
-                    // Find the radio button inside this option item
-                    const radio = this.querySelector('input[type="radio"]');
-                    if (radio) {
-                        radio.checked = true;
-
-                        // Remove highlight from all options in this question
-                        const questionContainer = this.closest('.question');
-                        const allOptionsInQuestion = questionContainer.querySelectorAll('.option-item');
-                        allOptionsInQuestion.forEach(function(option) {
-                            option.classList.remove('selected');
-                        });
-
-                        // Highlight the selected option
-                        this.classList.add('selected');
+                    // Store the selected answer in a hidden input field
+                    let hiddenInput = document.querySelector(`input[name="stored_ans_${qNum}"]`);
+                    if (!hiddenInput) {
+                        hiddenInput = document.createElement('input');
+                        hiddenInput.type = 'hidden';
+                        hiddenInput.name = `stored_ans_${qNum}`;
+                        document.getElementById('form1').appendChild(hiddenInput);
                     }
+                    hiddenInput.value = this.value;
+
+                    generateQuestionNavGrid(); // Update the navigation grid
                 });
             });
 
-            // Check if any options were previously selected (e.g., after page refresh)
-            const allRadios = document.querySelectorAll('input[type="radio"]');
-            allRadios.forEach(function(radio) {
-                if (radio.checked) {
-                    const parentOption = radio.closest('.option-item');
-                    if (parentOption) {
-                        parentOption.classList.add('selected');
-                    }
-                }
-            });
+            // Update question navigation grid
+            generateQuestionNavGrid();
+        }
+
+        // Event listeners for navigation
+        prevBtn.addEventListener('click', () => {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                displayQuestion();
+            }
         });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentQuestion < totalQuestions - 1) {
+                currentQuestion++;
+                displayQuestion();
+            } else {
+                // If on last question, show a summary or allow submission
+                alert("You've reached the last question. Review your answers before submitting.");
+            }
+        });
+
+        // Reset button functionality
+        resetBtn.addEventListener('click', function() {
+            const qNum = currentQuestion + 1;
+            const radioButtons = document.querySelectorAll(`input[name="a${qNum}"]`);
+            radioButtons.forEach(radio => radio.checked = false);
+            attemptedQuestions.delete(qNum);
+            generateQuestionNavGrid(); // Update the navigation grid
+        });
+
+        // Initialize - show first question
+        const mock_exid = <?php echo $mock_exid; ?>;
+        displayQuestion();
+        generateQuestionNavGrid();
+
+        // Handle form submission
+        document.getElementById('form1').addEventListener('submit', function(e) {
+            // Before submitting, transfer all stored answers to the actual form inputs
+            for (let i = 1; i <= totalQuestions; i++) {
+                const storedAnswer = document.querySelector(`input[name="stored_ans_${i}"]`);
+                if (storedAnswer) {
+                    // Create or update the actual form input that submit.php expects
+                    let formInput = document.querySelector(`input[name="a${i}"]`);
+                    if (!formInput) {
+                        formInput = document.createElement('input');
+                        formInput.type = 'hidden';
+                        formInput.name = `a${i}`;
+                        this.appendChild(formInput);
+                    }
+                    formInput.value = storedAnswer.value;
+                }
+            }
+            // Now submit the form with all answers
+        });
+
+        // Function to submit the form when timer expires
+        function st() {
+            document.getElementById("form1").submit();
+        }
     </script>
 
     <script src="../js/script.js"></script>
