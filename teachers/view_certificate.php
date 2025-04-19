@@ -110,6 +110,280 @@ if (mysqli_num_rows($table_check) > 0) {
             margin-right: 5px;
         }
 
+        /* Certificate styles */
+        .certificate-container {
+            background-color: #fefef9;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23d0b15e' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+            width: 800px;
+            height: 600px;
+            padding: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            border: 2px solid #d4af37;
+            position: relative;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        /* Fancy border with corner decorations */
+        .fancy-border {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border: 2px solid rgba(212, 175, 55, 0.5);
+            margin: 10px;
+            pointer-events: none;
+            z-index: 1;
+            box-shadow: inset 0 0 15px rgba(212, 175, 55, 0.15);
+        }
+
+        .corner {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border-color: #d4af37;
+            z-index: 2;
+        }
+
+        .corner-top-left {
+            top: 10px;
+            left: 10px;
+            border-top: 4px solid;
+            border-left: 4px solid;
+        }
+
+        .corner-top-right {
+            top: 10px;
+            right: 10px;
+            border-top: 4px solid;
+            border-right: 4px solid;
+        }
+
+        .corner-bottom-left {
+            bottom: 10px;
+            left: 10px;
+            border-bottom: 4px solid;
+            border-left: 4px solid;
+        }
+
+        .corner-bottom-right {
+            bottom: 10px;
+            right: 10px;
+            border-bottom: 4px solid;
+            border-right: 4px solid;
+        }
+
+        /* Certificate seal */
+        .certificate-seal {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            width: 110px;
+            height: 110px;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.7) 0%, rgba(212, 175, 55, 0.1) 70%);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #7a5c00;
+            font-size: 14px;
+            text-align: center;
+            font-weight: bold;
+            font-family: 'Playfair Display', serif;
+            transform: rotate(10deg);
+            text-transform: uppercase;
+            line-height: 1.3;
+            padding: 10px;
+            z-index: 3;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border: 1px dashed #7a5c00;
+        }
+
+        .certificate-seal::before {
+            content: '';
+            position: absolute;
+            width: 102px;
+            height: 102px;
+            border: 1px dashed #7a5c00;
+            border-radius: 50%;
+        }
+
+        .certificate-header {
+            text-align: center;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 2;
+            padding-bottom: 8px;
+            border-bottom: 2px solid rgba(212, 175, 55, 0.3);
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .certificate-title {
+            color: #0A2558;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 25px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .certificate-subtitle {
+            color: #0A2558;
+            font-size: 20px;
+            font-weight: bold;
+            font-family: 'Cormorant Garamond', serif;
+            letter-spacing: 1px;
+        }
+
+        .certificate-content {
+            padding: 10px 40px;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .certificate-text {
+            font-size: 16px;
+            margin: 6px 0;
+            line-height: 1.4;
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 500;
+        }
+
+        .student-name-cert {
+            font-size: 24px;
+            font-weight: bold;
+            color: #0A2558;
+            margin: 8px 0;
+            font-family: 'Playfair Display', serif;
+            border-bottom: 1px solid #d4af37;
+            display: inline-block;
+            padding: 0 20px 3px;
+            text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.05);
+            letter-spacing: 0.5px;
+        }
+
+        .certificate-details {
+            margin: 15px 0;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 12px;
+            border-radius: 8px;
+            width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .certificate-detail {
+            font-size: 15px;
+            margin: 8px 0;
+            font-family: 'Montserrat', sans-serif;
+            line-height: 1.3;
+        }
+
+        .certificate-footer {
+            position: absolute;
+            bottom: 15px;
+            width: calc(100% - 40px);
+            text-align: center;
+            z-index: 2;
+        }
+
+        .signature-line {
+            width: 200px;
+            height: 1px;
+            background-color: #000;
+            margin: 30px auto 5px auto;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Ribbon decoration */
+        .ribbon {
+            position: absolute;
+            bottom: 70px;
+            left: 30px;
+            width: 80px;
+            height: 80px;
+            z-index: 3;
+            opacity: 0.9;
+        }
+
+        .ribbon-circle {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, #d4af37 0%, #bb9632 100%);
+            border-radius: 50%;
+            border: 1px solid #946e00;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ribbon-circle::after {
+            content: '';
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border: 1px dashed rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+        }
+
+        .ribbon-tail {
+            position: absolute;
+            top: 45px;
+            left: 15px;
+            width: 15px;
+            height: 40px;
+            background: linear-gradient(to right, #d4af37, #bb9632);
+            transform: rotate(-35deg);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .ribbon-tail:nth-child(2) {
+            left: 35px;
+            transform: rotate(35deg);
+        }
+
+        .integrity-score-good {
+            color: #28a745;
+            font-weight: bold;
+            padding: 2px 6px;
+            background-color: rgba(40, 167, 69, 0.1);
+            border-radius: 4px;
+            border: 1px solid rgba(40, 167, 69, 0.2);
+        }
+
+        .integrity-score-at-risk {
+            color: #ffc107;
+            font-weight: bold;
+            padding: 2px 6px;
+            background-color: rgba(255, 193, 7, 0.1);
+            border-radius: 4px;
+            border: 1px solid rgba(255, 193, 7, 0.2);
+        }
+
+        .integrity-score-cheating {
+            color: #dc3545;
+            font-weight: bold;
+            padding: 2px 6px;
+            background-color: rgba(220, 53, 69, 0.1);
+            border-radius: 4px;
+            border: 1px solid rgba(220, 53, 69, 0.2);
+        }
+
         .nft-container {
             background-color: white;
             width: 800px;
@@ -117,6 +391,16 @@ if (mysqli_num_rows($table_check) > 0) {
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
             margin-bottom: 20px;
+        }
+
+        /* Add some spacing between certificate and NFT details */
+        .section-title {
+            text-align: center;
+            margin: 30px 0;
+            color: #0A2558;
+            font-size: 24px;
+            font-weight: 600;
+            font-family: 'Playfair Display', serif;
         }
 
         .nft-container h1 {
@@ -383,9 +667,29 @@ if (mysqli_num_rows($table_check) > 0) {
                         <?php endif; ?>
                     </div>
                 </div>
-                <?php if (isset($nft_data['image_url']) && !empty($nft_data['image_url'])): ?>
+                <?php
+                // Check if image URL exists, or use the one provided in the query if this is a test
+                $has_image = isset($nft_data['image_url']) && !empty($nft_data['image_url']);
+                $test_image = "ipfs://bafybeictwq6pmi6ml2arc2gmfls6ytwwjtv3jj3tpbdcjcvemtyqcgx6aa";
+
+                if ($has_image || isset($_GET['test_image'])):
+                ?>
                     <div class="nft-image">
-                        <img src="<?php echo $nft_data['image_url']; ?>" alt="NFT Certificate Image">
+                        <?php
+                        // Convert IPFS URI to gateway URL if needed
+                        $image_url = $has_image ? $nft_data['image_url'] : $test_image;
+
+                        if (strpos($image_url, 'ipfs://') === 0) {
+                            // Extract the CID (Content Identifier)
+                            $cid = str_replace('ipfs://', '', $image_url);
+                            // Use multiple public IPFS gateways with fallbacks
+                            $image_url = "https://gateway.pinata.cloud/ipfs/{$cid}";
+                        }
+                        ?>
+                        <img src="<?php echo $image_url; ?>" alt="NFT Certificate Image" style="max-width: 100%; border: 1px solid #d4af37; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-radius: 8px;">
+                        <?php if (isset($_GET['test_image'])): ?>
+                            <p class="status-note" style="text-align: center; margin-top: 10px;"><i>Demo image shown for testing purposes</i></p>
+                        <?php endif; ?>
                     </div>
                 <?php endif; ?>
             </div>
@@ -393,8 +697,24 @@ if (mysqli_num_rows($table_check) > 0) {
     <?php else: ?>
         <div class="no-nft">
             <h2>No Blockchain Certificate Found</h2>
-            <p>The student has not yet minted an NFT certificate for this exam.</p>
-            <p>Once they complete the minting process, the blockchain certificate will be available here.</p>
+            <p>This student has not yet minted an NFT certificate for this exam.</p>
+            <p>Once they complete the minting process, the blockchain certificate details will be available here.</p>
+            <p>Students can mint their certificates as NFTs from their results page.</p>
+
+            <?php if (isset($_GET['test_image'])): ?>
+                <div style="margin-top: 30px; text-align: center;">
+                    <h3>Sample NFT Certificate Preview</h3>
+                    <div style="max-width: 500px; margin: 20px auto; border: 1px solid #d4af37; padding: 10px; border-radius: 10px; background-color: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                        <?php
+                        $test_image = "ipfs://bafybeictwq6pmi6ml2arc2gmfls6ytwwjtv3jj3tpbdcjcvemtyqcgx6aa";
+                        $cid = str_replace('ipfs://', '', $test_image);
+                        $image_url = "https://gateway.pinata.cloud/ipfs/{$cid}";
+                        ?>
+                        <img src="<?php echo $image_url; ?>" alt="Sample NFT Certificate Image" style="max-width: 100%; border-radius: 8px;">
+                        <p class="status-note" style="text-align: center; margin-top: 10px;"><i>Demo NFT image shown for preview purposes</i></p>
+                    </div>
+                </div>
+            <?php endif; ?>
         </div>
     <?php endif; ?>
 
