@@ -189,3 +189,9 @@ body {
 2025-04-19 20:18:06 - Fetching data from: http://localhost/Hackfest25-42/teachers/simple_analytics.php?exam_id=71
 2025-04-19 20:18:06 - Raw data: {"exam_id":71,"exam_name":"Physics","description":"Forces","total_questions":2,"questions":[{"question_id":120,"question_text":"What is the value of acceleration due to gravity","options":[{"text":"10 m\/s^2","count":0,"percentage":0},{"text":"9.8 m\/s^2","count":0,"percentage":0},{"text":"2 m\/s^2","count":0,"percentage":0},{"text":"00000","count":0,"percentage":0}],"correct_option":"9.8 m\/s^2","correct_responses":0,"correct_percentage":0},{"question_id":121,"question_text":"What is Newton's F
 2025-04-19 20:18:06 - Successfully decoded JSON data
+2025-04-19 21:59:34 - Fetching data from: http://localhost/Hackfest25-42/teachers/simple_analytics.php?exam_id=64
+2025-04-19 21:59:34 - Raw data: {"error":"student_answers table does not exist"}
+2025-04-19 21:59:34 - Successfully decoded JSON data
+2025-04-19 21:59:44 - Fetching data from: http://localhost/Hackfest25-42/teachers/simple_analytics.php?exam_id=64
+2025-04-19 21:59:44 - Raw data: {"error":"No student answer data available for this exam yet"}
+2025-04-19 21:59:44 - Successfully decoded JSON data

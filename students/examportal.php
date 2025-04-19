@@ -109,10 +109,10 @@ while ($rowd = mysqli_fetch_array($res)) {
       padding: 15px;
       margin-bottom: 20px;
       background-color: #f8f9fa;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
       z-index: 100;
     }
-    
+
     .question-nav-title {
       font-weight: bold;
       margin-bottom: 10px;
@@ -121,18 +121,19 @@ while ($rowd = mysqli_fetch_array($res)) {
       border-bottom: 1px solid #ddd;
       padding-bottom: 8px;
     }
-    
+
     .question-number-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 8px;
     }
-    
+
     .question-number-btn {
       padding: 8px;
       border: 1px solid #ddd;
       border-radius: 4px;
-      background-color: #f8d7da; /* Red for unattempted */
+      background-color: #f8d7da;
+      /* Red for unattempted */
       color: #721c24;
       cursor: pointer;
       text-align: center;
@@ -140,18 +141,19 @@ while ($rowd = mysqli_fetch_array($res)) {
       font-weight: bold;
       transition: all 0.2s ease;
     }
-    
+
     .question-number-btn:hover {
       transform: scale(1.05);
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
-    
+
     .question-number-btn.current {
       border: 2px solid #0A2558;
     }
-    
+
     .question-number-btn.attempted {
-      background-color: #d4edda; /* Green for attempted */
+      background-color: #d4edda;
+      /* Green for attempted */
       color: #155724;
     }
 
@@ -197,28 +199,28 @@ while ($rowd = mysqli_fetch_array($res)) {
     //set the date we are counting down to 
     var count_id = "<?php echo $td; ?>";
     var countDownDate = new Date(count_id).getTime();
-    
+
     // Get the test duration in minutes and convert to milliseconds
     var testDuration = <?php echo $duration; ?> * 60 * 1000;
     var startTime = new Date().getTime();
     var endTime = startTime + testDuration;
-    
+
     // Use the smaller of the two times: either submission deadline or test duration
     var effectiveEndTime = Math.min(countDownDate, endTime);
-    
+
     // Function to auto-submit the test when time expires
     function autoSubmitTest() {
       // Simply submit the form with current answers without any alert
       document.getElementById("form1").submit();
     }
-    
+
     //Update the count down every 1 second 
     var x = setInterval(function() {
       //Get today's date and time 
       var now = new Date().getTime();
       //Find the distance between now and the effective end time
       var distance = effectiveEndTime - now;
-      
+
       if (distance <= 0) {
         // Clear the interval
         clearInterval(x);
@@ -228,13 +230,13 @@ while ($rowd = mysqli_fetch_array($res)) {
         autoSubmitTest();
         return;
       }
-      
+
       //Time calculations for hours, minutes and seconds 
       var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
       var seconds = Math.floor((distance % (1000 * 60)) / 1000);
       document.getElementById("time").innerHTML = "Timer: " + hours + "h " + minutes + "m " + seconds + "s";
-      
+
       // If approaching end of time (last 60 seconds), flash the timer
       if (distance < 60000) {
         document.getElementById("time").style.color = distance % 1000 < 500 ? "#dc3545" : "#0A2558";
@@ -355,7 +357,7 @@ while ($rowd = mysqli_fetch_array($res)) {
           align-items: center;
           z-index: 10000;
       `;
-      
+
       const modalContent = document.createElement('div');
       modalContent.style.cssText = `
           background-color: white;
@@ -366,7 +368,7 @@ while ($rowd = mysqli_fetch_array($res)) {
           box-shadow: 0 5px 15px rgba(0,0,0,0.3);
           text-align: center;
       `;
-      
+
       modalContent.innerHTML = `
           <h2 style="color: #0A2558; margin-bottom: 20px; font-size: 24px;">Exam Information</h2>
           <div style="text-align: left; margin-bottom: 25px;">
@@ -400,14 +402,14 @@ while ($rowd = mysqli_fetch_array($res)) {
               margin-top: 10px;
           ">I Understand & Start Exam</button>
       `;
-      
+
       testInfoModal.appendChild(modalContent);
       document.body.appendChild(testInfoModal);
-      
+
       // Start test button event handler
       document.getElementById('start-test-btn').addEventListener('click', function() {
-          testInfoModal.style.display = 'none';
-          fullScreenContainer.style.display = 'flex';
+        testInfoModal.style.display = 'none';
+        fullScreenContainer.style.display = 'flex';
       });
 
       // Make sure test info modal is displayed when page loads
@@ -724,7 +726,7 @@ while ($rowd = mysqli_fetch_array($res)) {
       </li>
     </ul>
   </div>
-  
+
   <!-- Question Navigation Box - Outside the main container, fixed on the right -->
   <div class="question-nav-box">
     <div class="question-nav-title">Question Navigation</div>
@@ -733,7 +735,7 @@ while ($rowd = mysqli_fetch_array($res)) {
     </div>
     <div class="status-indicators">
       <div class="status-indicator">
-        <div class="status-dot unattempted"></div> 
+        <div class="status-dot unattempted"></div>
         <span>Unattempted</span>
       </div>
       <div class="status-indicator">
@@ -821,7 +823,7 @@ while ($rowd = mysqli_fetch_array($res)) {
     // Generate question navigation grid
     function generateQuestionNavGrid() {
       questionNavGrid.innerHTML = '';
-      
+
       for (let i = 0; i < totalQuestions; i++) {
         const qNum = i + 1;
         const btn = document.createElement('div');
@@ -834,12 +836,12 @@ while ($rowd = mysqli_fetch_array($res)) {
         }
         btn.textContent = qNum;
         btn.dataset.question = i;
-        
+
         btn.addEventListener('click', function() {
           currentQuestion = parseInt(this.dataset.question);
           displayQuestion();
         });
-        
+
         questionNavGrid.appendChild(btn);
       }
     }
@@ -880,10 +882,10 @@ while ($rowd = mysqli_fetch_array($res)) {
 
       // Check if this question was previously attempted
       if (attemptedQuestions.has(qNum)) {
-        // Try to find the saved answer in the form data
-        const formData = new FormData(document.getElementById('form1'));
-        const savedValue = formData.get(`o${qNum}`);
-        if (savedValue) {
+        // Check if there's a hidden input field for this question
+        const hiddenInput = document.querySelector(`input[name="stored_ans_${qNum}"]`);
+        if (hiddenInput) {
+          const savedValue = hiddenInput.value;
           const radioBtn = document.querySelector(`input[name="o${qNum}"][value="${savedValue}"]`);
           if (radioBtn) radioBtn.checked = true;
         }
@@ -894,10 +896,21 @@ while ($rowd = mysqli_fetch_array($res)) {
       radioButtons.forEach(radio => {
         radio.addEventListener('change', function() {
           attemptedQuestions.add(qNum);
+
+          // Store the selected answer in a hidden input field
+          let hiddenInput = document.querySelector(`input[name="stored_ans_${qNum}"]`);
+          if (!hiddenInput) {
+            hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.name = `stored_ans_${qNum}`;
+            document.getElementById('form1').appendChild(hiddenInput);
+          }
+          hiddenInput.value = this.value;
+
           generateQuestionNavGrid(); // Update the navigation grid
         });
       });
-      
+
       // Update question navigation grid
       generateQuestionNavGrid();
     }
@@ -936,7 +949,22 @@ while ($rowd = mysqli_fetch_array($res)) {
 
     // Handle form submission
     document.getElementById('form1').addEventListener('submit', function(e) {
-      // Just submit as is - no need to collect from localStorage
+      // Before submitting, transfer all stored answers to the actual form inputs
+      for (let i = 1; i <= totalQuestions; i++) {
+        const storedAnswer = document.querySelector(`input[name="stored_ans_${i}"]`);
+        if (storedAnswer) {
+          // Create or update the actual form input that submit.php expects
+          let formInput = document.querySelector(`input[name="o${i}"]`);
+          if (!formInput) {
+            formInput = document.createElement('input');
+            formInput.type = 'hidden';
+            formInput.name = `o${i}`;
+            this.appendChild(formInput);
+          }
+          formInput.value = storedAnswer.value;
+        }
+      }
+      // Now submit the form with all answers
     });
 
     // Original timer code
