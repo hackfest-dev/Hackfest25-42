@@ -1,196 +1,209 @@
 # ExamFlow
 
 <p align="center">
-  <img src="img/logo.png" alt="ExamFlow Logo" width="180">
+  <img src="img/logo.png" alt="ExamFlow Logo" width="200">
 </p>
 
 <p align="center">
-  <b>Advanced Online Assessment Platform with Blockchain-Verified Credentials</b>
+  <b>The Ultimate Assessment Platform with Blockchain-Verified Credentials & Advanced Proctoring</b>
 </p>
 
 <p align="center">
-  <a href="#overview">Overview</a> •
-  <a href="#key-features">Key Features</a> •
-  <a href="#anti-cheat-system">Anti-Cheat System</a> •
-  <a href="#blockchain-integration">Blockchain Integration</a> •
-  <a href="#email-notifications">Email Notifications</a> •
+  <a href="#blockchain-verified-credentials">Blockchain Verification</a> •
+  <a href="#integrity-scoring">Integrity Scoring</a> •
+  <a href="#advanced-proctoring">Proctoring</a> •
+  <a href="#ai-powered-mock-tests">Mock Tests</a> •
+  <a href="#examination-analytics">Analytics</a> •
+  <a href="#key-features">Features</a> •
   <a href="#architecture">Architecture</a> •
-  <a href="#installation">Installation</a> •
-  <a href="#usage">Usage</a> •
-  <a href="#security">Security</a> •
-  <a href="#development">Development</a>
+  <a href="#installation">Installation</a>
 </p>
 
-## Overview
+## Blockchain-Verified Credentials
 
-ExamFlow is an enterprise-grade online assessment platform designed to provide secure, efficient, and transparent examination experiences for educational institutions. It addresses critical challenges in remote assessment through an innovative dual-panel system with blockchain verification and advanced anti-cheating measures.
+ExamFlow's cutting-edge blockchain integration ensures absolute credential authenticity through immutable NFT certificates that **cannot be forged or tampered with**.
 
-### Problem Statement
+### Tamper-Proof Verification
 
-Educational institutions conducting remote assessments face significant challenges:
+- **Ethereum-Backed Authenticity**: Each certificate is minted as a unique non-fungible token on the Ethereum blockchain, creating a permanent, public record that can never be altered or deleted
+- **Cryptographic Proof**: Digital signatures and hash functions establish mathematical certainty of certificate legitimacy
+- **Decentralized Storage**: Certificate data and images stored on IPFS (InterPlanetary File System) ensuring no single point of failure or tampering opportunity
+- **Public Verification**: Anyone can instantly verify credential authenticity without special software or institutional access
 
-- Time-intensive manual exam creation and assessment
-- Resource waste with traditional paper-based methods
-- Difficulty maintaining academic integrity in remote settings
-- Delays in grading and result distribution
+### Comprehensive Certificate Security
 
-### Solution
+| Security Layer | Implementation | Benefit |
+|----------------|----------------|---------|
+| Blockchain Record | Ethereum Sepolia Network | Immutable timestamped proof that cannot be altered |
+| Decentralized Storage | IPFS via Pinata | Tamper-proof file storage without centralized vulnerability |
+| Smart Contract | ERC-721 NFT Standard | Cryptographic ownership with transfer capabilities |
+| Verification Portal | Public blockchain explorer | Universal accessibility for verification |
+| Digital Signature | Institutional cryptographic keys | Authorized issuance verification |
 
-ExamFlow delivers a comprehensive platform that streamlines the entire examination process while ensuring academic integrity through cutting-edge technologies.
+### Immediate Benefits
+
+- **Eliminates Certificate Forgery**: Makes falsifying academic credentials mathematically impossible
+- **Streamlines Verification**: Employers and institutions can instantly verify authenticity
+- **Permanent Record**: Credentials persist indefinitely on the blockchain, immune to institutional system changes
+- **Student Ownership**: Students truly own their credentials as blockchain assets
+
+## Integrity Scoring
+
+ExamFlow's revolutionary Integrity Scoring system provides objective, transparent measurement of examination conduct, combining academic performance with ethical behavior metrics.
+
+### Real-Time Integrity Evaluation
+
+- **100-Point Scale**: Students begin with a perfect integrity score that dynamically adjusts based on detected behaviors
+- **Transparent Monitoring**: Real-time integrity score displayed during examination, providing immediate feedback
+- **Permanent Record**: Final integrity scores permanently recorded alongside academic performance
+- **Blockchain Integration**: Integrity metrics embedded in certificate NFTs for permanent ethical behavior verification
+
+### Sophisticated Classification System
+
+| Category | Score Range | Interpretation | Action |
+|----------|-------------|----------------|--------|
+| Exemplary | 90-100 | Perfect examination conduct | Normal certificate issuance |
+| Good | 75-89 | Minor issues but acceptable behavior | Standard certificate with note |
+| At-Risk | 50-74 | Concerning patterns requiring review | Certificate with integrity warning |
+| Violation | 0-49 | Significant evidence of academic dishonesty | Potential examination invalidation |
+
+### Comprehensive Violation Detection
+
+ExamFlow's integrity scoring accounts for various violation types with escalating penalties:
+
+- **Tab Switching**: 3-15 point penalties based on frequency
+- **Window Focus Loss**: 2-8 point penalties per occurrence
+- **Combined Violations**: Severe 10-20 point penalties for pattern violations
+- **Threshold Enforcement**: Automatic examination termination when integrity falls below critical thresholds
+
+## Advanced Proctoring
+
+ExamFlow employs state-of-the-art proctoring technology that balances rigorous security with student privacy, ensuring examination integrity without invasive surveillance.
+
+### Multi-Layered Detection System
+
+- **Browser Activity Monitoring**: Advanced event tracking detects suspicious browser behaviors
+- **Focus Analysis**: Sophisticated algorithms identify attention shifts and external resource usage
+- **Temporal Pattern Recognition**: AI-powered identification of statistically suspicious behavioral patterns
+- **Full-Screen Enforcement**: Automatic detection of examination environment manipulation
+
+### Proctor Dashboard
+
+Instructors gain access to a powerful real-time monitoring system:
+
+- **Live Violation Alerts**: Instant notification of suspicious activities
+- **Student Monitoring Panel**: Overview of all examination participants with integrity status
+- **Detailed Logs**: Comprehensive timestamped record of all detected behaviors
+- **Statistical Analysis**: Institutional patterns and trends in academic integrity
+- **Evidence Repository**: Secure storage of all integrity-related data for review
+
+### Privacy-Conscious Design
+
+- **Data Minimization**: Only essential behavioral metrics collected without invasive video/audio
+- **Transparent Monitoring**: Students fully informed of all monitored behaviors
+- **Local Processing**: Primary behavior analysis performed in browser to minimize data transmission
+- **Secure Protocols**: Industry-standard encryption for all integrity data
+- **Ethical Design**: Balances academic integrity with student dignity and privacy
+
+## AI-Powered Mock Tests
+
+ExamFlow revolutionizes exam preparation with intelligent mock tests that adapt to student needs, providing realistic practice environments with personalized learning experiences.
+
+### Intelligent Test Generation
+
+- **Automatic Creation**: AI-powered system generates multiple versions of practice exams from question banks
+- **Content Balancing**: Smart distribution of question types, topics, and difficulty levels
+- **Real Environment Simulation**: Mock tests mirror the actual exam experience, including timing and interface
+- **Varied Scenarios**: Multiple unique mock exams for each assessment preventing memorization
+
+### Adaptive Learning
+
+- **Performance Analysis**: Sophisticated algorithms identify knowledge gaps and strengths
+- **Progress Tracking**: Detailed statistics across multiple practice attempts
+- **Weak Area Identification**: Automatic detection of concepts requiring additional study
+- **Confidence Building**: Graduated difficulty progression as mastery improves
+
+### Comprehensive Preparation
+
+- **Unlimited Practice**: Students can attempt mock exams multiple times
+- **Instant Feedback**: Immediate scoring with detailed answer explanations
+- **Strategic Insights**: Performance metrics for optimization of study strategies
+- **Authentic Experience**: Full proctoring environment simulation for reduced test anxiety
+
+## Examination Analytics
+
+ExamFlow's analytical engine transforms examination data into actionable insights, helping instructors understand and optimize educational outcomes through visual data representation.
+
+### Question-Level Analysis
+
+- **Performance Metrics**: Detailed statistics for each question showing response distribution
+- **Difficulty Assessment**: Automatic calculation of question difficulty based on response patterns
+- **Distractor Analysis**: Effectiveness evaluation of incorrect options
+- **Visual Representation**: Intuitive graphical display of response patterns
+
+### Exam-Wide Insights
+
+- **Performance Distribution**: Visual representation of score distribution across student population
+- **Time Analysis**: Metrics on time spent per question and section
+- **Comparative Statistics**: Historical performance trends across different cohorts
+- **Integrity Correlation**: Relationship between integrity scores and academic performance
+
+### Data Visualization
+
+- **Interactive Charts**: Dynamic visualizations of examination performance data
+- **Custom Filtering**: Segmentation analysis by student demographics or question characteristics
+- **Exportable Reports**: Comprehensive analytics for institutional assessment
+- **Real-Time Updates**: Live data processing as students complete examinations
 
 ## Key Features
 
 ### Administration Panel
 
-- **Dashboard Analytics**: Real-time examination statistics and performance metrics
-- **Exam Management**: Intuitive creation and configuration interface
-- **Question Bank**: Secure repository with categorization and difficulty settings
-- **Automated Assessment**: Instant grading with customizable scoring parameters
-- **Performance Analysis**: Detailed insights into student performance patterns
-- **Communication System**: Centralized announcement distribution
-- **Integrity Monitoring**: Comprehensive violation tracking and reporting
+- **Comprehensive Dashboard**: Real-time examination statistics with performance metrics
+- **Advanced Exam Creation**: Intuitive interface with flexible configuration options
+- **Secure Question Repository**: Organized question bank with categorization
+- **Instant Grading**: Automated assessment with customizable scoring parameters
+- **Integrity Management**: Complete violation reporting and monitoring
+- **Communication Center**: Centralized notification and messaging system
 
 ### Student Experience
 
-- **Streamlined Interface**: Distraction-free environment with intuitive navigation
-- **Time Management**: Synchronized countdown timer with auto-submission
-- **Progress Tracking**: Question-by-question navigation with completion indicators
-- **Result Access**: Immediate post-submission scoring and performance analysis
-- **Integrity Transparency**: Real-time integrity score visibility during examinations
-- **Credential Generation**: On-demand blockchain certificate creation
-
-### Mock Examination System
-
-- **Practice Environment**: Auto-generated mock exams based on real assessments
-- **Adaptive Practice**: Multiple mock tests per exam with varied questions
-- **Self-Assessment**: Students can evaluate their readiness before actual exams
-- **Performance Analytics**: Track progress and improvement across practice attempts
-- **Realistic Experience**: Mock exams mirror the actual exam environment and format
-- **Instant Feedback**: Immediate scoring and answer review after completion
-
-## Anti-Cheat System
-
-ExamFlow implements a sophisticated multi-layered anti-cheat system to ensure examination integrity.
-
-### Detection Mechanisms
-
-- **Tab Switching Detection**: Leverages the Visibility API to identify context switching
-- **Window Focus Monitoring**: Tracks when the examination window loses focus
-- **Combined Behavior Analysis**: Identifies suspicious patterns through temporal correlation
-- **Full-Screen Enforcement**: Requires and monitors examination in full-screen mode
-
-### Integrity Scoring
-
-- **100-Point Scale**: Students begin with a perfect score that reflects examination integrity
-- **Progressive Penalties**: Escalating deductions based on violation frequency and severity
-- **Real-Time Transparency**: Students can view their current integrity score during the exam
-- **Automatic Intervention**: Examination auto-submission if integrity falls below critical thresholds
-
-### Classification System
-
-Integrity scores translate to the following categories:
-
-| Category           | Score Range | Interpretation                                   |
-| ------------------ | ----------- | ------------------------------------------------ |
-| Good               | 75-100      | Normal examination behavior                      |
-| At-Risk            | 50-74       | Potentially suspicious patterns requiring review |
-| Cheating Suspicion | 0-49        | Significant evidence of academic dishonesty      |
-
-### Violation Penalties
-
-#### Tab Switching
-
-| Occurrences | Penalty    | Cumulative Impact |
-| ----------- | ---------- | ----------------- |
-| First       | -3 points  | -3 points         |
-| Second      | -5 points  | -8 points         |
-| Third       | -8 points  | -16 points        |
-| Fourth+     | -15 points | -31+ points       |
-
-#### Window Focus Loss
-
-| Occurrences | Penalty   | Cumulative Impact |
-| ----------- | --------- | ----------------- |
-| First       | -2 points | -2 points         |
-| Second      | -4 points | -6 points         |
-| Third       | -6 points | -12 points        |
-| Fourth+     | -8 points | -20+ points       |
-
-#### Combined Violations
-
-| Occurrences | Penalty    | Cumulative Impact |
-| ----------- | ---------- | ----------------- |
-| First       | -10 points | -10 points        |
-| Second      | -15 points | -25 points        |
-| Third+      | -20 points | -45+ points       |
-
-## Blockchain Integration
-
-ExamFlow utilizes blockchain technology to provide tamper-proof digital credentials.
-
-### Certificate System
-
-- **NFT Certification**: Each credential is minted as a unique non-fungible token
-- **Ethereum Integration**: Utilizes Sepolia testnet for cost-effective verification
-- **IPFS Storage**: Decentralized storage of certificate images and metadata
-- **Integrity Verification**: Examination scores and integrity metrics permanently recorded
-- **Marketplace Compatibility**: Certificates viewable on standard NFT platforms
-
-### Technical Implementation
-
-- **Smart Contract**: ERC-721 compliant for maximum compatibility
-- **Metadata Standard**: Follows OpenSea metadata specifications
-- **Storage Provider**: Pinata IPFS pinning service
-- **Client Integration**: ethers.js for blockchain interaction
-
-## Email Notifications
-
-ExamFlow integrates an automated email notification system that sends certificates to students upon successful exam completion.
-
-### Certificate Email System
-
-- **Automated Delivery**: NFT certificates sent directly to students' email addresses
-- **Attachment Format**: High-quality PNG certificates with blockchain verification details
-- **Blockchain Links**: Direct links to OpenSea and Etherscan for certificate verification
-- **Customized Content**: Personalized email messages with student and exam information
-- **Secure Delivery**: Industry-standard SMTP with proper authentication
-
-### Technical Implementation
-
-- **Email Service**: Uses PHPMailer library with SMTP authentication
-- **Template System**: Responsive HTML email templates with certificate details
-- **Error Handling**: Comprehensive logging for troubleshooting delivery issues
-- **Configuration**: Centralized email settings for easy maintenance
+- **Intuitive Interface**: Clean, distraction-free examination environment
+- **Progress Monitoring**: Real-time completion tracking and navigation
+- **Immediate Results**: Instant scoring with detailed performance feedback
+- **Certificate Generation**: One-click blockchain credential creation
+- **Personal Analytics**: Individual performance insights and comparison metrics
+- **Preparation Tools**: Access to AI-generated practice exams and resources
 
 ## Architecture
 
 ```
-┌───────────────────┐      ┌────────────────┐      ┌───────────────────┐
-│                   │      │                │      │                   │
-│  ADMINISTRATION   │◄────►│    DATABASE    │◄────►│      STUDENT      │
-│      PANEL        │      │                │      │      PORTAL       │
-│                   │      └────────────────┘      │                   │
-└───────────────────┘              │              └───────────────────┘
-                                   │                        │
-                                   ▼                        ▼
-                          ┌────────────────┐      ┌───────────────────┐
-                          │     ANTI-      │      │    BLOCKCHAIN     │
-                          │     CHEAT      │      │    INTEGRATION    │
-                          │     SYSTEM     │      │                   │
-                          └────────────────┘      └───────────────────┘
-                                  │                        │
-                                  │                ┌────────┴───────┐
-                                  │                ▼                ▼
-                                  │         ┌─────────────┐  ┌─────────────┐
-                                  │         │    IPFS     │  │  ETHEREUM   │
-                                  │         │   STORAGE   │  │   NETWORK   │
-                                  │         └─────────────┘  └─────────────┘
-                                  ▼
-                          ┌────────────────┐
-                          │     MOCK       │
-                          │     EXAM       │
-                          │    SYSTEM      │
-                          └────────────────┘
+┌─────────────────────────┐      ┌────────────────────┐      ┌──────────────────────┐
+│                         │      │                    │      │                      │
+│   ADMINISTRATION PANEL  │◄────►│      DATABASE      │◄────►│    STUDENT PORTAL    │
+│                         │      │                    │      │                      │
+└─────────────────────────┘      └────────────────────┘      └──────────────────────┘
+           │                               │                            │
+           │                               │                            │
+           ▼                               ▼                            ▼
+┌─────────────────────────┐      ┌────────────────────┐      ┌──────────────────────┐
+│                         │      │                    │      │                      │
+│   EXAMINATION ANALYTICS │◄────►│   PROCTORING SYSTEM│◄────►│ BLOCKCHAIN INTEGRATION│
+│                         │      │                    │      │                      │
+└─────────────────────────┘      └────────────────────┘      └──────────────────────┘
+                                         │                            │
+                                         │                    ┌───────┴───────┐
+                                         │                    ▼               ▼
+                                         │             ┌─────────────┐ ┌─────────────┐
+                                         │             │    IPFS     │ │  ETHEREUM   │
+                                         │             │   STORAGE   │ │   NETWORK   │
+                                         │             └─────────────┘ └─────────────┘
+                                         ▼
+                                ┌────────────────────┐
+                                │                    │
+                                │   AI MOCK EXAMS    │
+                                │                    │
+                                └────────────────────┘
 ```
 
 ## Installation
@@ -199,8 +212,9 @@ ExamFlow integrates an automated email notification system that sends certificat
 
 - Web server with PHP 7.4+
 - MySQL 5.7+ database
+- Node.js 14+ for blockchain features
 - Composer for PHP dependencies
-- Internet connection for blockchain features
+- Pinata API key for IPFS storage
 
 ### Setup Process
 
@@ -221,10 +235,13 @@ ExamFlow integrates an automated email notification system that sends certificat
    mysql -u root -p db_eval < database/db_eval.sql
    ```
 
-3. **Set up mock exam tables**
+3. **Set up required tables**
 
    ```bash
-   # Run the installation script for mock exam tables
+   # Set up analytics tables
+   php setup_analytics_db.php
+   
+   # Set up mock exam system
    php install_mock_tables.php
    ```
 
@@ -238,22 +255,7 @@ ExamFlow integrates an automated email notification system that sends certificat
    nano config.php
    ```
 
-5. **Configure email notifications**
-
-   ```bash
-   # Copy example email configuration
-   cp utils/email_config.example.php utils/email_config.php
-
-   # Edit with your email credentials
-   nano utils/email_config.php
-   ```
-
-   For Gmail accounts:
-   - Enable 2-Factor Authentication on your Google account
-   - Create an App Password at https://myaccount.google.com/apppasswords
-   - Use the App Password (not your regular Gmail password) in the config file
-
-6. **Set up blockchain features** (optional)
+5. **Set up blockchain integration**
 
    ```bash
    # Create environment file
@@ -263,63 +265,21 @@ ExamFlow integrates an automated email notification system that sends certificat
    nano students/.env
    ```
 
-7. **Deploy to web server**
+6. **Deploy to web server**
    ```bash
    # Ensure correct permissions
    chmod -R 755 .
    chmod -R 777 uploads/
    ```
 
-## Usage
+## Security Features
 
-### For Instructors
-
-1. Access the administration panel at `/teachers/login.php`
-2. Create new examinations with customizable parameters
-3. Manage question banks and student registrations
-4. Generate practice mock exams for students from existing assessments
-5. Monitor real-time examination progress
-6. Review integrity reports and performance analytics
-
-### For Students
-
-1. Log in to the student portal at `/login_student.php`
-2. View available examinations and practice mock exams on the dashboard
-3. Take mock tests to prepare for upcoming assessments
-4. Enter examination environment when ready
-5. Navigate through questions and submit answers
-6. Review results and generate blockchain certificates
-
-## Security
-
-ExamFlow incorporates comprehensive security measures:
-
-- **Authentication**: Secure session management with timeout protection
-- **Data Protection**: Input validation against injection attacks
-- **Examination Integrity**: Multi-layered anti-cheat system
-- **Credential Security**: Tamper-proof blockchain verification
-- **Environmental Security**: Full-screen enforcement and monitoring
-
-## Development
-
-### Technology Stack
-
-- **Frontend**: HTML5, CSS3, JavaScript
-- **Backend**: PHP 7.4+
-- **Database**: MySQL 5.7+
-- **UI Components**: Boxicons
-- **Blockchain**: Ethereum (Sepolia) with ethers.js
-- **Storage**: IPFS via Pinata API
-- **Email**: PHPMailer with SMTP authentication
-
-### Key Components
-
-- **Examination Engine**: `students/examportal.php`
-- **Anti-Cheat System**: `students/log_violation.php`
-- **Certificate Generation**: `students/generate_certificate.php`
-- **Blockchain Integration**: `students/mint_nft.php`
-- **Email Notification**: `utils/mailer.php`
-- **Violation Reporting**: `teachers/view_violations.php`
+- **Blockchain Verification**: Tamper-proof credential verification
+- **Multi-Factor Authentication**: Enhanced login security
+- **Advanced Proctoring**: Sophisticated integrity monitoring
+- **Secure Sessions**: Protected session management
+- **Data Encryption**: Protection of sensitive information
+- **Input Validation**: Prevention of injection attacks
 
 ## License
 
@@ -332,4 +292,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ---
 
-<p align="center">Made with precision and care by Team Cerebro</p>
+<p align="center">
+  <b>ExamFlow: Redefining Academic Assessment With Blockchain Integrity</b><br>
+  Made with precision and innovation by Team Cerebro
+</p>

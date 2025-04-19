@@ -101,6 +101,7 @@ $result = mysqli_query($conn, $sql);
                             <th>No. of questions</th>
                             <th>Added on</th>
                             <th>Actions</th>
+                            <th>Analytics</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -121,6 +122,12 @@ $result = mysqli_query($conn, $sql);
                                     <form action="viewresults.php" method="post">
                                          <input type="hidden" name="exid" value="<?php echo $row['exid']; ?>">
                                         <button class ="btnres" type="submit" name="vw_rslts" ><i class='bx bx-search-alt' ></i>View Result</button>
+                                    </form>
+                                </td>
+                                <td>
+                                    <form action="view_analytics.php" method="post">
+                                         <input type="hidden" name="exid" value="<?php echo $row['exid']; ?>">
+                                        <button class ="btnres analytics-btn" type="submit" name="vw_analytics" ><i class='bx bx-bar-chart-alt-2' ></i>View Analytics</button>
                                     </form>
                                 </td>
                             </tr>

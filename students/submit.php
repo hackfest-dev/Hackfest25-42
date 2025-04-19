@@ -69,6 +69,28 @@ if (isset($_POST["exid"])) {
 
     // Get the newly created attempt ID
     $attempt_id = $conn->insert_id;
+    
+    // Store student answers for analytics
+    for ($i = 1; $i <= $nq; $i++) {
+        $qid = mysqli_real_escape_string($conn, $_POST['qid' . $i]);
+        $op = mysqli_real_escape_string($conn, $_POST['o' . $i]);
+        
+        $sql = "SELECT qstn_ans FROM qstn_list WHERE exid='$exid' AND qid='$qid'";
+        $result = mysqli_query($conn, $sql);
+        
+        if (mysqli_num_rows($result) > 0) {
+            $row = mysqli_fetch_assoc($result);
+            $correct_answer = $row['qstn_ans'];
+            $is_correct = ($op == $correct_answer) ? 1 : 0;
+            
+            // Insert into student_answers table
+            $insert_answer_sql = "INSERT INTO student_answers (attempt_id, exid, qid, uname, selected_option, is_correct) 
+                                  VALUES (?, ?, ?, ?, ?, ?)";
+            $stmt = $conn->prepare($insert_answer_sql);
+            $stmt->bind_param("iiissi", $attempt_id, $exid, $qid, $uname, $op, $is_correct);
+            $stmt->execute();
+        }
+    }
 
     // Redirect to certificate generation page with the attempt ID
     header("Location: generate_certificate.php?id=$attempt_id&auto_mint=1");

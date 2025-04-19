@@ -309,6 +309,60 @@ ALTER TABLE `mock_atmpt_list`
 ALTER TABLE `mock_atmpt_list`
   MODIFY `id` int(100) NOT NULL AUTO_INCREMENT;
 
+--
+-- Table structure for table `student_answers`
+--
+
+CREATE TABLE `student_answers` (
+  `id` int(11) NOT NULL,
+  `attempt_id` int(100) NOT NULL,
+  `exid` int(100) NOT NULL,
+  `qid` int(11) NOT NULL,
+  `uname` varchar(100) NOT NULL,
+  `selected_option` varchar(100) NOT NULL,
+  `is_correct` tinyint(1) NOT NULL,
+  `answer_time` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Indexes for table `student_answers`
+--
+ALTER TABLE `student_answers`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `exid` (`exid`),
+  ADD KEY `qid` (`qid`),
+  ADD KEY `attempt_id` (`attempt_id`);
+
+--
+-- AUTO_INCREMENT for table `student_answers`
+--
+ALTER TABLE `student_answers`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- Table structure for table `question_options`
+--
+
+CREATE TABLE `question_options` (
+  `id` int(11) NOT NULL,
+  `qid` int(11) NOT NULL,
+  `option_text` varchar(100) NOT NULL,
+  `option_number` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Indexes for table `question_options`
+--
+ALTER TABLE `question_options`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `qid` (`qid`);
+
+--
+-- AUTO_INCREMENT for table `question_options`
+--
+ALTER TABLE `question_options`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

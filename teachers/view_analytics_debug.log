@@ -1,0 +1,191 @@
+2025-04-19 17:27:04 - Fetching data from: http://localhost/Hackfest25-42/teachers/get_exam_analytics.php?exam_id=66
+2025-04-19 17:27:04 - Raw data: <!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="teachers/css/style.css">
+	<title>Login| Welcome</title>
+</head>
+<style>
+body {
+  background-image: url('img/evng.jpg');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: 100% 100%;
+}
+</style>
+<body>
+	<h1>Good Evening</h1><br>
+	<div class="container" id="container">
+		<div class="form-container log-in-container">
+			<form action="#" method="post">
+				<h1>Teacher login</h1>
+				<br><br>
+2025-04-19 17:27:04 - Invalid JSON format - doesn't start with { or [
+2025-04-19 17:27:04 - Extracted JSON starting at position 143
+2025-04-19 17:27:04 - JSON decoding error: Syntax error
+2025-04-19 17:27:19 - Fetching data from: http://localhost/Hackfest25-42/teachers/get_exam_analytics.php?exam_id=65
+2025-04-19 17:27:20 - Raw data: <!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="teachers/css/style.css">
+	<title>Login| Welcome</title>
+</head>
+<style>
+body {
+  background-image: url('img/evng.jpg');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: 100% 100%;
+}
+</style>
+<body>
+	<h1>Good Evening</h1><br>
+	<div class="container" id="container">
+		<div class="form-container log-in-container">
+			<form action="#" method="post">
+				<h1>Teacher login</h1>
+				<br><br>
+2025-04-19 17:27:20 - Invalid JSON format - doesn't start with { or [
+2025-04-19 17:27:20 - Extracted JSON starting at position 143
+2025-04-19 17:27:20 - JSON decoding error: Syntax error
+2025-04-19 17:27:23 - Fetching data from: http://localhost/Hackfest25-42/teachers/get_exam_analytics.php?exam_id=66
+2025-04-19 17:27:23 - Raw data: <!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="teachers/css/style.css">
+	<title>Login| Welcome</title>
+</head>
+<style>
+body {
+  background-image: url('img/evng.jpg');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: 100% 100%;
+}
+</style>
+<body>
+	<h1>Good Evening</h1><br>
+	<div class="container" id="container">
+		<div class="form-container log-in-container">
+			<form action="#" method="post">
+				<h1>Teacher login</h1>
+				<br><br>
+2025-04-19 17:27:23 - Invalid JSON format - doesn't start with { or [
+2025-04-19 17:27:23 - Extracted JSON starting at position 143
+2025-04-19 17:27:23 - JSON decoding error: Syntax error
+2025-04-19 17:31:10 - Fetching data from: http://localhost/Hackfest25-42/teachers/simple_analytics.php?exam_id=66
+2025-04-19 17:31:10 - Raw data: {"error":"No student answer data available for this exam yet"}
+2025-04-19 17:31:10 - Successfully decoded JSON data
+2025-04-19 17:31:14 - Fetching data from: http://localhost/Hackfest25-42/teachers/simple_analytics.php?exam_id=65
+2025-04-19 17:31:14 - Raw data: {"exam_id":65,"exam_name":"Differential Calculus","description":"Differential Calculus","total_questions":2,"questions":[{"question_id":105,"question_text":"integral of x dx","options":[{"text":"x2\/2....","count":0,"percentage":0},{"text":"x......","count":0,"percentage":0},{"text":"1......","count":0,"percentage":0},{"text":"0.....","count":0,"percentage":0}],"correct_option":"0.....","correct_responses":0,"correct_percentage":0},{"question_id":106,"question_text":"integral of 0","options":[{"
+2025-04-19 17:31:14 - Successfully decoded JSON data
+2025-04-19 17:32:49 - Fetching data from: http://localhost/Hackfest25-42/teachers/simple_analytics.php?exam_id=66
+2025-04-19 17:32:49 - Raw data: {"error":"No student answer data available for this exam yet"}
+2025-04-19 17:32:49 - Successfully decoded JSON data
+2025-04-19 17:32:52 - Fetching data from: http://localhost/Hackfest25-42/teachers/simple_analytics.php?exam_id=66
+2025-04-19 17:32:52 - Raw data: {"error":"No student answer data available for this exam yet"}
+2025-04-19 17:32:52 - Successfully decoded JSON data
+2025-04-19 17:32:54 - Fetching data from: http://localhost/Hackfest25-42/teachers/simple_analytics.php?exam_id=66
+2025-04-19 17:32:55 - Raw data: {"error":"No student answer data available for this exam yet"}
+2025-04-19 17:32:55 - Successfully decoded JSON data
+2025-04-19 17:32:57 - Fetching data from: http://localhost/Hackfest25-42/teachers/simple_analytics.php?exam_id=65
+2025-04-19 17:32:57 - Raw data: {"exam_id":65,"exam_name":"Differential Calculus","description":"Differential Calculus","total_questions":2,"questions":[{"question_id":105,"question_text":"integral of x dx","options":[{"text":"x2\/2....","count":0,"percentage":0},{"text":"x......","count":0,"percentage":0},{"text":"1......","count":0,"percentage":0},{"text":"0.....","count":0,"percentage":0}],"correct_option":"0.....","correct_responses":0,"correct_percentage":0},{"question_id":106,"question_text":"integral of 0","options":[{"
+2025-04-19 17:32:57 - Successfully decoded JSON data
+2025-04-19 17:33:09 - Fetching data from: http://localhost/Hackfest25-42/teachers/simple_analytics.php?exam_id=66
+2025-04-19 17:33:09 - Raw data: {"error":"No student answer data available for this exam yet"}
+2025-04-19 17:33:09 - Successfully decoded JSON data
+2025-04-19 17:33:11 - Fetching data from: http://localhost/Hackfest25-42/teachers/simple_analytics.php?exam_id=65
+2025-04-19 17:33:11 - Raw data: {"exam_id":65,"exam_name":"Differential Calculus","description":"Differential Calculus","total_questions":2,"questions":[{"question_id":105,"question_text":"integral of x dx","options":[{"text":"x2\/2....","count":0,"percentage":0},{"text":"x......","count":0,"percentage":0},{"text":"1......","count":0,"percentage":0},{"text":"0.....","count":0,"percentage":0}],"correct_option":"0.....","correct_responses":0,"correct_percentage":0},{"question_id":106,"question_text":"integral of 0","options":[{"
+2025-04-19 17:33:11 - Successfully decoded JSON data
+2025-04-19 17:33:21 - Fetching data from: http://localhost/Hackfest25-42/teachers/simple_analytics.php?exam_id=65
+2025-04-19 17:33:21 - Raw data: {"exam_id":65,"exam_name":"Differential Calculus","description":"Differential Calculus","total_questions":2,"questions":[{"question_id":105,"question_text":"integral of x dx","options":[{"text":"x2\/2....","count":0,"percentage":0},{"text":"x......","count":0,"percentage":0},{"text":"1......","count":0,"percentage":0},{"text":"0.....","count":0,"percentage":0}],"correct_option":"0.....","correct_responses":0,"correct_percentage":0},{"question_id":106,"question_text":"integral of 0","options":[{"
+2025-04-19 17:33:21 - Successfully decoded JSON data
+2025-04-19 17:33:30 - Fetching data from: http://localhost/Hackfest25-42/teachers/simple_analytics.php?exam_id=66
+2025-04-19 17:33:30 - Raw data: {"error":"No student answer data available for this exam yet"}
+2025-04-19 17:33:30 - Successfully decoded JSON data
+2025-04-19 17:36:15 - Fetching data from: http://localhost/Hackfest25-42/teachers/simple_analytics.php?exam_id=67
+2025-04-19 17:36:15 - Raw data: {"error":"No student answer data available for this exam yet"}
+2025-04-19 17:36:15 - Successfully decoded JSON data
+2025-04-19 17:36:18 - Fetching data from: http://localhost/Hackfest25-42/teachers/simple_analytics.php?exam_id=67
+2025-04-19 17:36:18 - Raw data: {"error":"No student answer data available for this exam yet"}
+2025-04-19 17:36:18 - Successfully decoded JSON data
+2025-04-19 17:36:25 - Fetching data from: http://localhost/Hackfest25-42/teachers/simple_analytics.php?exam_id=67
+2025-04-19 17:36:25 - Raw data: {"error":"No student answer data available for this exam yet"}
+2025-04-19 17:36:25 - Successfully decoded JSON data
+2025-04-19 17:36:51 - Fetching data from: http://localhost/Hackfest25-42/teachers/simple_analytics.php?exam_id=67
+2025-04-19 17:36:51 - Raw data: {"error":"No student answer data available for this exam yet"}
+2025-04-19 17:36:51 - Successfully decoded JSON data
+2025-04-19 17:36:53 - Fetching data from: http://localhost/Hackfest25-42/teachers/simple_analytics.php?exam_id=67
+2025-04-19 17:36:53 - Raw data: {"error":"No student answer data available for this exam yet"}
+2025-04-19 17:36:53 - Successfully decoded JSON data
+2025-04-19 17:36:56 - Fetching data from: http://localhost/Hackfest25-42/teachers/simple_analytics.php?exam_id=67
+2025-04-19 17:36:56 - Raw data: {"error":"No student answer data available for this exam yet"}
+2025-04-19 17:36:56 - Successfully decoded JSON data
+2025-04-19 17:38:31 - Fetching data from: http://localhost/Hackfest25-42/teachers/simple_analytics.php?exam_id=67
+2025-04-19 17:38:31 - Raw data: {"exam_id":67,"exam_name":"Differential Calculus","description":"Differential Calculus","total_questions":2,"questions":[{"question_id":109,"question_text":"calcium","options":[{"text":"ca","count":0,"percentage":0},{"text":"sd","count":0,"percentage":0},{"text":"edgg","count":0,"percentage":0},{"text":"EF","count":0,"percentage":0}],"correct_option":"ca","correct_responses":0,"correct_percentage":0},{"question_id":110,"question_text":"Silver","options":[{"text":"sf","count":0,"percentage":0},{"
+2025-04-19 17:38:31 - Successfully decoded JSON data
+2025-04-19 17:39:35 - Fetching data from: http://localhost/Hackfest25-42/teachers/simple_analytics.php?exam_id=67
+2025-04-19 17:39:35 - Raw data: {"exam_id":67,"exam_name":"Differential Calculus","description":"Differential Calculus","total_questions":2,"questions":[{"question_id":109,"question_text":"calcium","options":[{"text":"ca","count":0,"percentage":0},{"text":"sd","count":0,"percentage":0},{"text":"edgg","count":0,"percentage":0},{"text":"EF","count":0,"percentage":0}],"correct_option":"ca","correct_responses":0,"correct_percentage":0},{"question_id":110,"question_text":"Silver","options":[{"text":"sf","count":0,"percentage":0},{"
+2025-04-19 17:39:35 - Successfully decoded JSON data
+2025-04-19 17:45:50 - Fetching data from: http://localhost/Hackfest25-42/teachers/simple_analytics.php?exam_id=67
+2025-04-19 17:45:50 - Raw data: {"exam_id":67,"exam_name":"Differential Calculus","description":"Differential Calculus","total_questions":2,"questions":[{"question_id":109,"question_text":"calcium","options":[{"text":"ca","count":0,"percentage":0},{"text":"sd","count":0,"percentage":0},{"text":"edgg","count":0,"percentage":0},{"text":"EF","count":0,"percentage":0}],"correct_option":"ca","correct_responses":0,"correct_percentage":0},{"question_id":110,"question_text":"Silver","options":[{"text":"sf","count":0,"percentage":0},{"
+2025-04-19 17:45:50 - Successfully decoded JSON data
+2025-04-19 17:46:12 - Using cached data for exam 67
+2025-04-19 17:46:14 - Using cached data for exam 67
+2025-04-19 17:46:16 - Using cached data for exam 67
+2025-04-19 17:50:52 - Fetching data from: http://localhost/Hackfest25-42/teachers/simple_analytics.php?exam_id=68
+2025-04-19 17:50:52 - Raw data: {"exam_id":68,"exam_name":"Math","description":"Addition","total_questions":3,"questions":[{"question_id":111,"question_text":"1+2=","options":[{"text":"three","count":0,"percentage":0},{"text":"seven","count":0,"percentage":0},{"text":"nine","count":0,"percentage":0},{"text":"nineteen","count":0,"percentage":0}],"correct_option":"three","correct_responses":0,"correct_percentage":0},{"question_id":112,"question_text":"4-5=","options":[{"text":"negative one","count":0,"percentage":0},{"text":"thr
+2025-04-19 17:50:52 - Successfully decoded JSON data
+2025-04-19 17:53:36 - Using cached data for exam 68
+2025-04-19 17:53:38 - Using cached data for exam 68
+2025-04-19 17:53:41 - Using cached data for exam 68
+2025-04-19 17:55:29 - Fetching data from: http://localhost/Hackfest25-42/teachers/simple_analytics.php?exam_id=69
+2025-04-19 17:55:29 - Raw data: {"exam_id":69,"exam_name":"Math","description":"Addition","total_questions":3,"questions":[{"question_id":114,"question_text":"1+2=","options":[{"text":"three","count":0,"percentage":0},{"text":"seven","count":0,"percentage":0},{"text":"nine","count":0,"percentage":0},{"text":"nineteen","count":0,"percentage":0}],"correct_option":"three","correct_responses":0,"correct_percentage":0},{"question_id":115,"question_text":"4-5=","options":[{"text":"negative one","count":0,"percentage":0},{"text":"thr
+2025-04-19 17:55:29 - Successfully decoded JSON data
+2025-04-19 17:55:44 - Using cached data for exam 69
+2025-04-19 17:55:47 - Using cached data for exam 69
+2025-04-19 18:02:19 - Fetching data from: http://localhost/Hackfest25-42/teachers/simple_analytics.php?exam_id=69
+2025-04-19 18:02:19 - Raw data: {"exam_id":69,"exam_name":"Math","description":"Addition","total_questions":3,"questions":[{"question_id":114,"question_text":"1+2=","options":[{"text":"three","count":0,"percentage":0},{"text":"seven","count":0,"percentage":0},{"text":"nine","count":0,"percentage":0},{"text":"nineteen","count":0,"percentage":0}],"correct_option":"three","correct_responses":0,"correct_percentage":0},{"question_id":115,"question_text":"4-5=","options":[{"text":"negative one","count":0,"percentage":0},{"text":"thr
+2025-04-19 18:02:19 - Successfully decoded JSON data
+2025-04-19 18:05:16 - Fetching data from: http://localhost/Hackfest25-42/teachers/simple_analytics.php?exam_id=70
+2025-04-19 18:05:16 - Raw data: {"exam_id":70,"exam_name":"Math","description":"Addition","total_questions":3,"questions":[{"question_id":117,"question_text":"1+2=","options":[{"text":"three","count":0,"percentage":0},{"text":"seven","count":0,"percentage":0},{"text":"nine","count":0,"percentage":0},{"text":"nineteen","count":0,"percentage":0}],"correct_option":"three","correct_responses":0,"correct_percentage":0},{"question_id":118,"question_text":"4-5=","options":[{"text":"negative one","count":0,"percentage":0},{"text":"thr
+2025-04-19 18:05:16 - Successfully decoded JSON data
+2025-04-19 18:31:25 - Fetching data from: http://localhost/Hackfest25-42/teachers/simple_analytics.php?exam_id=70
+2025-04-19 18:31:25 - Raw data: {"exam_id":70,"exam_name":"Math","description":"Addition","total_questions":3,"questions":[{"question_id":117,"question_text":"1+2=","options":[{"text":"three","count":0,"percentage":0},{"text":"seven","count":0,"percentage":0},{"text":"nine","count":0,"percentage":0},{"text":"nineteen","count":0,"percentage":0}],"correct_option":"three","correct_responses":0,"correct_percentage":0},{"question_id":118,"question_text":"4-5=","options":[{"text":"negative one","count":0,"percentage":0},{"text":"thr
+2025-04-19 18:31:25 - Successfully decoded JSON data
+2025-04-19 18:37:15 - Fetching data from: http://localhost/Hackfest25-42/teachers/simple_analytics.php?exam_id=70
+2025-04-19 18:37:15 - Raw data: {"exam_id":70,"exam_name":"Math","description":"Addition","total_questions":"3","questions":[{"question_id":"117","question_text":"1+2=","options":[{"text":"three","count":0,"percentage":0},{"text":"seven","count":0,"percentage":0},{"text":"nine","count":0,"percentage":0},{"text":"nineteen","count":0,"percentage":0}],"correct_option":"three","correct_responses":0,"correct_percentage":0},{"question_id":"118","question_text":"4-5=","options":[{"text":"negative one","count":0,"percentage":0},{"text
+2025-04-19 18:37:15 - Successfully decoded JSON data
+2025-04-19 18:40:44 - Fetching data from: http://localhost/Hackfest25-42/teachers/simple_analytics.php?exam_id=70
+2025-04-19 18:40:44 - Raw data: {"exam_id":70,"exam_name":"Math","description":"Addition","total_questions":"3","questions":[{"question_id":"117","question_text":"1+2=","options":[{"text":"three","count":0,"percentage":0},{"text":"seven","count":0,"percentage":0},{"text":"nine","count":0,"percentage":0},{"text":"nineteen","count":0,"percentage":0}],"correct_option":"three","correct_responses":0,"correct_percentage":0},{"question_id":"118","question_text":"4-5=","options":[{"text":"negative one","count":0,"percentage":0},{"text
+2025-04-19 18:40:44 - Successfully decoded JSON data
+2025-04-19 18:42:42 - Fetching data from: http://localhost/Hackfest25-42/teachers/simple_analytics.php?exam_id=70
+2025-04-19 18:42:42 - Raw data: {"exam_id":70,"exam_name":"Math","description":"Addition","total_questions":3,"questions":[{"question_id":117,"question_text":"1+2=","options":[{"text":"three","count":0,"percentage":0},{"text":"seven","count":0,"percentage":0},{"text":"nine","count":0,"percentage":0},{"text":"nineteen","count":0,"percentage":0}],"correct_option":"three","correct_responses":0,"correct_percentage":0},{"question_id":118,"question_text":"4-5=","options":[{"text":"negative one","count":0,"percentage":0},{"text":"thr
+2025-04-19 18:42:42 - Successfully decoded JSON data
+2025-04-19 19:28:48 - Fetching data from: http://localhost/Hackfest25-42/teachers/simple_analytics.php?exam_id=70
+2025-04-19 19:28:48 - Raw data: {"exam_id":70,"exam_name":"Math","description":"Addition","total_questions":3,"questions":[{"question_id":117,"question_text":"1+2=","options":[{"text":"three","count":0,"percentage":0},{"text":"seven","count":0,"percentage":0},{"text":"nine","count":0,"percentage":0},{"text":"nineteen","count":0,"percentage":0}],"correct_option":"three","correct_responses":0,"correct_percentage":0},{"question_id":118,"question_text":"4-5=","options":[{"text":"negative one","count":0,"percentage":0},{"text":"thr
+2025-04-19 19:28:48 - Successfully decoded JSON data
+2025-04-19 19:29:35 - Fetching data from: http://localhost/Hackfest25-42/teachers/simple_analytics.php?exam_id=70
+2025-04-19 19:29:35 - Raw data: {"exam_id":70,"exam_name":"Math","description":"Addition","total_questions":3,"questions":[{"question_id":117,"question_text":"1+2=","options":[{"text":"three","count":0,"percentage":0},{"text":"seven","count":0,"percentage":0},{"text":"nine","count":0,"percentage":0},{"text":"nineteen","count":0,"percentage":0}],"correct_option":"three","correct_responses":0,"correct_percentage":0},{"question_id":118,"question_text":"4-5=","options":[{"text":"negative one","count":0,"percentage":0},{"text":"thr
+2025-04-19 19:29:35 - Successfully decoded JSON data
+2025-04-19 19:29:39 - Fetching data from: http://localhost/Hackfest25-42/teachers/simple_analytics.php?exam_id=70
+2025-04-19 19:29:39 - Raw data: {"exam_id":70,"exam_name":"Math","description":"Addition","total_questions":3,"questions":[{"question_id":117,"question_text":"1+2=","options":[{"text":"three","count":0,"percentage":0},{"text":"seven","count":0,"percentage":0},{"text":"nine","count":0,"percentage":0},{"text":"nineteen","count":0,"percentage":0}],"correct_option":"three","correct_responses":0,"correct_percentage":0},{"question_id":118,"question_text":"4-5=","options":[{"text":"negative one","count":0,"percentage":0},{"text":"thr
+2025-04-19 19:29:39 - Successfully decoded JSON data
+2025-04-19 19:44:56 - Fetching data from: http://localhost/Hackfest25-42/teachers/simple_analytics.php?exam_id=70
+2025-04-19 19:44:56 - Raw data: {"exam_id":70,"exam_name":"Math","description":"Addition","total_questions":3,"questions":[{"question_id":117,"question_text":"1+2=","options":[{"text":"three","count":0,"percentage":0},{"text":"seven","count":0,"percentage":0},{"text":"nine","count":0,"percentage":0},{"text":"nineteen","count":0,"percentage":0}],"correct_option":"three","correct_responses":0,"correct_percentage":0},{"question_id":118,"question_text":"4-5=","options":[{"text":"negative one","count":0,"percentage":0},{"text":"thr
+2025-04-19 19:44:56 - Successfully decoded JSON data
+2025-04-19 19:45:02 - Fetching data from: http://localhost/Hackfest25-42/teachers/simple_analytics.php?exam_id=70
+2025-04-19 19:45:02 - Raw data: {"exam_id":70,"exam_name":"Math","description":"Addition","total_questions":3,"questions":[{"question_id":117,"question_text":"1+2=","options":[{"text":"three","count":0,"percentage":0},{"text":"seven","count":0,"percentage":0},{"text":"nine","count":0,"percentage":0},{"text":"nineteen","count":0,"percentage":0}],"correct_option":"three","correct_responses":0,"correct_percentage":0},{"question_id":118,"question_text":"4-5=","options":[{"text":"negative one","count":0,"percentage":0},{"text":"thr
+2025-04-19 19:45:02 - Successfully decoded JSON data
+2025-04-19 19:48:35 - Fetching data from: http://localhost/Hackfest25-42/teachers/simple_analytics.php?exam_id=70
+2025-04-19 19:48:35 - Raw data: {"exam_id":70,"exam_name":"Math","description":"Addition","total_questions":3,"questions":[{"question_id":117,"question_text":"1+2=","options":[{"text":"three","count":0,"percentage":0},{"text":"seven","count":0,"percentage":0},{"text":"nine","count":0,"percentage":0},{"text":"nineteen","count":0,"percentage":0}],"correct_option":"three","correct_responses":0,"correct_percentage":0},{"question_id":118,"question_text":"4-5=","options":[{"text":"negative one","count":0,"percentage":0},{"text":"thr
+2025-04-19 19:48:35 - Successfully decoded JSON data
+2025-04-19 19:56:07 - Fetching data from: http://localhost/Hackfest25-42/teachers/simple_analytics.php?exam_id=71
+2025-04-19 19:56:07 - Raw data: {"exam_id":71,"exam_name":"Physics","description":"Forces","total_questions":2,"questions":[{"question_id":120,"question_text":"What is the value of acceleration due to gravity","options":[{"text":"10 m\/s^2","count":0,"percentage":0},{"text":"9.8 m\/s^2","count":0,"percentage":0},{"text":"2 m\/s^2","count":0,"percentage":0},{"text":"00000","count":0,"percentage":0}],"correct_option":"9.8 m\/s^2","correct_responses":0,"correct_percentage":0},{"question_id":121,"question_text":"What is Newton's F
+2025-04-19 19:56:07 - Successfully decoded JSON data
+2025-04-19 20:09:24 - Fetching data from: http://localhost/Hackfest25-42/teachers/simple_analytics.php?exam_id=70
+2025-04-19 20:09:24 - Raw data: {"exam_id":70,"exam_name":"Math","description":"Addition","total_questions":3,"questions":[{"question_id":117,"question_text":"1+2=","options":[{"text":"three","count":0,"percentage":0},{"text":"seven","count":0,"percentage":0},{"text":"nine","count":0,"percentage":0},{"text":"nineteen","count":0,"percentage":0}],"correct_option":"three","correct_responses":0,"correct_percentage":0},{"question_id":118,"question_text":"4-5=","options":[{"text":"negative one","count":0,"percentage":0},{"text":"thr
+2025-04-19 20:09:24 - Successfully decoded JSON data
+2025-04-19 20:18:06 - Fetching data from: http://localhost/Hackfest25-42/teachers/simple_analytics.php?exam_id=71
+2025-04-19 20:18:06 - Raw data: {"exam_id":71,"exam_name":"Physics","description":"Forces","total_questions":2,"questions":[{"question_id":120,"question_text":"What is the value of acceleration due to gravity","options":[{"text":"10 m\/s^2","count":0,"percentage":0},{"text":"9.8 m\/s^2","count":0,"percentage":0},{"text":"2 m\/s^2","count":0,"percentage":0},{"text":"00000","count":0,"percentage":0}],"correct_option":"9.8 m\/s^2","correct_responses":0,"correct_percentage":0},{"question_id":121,"question_text":"What is Newton's F
+2025-04-19 20:18:06 - Successfully decoded JSON data
