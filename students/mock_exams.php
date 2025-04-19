@@ -5,9 +5,13 @@ if (!isset($_SESSION["uname"])) {
 }
 
 include '../config.php';
+require_once '../utils/message_utils.php';
 error_reporting(0);
 
 $uname = $_SESSION['uname'];
+
+// Get the count of unread messages
+$unread_count = getUnreadMessageCount($uname, $conn);
 
 // This query gets all mock exams that are ready and not attempted by the current user
 $sql = "SELECT me.* FROM mock_exm_list me 
@@ -81,6 +85,24 @@ $completed_result = mysqli_query($conn, $completed_sql);
         .exmbtn:hover {
             background-color: #153d8a;
         }
+        
+        /* Notification badge style */
+        .notification-badge {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            top: -5px;
+            right: 10px;
+            min-width: 18px;
+            height: 18px;
+            background-color: #ff3e55;
+            color: white;
+            border-radius: 50%;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 0 4px;
+        }
     </style>
 </head>
 
@@ -118,7 +140,10 @@ $completed_result = mysqli_query($conn, $completed_sql);
             <li>
                 <a href="messages.php">
                     <i class='bx bx-message'></i>
-                    <span class="links_name">Messages</span>
+                    <span class="links_name">Announcements</span>
+                    <?php if ($unread_count > 0): ?>
+                    <span class="notification-badge"><?php echo $unread_count; ?></span>
+                    <?php endif; ?>
                 </a>
             </li>
             <li>

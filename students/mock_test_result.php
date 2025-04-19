@@ -234,7 +234,7 @@ error_log("User Answers Retrieved: " . json_encode($user_answers));
             <li>
                 <a href="messages.php">
                     <i class='bx bx-message'></i>
-                    <span class="links_name">Messages</span>
+                    <span class="links_name">Announcements</span>
                 </a>
             </li>
             <li>

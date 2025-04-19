@@ -4,10 +4,15 @@ if (!isset($_SESSION["fname"])) {
   header("Location: ../login_student.php");
 }
 include '../config.php';
+require_once '../utils/message_utils.php';
 error_reporting(0);
 
 $sql = "SELECT * FROM message";
 $result = mysqli_query($conn, $sql);
+
+// Mark all messages as read for this user
+$uname = $_SESSION['uname'];
+markAllMessagesAsRead($uname, $conn);
 
 ?>
 <!DOCTYPE html>
@@ -15,7 +20,7 @@ $result = mysqli_query($conn, $sql);
 
 <head>
   <meta charset="UTF-8">
-  <title>Messages</title>
+  <title>Announcements</title>
   <link rel="stylesheet" href="css/dash.css">
   <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -55,7 +60,7 @@ $result = mysqli_query($conn, $sql);
       <li>
         <a href="#" class="active">
           <i class='bx bx-message'></i>
-          <span class="links_name">Messages</span>
+          <span class="links_name">Announcements</span>
         </a>
       </li>
       <li>

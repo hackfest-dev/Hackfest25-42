@@ -5,10 +5,15 @@ if (!isset($_SESSION["uname"])) {
 }
 
 include '../config.php';
+require_once '../utils/message_utils.php';
 error_reporting(0);
 
 $sql = "SELECT * FROM exm_list";
 $result = mysqli_query($conn, $sql);
+
+// Get the count of unread messages
+$uname = $_SESSION['uname'];
+$unread_count = getUnreadMessageCount($uname, $conn);
 
 ?>
 <!DOCTYPE html>
@@ -56,7 +61,10 @@ $result = mysqli_query($conn, $sql);
       <li>
         <a href="messages.php">
           <i class='bx bx-message'></i>
-          <span class="links_name">Messages</span>
+          <span class="links_name">Announcements</span>
+          <?php if ($unread_count > 0): ?>
+          <span class="notification-badge"><?php echo $unread_count; ?></span>
+          <?php endif; ?>
         </a>
       </li>
       <li>
@@ -156,6 +164,25 @@ $result = mysqli_query($conn, $sql);
 
   <script src="../js/script.js"></script>
 
+  <style>
+    /* Notification badge style */
+    .notification-badge {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      position: absolute;
+      top: -5px;
+      right: 10px;
+      min-width: 18px;
+      height: 18px;
+      background-color: #ff3e55;
+      color: white;
+      border-radius: 50%;
+      font-size: 11px;
+      font-weight: bold;
+      padding: 0 4px;
+    }
+  </style>
 
 </body>
 

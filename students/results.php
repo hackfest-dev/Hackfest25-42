@@ -4,7 +4,12 @@ if (!isset($_SESSION["uname"])) {
   header("Location: ../login_student.php");
 }
 include '../config.php';
+require_once '../utils/message_utils.php';
 $uname = $_SESSION['uname'];
+
+// Get the count of unread messages
+$unread_count = getUnreadMessageCount($uname, $conn);
+
 $sql = "SELECT * FROM atmpt_list WHERE uname='$uname'";
 $result = mysqli_query($conn, $sql);
 ?>
@@ -17,6 +22,45 @@ $result = mysqli_query($conn, $sql);
   <link rel="stylesheet" href="css/dash.css">
   <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    .cert-btn {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 12px;
+      background-color: #0A2558;
+      color: white;
+      border-radius: 4px;
+      text-decoration: none;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+
+    .cert-btn:hover {
+      background-color: #0d3a80;
+    }
+
+    .cert-btn i {
+      margin-right: 5px;
+    }
+    
+    /* Notification badge style */
+    .notification-badge {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      position: absolute;
+      top: -5px;
+      right: 10px;
+      min-width: 18px;
+      height: 18px;
+      background-color: #ff3e55;
+      color: white;
+      border-radius: 50%;
+      font-size: 11px;
+      font-weight: bold;
+      padding: 0 4px;
+    }
+  </style>
 </head>
 
 <body>
@@ -53,7 +97,10 @@ $result = mysqli_query($conn, $sql);
       <li>
         <a href="messages.php">
           <i class='bx bx-message'></i>
-          <span class="links_name">Messages</span>
+          <span class="links_name">Announcements</span>
+          <?php if ($unread_count > 0): ?>
+          <span class="notification-badge"><?php echo $unread_count; ?></span>
+          <?php endif; ?>
         </a>
       </li>
       <li>
@@ -138,28 +185,6 @@ $result = mysqli_query($conn, $sql);
   </section>
 
   <script src="../js/script.js"></script>
-
-  <style>
-    .cert-btn {
-      display: inline-flex;
-      align-items: center;
-      padding: 6px 12px;
-      background-color: #0A2558;
-      color: white;
-      border-radius: 4px;
-      text-decoration: none;
-      font-size: 14px;
-      transition: all 0.3s ease;
-    }
-
-    .cert-btn:hover {
-      background-color: #0d3a80;
-    }
-
-    .cert-btn i {
-      margin-right: 5px;
-    }
-  </style>
 
 </body>
 

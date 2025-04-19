@@ -603,7 +603,7 @@ while ($rowd = mysqli_fetch_array($res)) {
             <li>
                 <a href="messages.php">
                     <i class='bx bx-message'></i>
-                    <span class="links_name">Messages</span>
+                    <span class="links_name">Announcements</span>
                 </a>
             </li>
             <li>

@@ -4,7 +4,11 @@ if (!isset($_SESSION["uname"])) {
   header("Location: ../login_student.php");
 }
 include '../config.php';
+require_once '../utils/message_utils.php';
 $uname = $_SESSION['uname'];
+
+// Get the count of unread messages
+$unread_count = getUnreadMessageCount($uname, $conn);
 
 ?>
 <!DOCTYPE html>
@@ -16,6 +20,25 @@ $uname = $_SESSION['uname'];
   <link rel="stylesheet" href="css/dash.css">
   <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* Notification badge style */
+    .notification-badge {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      position: absolute;
+      top: -5px;
+      right: 10px;
+      min-width: 18px;
+      height: 18px;
+      background-color: #ff3e55;
+      color: white;
+      border-radius: 50%;
+      font-size: 11px;
+      font-weight: bold;
+      padding: 0 4px;
+    }
+  </style>
 </head>
 
 <body>
@@ -52,7 +75,10 @@ $uname = $_SESSION['uname'];
       <li>
         <a href="messages.php">
           <i class='bx bx-message'></i>
-          <span class="links_name">Messages</span>
+          <span class="links_name">Announcements</span>
+          <?php if ($unread_count > 0): ?>
+          <span class="notification-badge"><?php echo $unread_count; ?></span>
+          <?php endif; ?>
         </a>
       </li>
       <li>
@@ -130,13 +156,13 @@ $uname = $_SESSION['uname'];
         </div> -->
         <div class="box">
           <div class="right-side">
-            <div class="box-topic">Annoucements</div>
+            <div class="box-topic">Announcements</div>
             <div class="number"><?php $sql = "SELECT COUNT(1) FROM message";
                                 $result = mysqli_query($conn, $sql);
                                 $row = mysqli_fetch_array($result);
                                 echo $row['0'] ?></div>
             <div class="brief">
-              <span class="text">Total number of messages recieved</span>
+              <span class="text">Total number of announcements received</span>
             </div>
           </div>
           <i class='bx bx-paper-plane ico four'></i>
@@ -148,14 +174,27 @@ $uname = $_SESSION['uname'];
           <div class="title" style="text-align:center;">:: General Instructions ::</div><br><br>
           <div class="stat-details">
             <ul class="details">
-              <li>You are only allowed to start the test at the prescribed time. The timer will start from the current time irrespective of when you start the exam and end when the given time is up.</li><br>
-              <li>You can see the history of test taken and scores in the Results section</li><br>
-              <li>To start the test, click on 'Start' button in the exam section.</li><br>
-              <li>Once the test is started the timer would run irrespective of your logged in or logged our status. So it is recommended not to logout before test completion.</li><br>
-              <li>To mark an answer you need to select the option. Upon locking the selected options button will "blue".</li><br>
-              <li>To reset the form click on the reset button at the bottom .</li><br>
-              <li>The assigned tests should be completed within the submission time. Failing to complete the assessment will award you zero marks.</li><br>
-              <li>The marks will be calculated and displayed instantly in the result section along with your percentage.</li><br>
+              <li><strong>Exam Timing:</strong> You are only allowed to start the test at the scheduled time. The timer begins immediately and will expire at the designated end time regardless of when you start.</li><br>
+              <li><strong>Full Screen Mode:</strong> All examinations must be completed in full screen mode. Exiting full screen will be flagged as a potential integrity violation.</li><br>
+              <li><strong>Integrity Monitoring:</strong> The system includes an advanced anti-cheat system that tracks:
+                <ul style="margin-left: 30px; margin-top: 10px;">
+                  <li>Tab switching or browser minimizing</li>
+                  <li>Window focus loss (switching to other applications)</li>
+                  <li>Suspicious patterns of combined behaviors</li>
+                </ul>
+              </li><br>
+              <li><strong>Integrity Score:</strong> You begin each exam with a perfect 100-point integrity score. Violations result in score deductions:
+                <ul style="margin-left: 30px; margin-top: 10px;">
+                  <li>75-100: Good standing</li>
+                  <li>50-74: At-Risk (requires review)</li>
+                  <li>0-49: Cheating Suspicion (may result in disqualification)</li>
+                </ul>
+              </li><br>
+              <li><strong>Auto-Submission:</strong> If your integrity score falls below the critical threshold, your exam will be automatically submitted.</li><br>
+              <li><strong>Answer Selection:</strong> Click an option to select it. Locked answers will appear in green. Use the navigation panel to track your progress.</li><br>
+              <li><strong>Mock Exams:</strong> Practice tests are available in the Mock Exams section to help you prepare.</li><br>
+              <li><strong>Results:</strong> View your scores, performance analytics, and integrity reports in the Results section after completion.</li><br>
+              <li><strong>Certificates:</strong> Blockchain-verified certificates can be generated for successfully completed exams with satisfactory integrity scores.</li><br>
             </ul>
           </div>
         </div>

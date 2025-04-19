@@ -4,9 +4,15 @@ if (!isset($_SESSION["fname"])) {
   header("Location: ../login_student.php");
 }
 include '../config.php';
+require_once '../utils/message_utils.php';
 error_reporting(0);
 
 $id = $_SESSION['id'];
+$uname = $_SESSION['uname'];
+
+// Get the count of unread messages
+$unread_count = getUnreadMessageCount($uname, $conn);
+
 $sql = "SELECT * FROM student WHERE id='$id'";
 $result = mysqli_query($conn, $sql);
 if (mysqli_num_rows($result) > 0) {
@@ -24,6 +30,25 @@ if (mysqli_num_rows($result) > 0) {
   <link rel="stylesheet" href="css/dash.css">
   <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* Notification badge style */
+    .notification-badge {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      position: absolute;
+      top: -5px;
+      right: 10px;
+      min-width: 18px;
+      height: 18px;
+      background-color: #ff3e55;
+      color: white;
+      border-radius: 50%;
+      font-size: 11px;
+      font-weight: bold;
+      padding: 0 4px;
+    }
+  </style>
 </head>
 
 <body>
@@ -60,7 +85,10 @@ if (mysqli_num_rows($result) > 0) {
       <li>
         <a href="messages.php">
           <i class='bx bx-message'></i>
-          <span class="links_name">Messages</span>
+          <span class="links_name">Announcements</span>
+          <?php if ($unread_count > 0): ?>
+          <span class="notification-badge"><?php echo $unread_count; ?></span>
+          <?php endif; ?>
         </a>
       </li>
       <li>
