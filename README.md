@@ -13,6 +13,7 @@
   <a href="#key-features">Key Features</a> •
   <a href="#anti-cheat-system">Anti-Cheat System</a> •
   <a href="#blockchain-integration">Blockchain Integration</a> •
+  <a href="#email-notifications">Email Notifications</a> •
   <a href="#architecture">Architecture</a> •
   <a href="#installation">Installation</a> •
   <a href="#usage">Usage</a> •
@@ -57,6 +58,15 @@ ExamFlow delivers a comprehensive platform that streamlines the entire examinati
 - **Result Access**: Immediate post-submission scoring and performance analysis
 - **Integrity Transparency**: Real-time integrity score visibility during examinations
 - **Credential Generation**: On-demand blockchain certificate creation
+
+### Mock Examination System
+
+- **Practice Environment**: Auto-generated mock exams based on real assessments
+- **Adaptive Practice**: Multiple mock tests per exam with varied questions
+- **Self-Assessment**: Students can evaluate their readiness before actual exams
+- **Performance Analytics**: Track progress and improvement across practice attempts
+- **Realistic Experience**: Mock exams mirror the actual exam environment and format
+- **Instant Feedback**: Immediate scoring and answer review after completion
 
 ## Anti-Cheat System
 
@@ -133,6 +143,25 @@ ExamFlow utilizes blockchain technology to provide tamper-proof digital credenti
 - **Storage Provider**: Pinata IPFS pinning service
 - **Client Integration**: ethers.js for blockchain interaction
 
+## Email Notifications
+
+ExamFlow integrates an automated email notification system that sends certificates to students upon successful exam completion.
+
+### Certificate Email System
+
+- **Automated Delivery**: NFT certificates sent directly to students' email addresses
+- **Attachment Format**: High-quality PNG certificates with blockchain verification details
+- **Blockchain Links**: Direct links to OpenSea and Etherscan for certificate verification
+- **Customized Content**: Personalized email messages with student and exam information
+- **Secure Delivery**: Industry-standard SMTP with proper authentication
+
+### Technical Implementation
+
+- **Email Service**: Uses PHPMailer library with SMTP authentication
+- **Template System**: Responsive HTML email templates with certificate details
+- **Error Handling**: Comprehensive logging for troubleshooting delivery issues
+- **Configuration**: Centralized email settings for easy maintenance
+
 ## Architecture
 
 ```
@@ -149,13 +178,19 @@ ExamFlow utilizes blockchain technology to provide tamper-proof digital credenti
                           │     CHEAT      │      │    INTEGRATION    │
                           │     SYSTEM     │      │                   │
                           └────────────────┘      └───────────────────┘
-                                                           │
-                                                  ┌────────┴───────┐
-                                                  ▼                ▼
-                                           ┌─────────────┐  ┌─────────────┐
-                                           │    IPFS     │  │  ETHEREUM   │
-                                           │   STORAGE   │  │   NETWORK   │
-                                           └─────────────┘  └─────────────┘
+                                  │                        │
+                                  │                ┌────────┴───────┐
+                                  │                ▼                ▼
+                                  │         ┌─────────────┐  ┌─────────────┐
+                                  │         │    IPFS     │  │  ETHEREUM   │
+                                  │         │   STORAGE   │  │   NETWORK   │
+                                  │         └─────────────┘  └─────────────┘
+                                  ▼
+                          ┌────────────────┐
+                          │     MOCK       │
+                          │     EXAM       │
+                          │    SYSTEM      │
+                          └────────────────┘
 ```
 
 ## Installation
@@ -186,7 +221,14 @@ ExamFlow utilizes blockchain technology to provide tamper-proof digital credenti
    mysql -u root -p db_eval < database/db_eval.sql
    ```
 
-3. **Configure environment**
+3. **Set up mock exam tables**
+
+   ```bash
+   # Run the installation script for mock exam tables
+   php install_mock_tables.php
+   ```
+
+4. **Configure environment**
 
    ```bash
    # Copy example configuration
@@ -196,7 +238,22 @@ ExamFlow utilizes blockchain technology to provide tamper-proof digital credenti
    nano config.php
    ```
 
-4. **Set up blockchain features** (optional)
+5. **Configure email notifications**
+
+   ```bash
+   # Copy example email configuration
+   cp utils/email_config.example.php utils/email_config.php
+
+   # Edit with your email credentials
+   nano utils/email_config.php
+   ```
+
+   For Gmail accounts:
+   - Enable 2-Factor Authentication on your Google account
+   - Create an App Password at https://myaccount.google.com/apppasswords
+   - Use the App Password (not your regular Gmail password) in the config file
+
+6. **Set up blockchain features** (optional)
 
    ```bash
    # Create environment file
@@ -206,7 +263,7 @@ ExamFlow utilizes blockchain technology to provide tamper-proof digital credenti
    nano students/.env
    ```
 
-5. **Deploy to web server**
+7. **Deploy to web server**
    ```bash
    # Ensure correct permissions
    chmod -R 755 .
@@ -220,16 +277,18 @@ ExamFlow utilizes blockchain technology to provide tamper-proof digital credenti
 1. Access the administration panel at `/teachers/login.php`
 2. Create new examinations with customizable parameters
 3. Manage question banks and student registrations
-4. Monitor real-time examination progress
-5. Review integrity reports and performance analytics
+4. Generate practice mock exams for students from existing assessments
+5. Monitor real-time examination progress
+6. Review integrity reports and performance analytics
 
 ### For Students
 
 1. Log in to the student portal at `/login_student.php`
-2. View available examinations on the dashboard
-3. Enter examination environment when ready
-4. Navigate through questions and submit answers
-5. Review results and generate blockchain certificates
+2. View available examinations and practice mock exams on the dashboard
+3. Take mock tests to prepare for upcoming assessments
+4. Enter examination environment when ready
+5. Navigate through questions and submit answers
+6. Review results and generate blockchain certificates
 
 ## Security
 
@@ -251,6 +310,7 @@ ExamFlow incorporates comprehensive security measures:
 - **UI Components**: Boxicons
 - **Blockchain**: Ethereum (Sepolia) with ethers.js
 - **Storage**: IPFS via Pinata API
+- **Email**: PHPMailer with SMTP authentication
 
 ### Key Components
 
@@ -258,6 +318,7 @@ ExamFlow incorporates comprehensive security measures:
 - **Anti-Cheat System**: `students/log_violation.php`
 - **Certificate Generation**: `students/generate_certificate.php`
 - **Blockchain Integration**: `students/mint_nft.php`
+- **Email Notification**: `utils/mailer.php`
 - **Violation Reporting**: `teachers/view_violations.php`
 
 ## License
